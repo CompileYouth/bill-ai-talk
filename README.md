@@ -11,6 +11,7 @@
 3. 基于模板整理成公众号文章
 4. 成稿存入 `articles/`
 5. 每次产出后，回写 `docs/article-format.md`，持续更新固定格式和写作偏好
+6. 提交时把“规范修改”和“当天文章”拆成不同 commit
 
 目录说明：
 
@@ -24,6 +25,7 @@
 其中关键文档：
 
 - `docs/article-format.md`：记录已经形成的公众号格式偏好
+- `docs/workflow.md`：记录从选题到提交的执行流程和提交约定
 - `docs/writing-guidelines.md`：记录写作要求、风格和传播目标
 
 当前默认交付：
