@@ -87,12 +87,6 @@ func circle(center: CGPoint, radius: CGFloat, fill: NSColor, stroke: NSColor, li
     path.stroke()
 }
 
-func pngData(from image: NSImage) -> Data? {
-    guard let tiff = image.tiffRepresentation,
-          let rep = NSBitmapImageRep(data: tiff) else { return nil }
-    return rep.representation(using: .png, properties: [:])
-}
-
 func jpegData(from image: NSImage) -> Data? {
     guard let tiff = image.tiffRepresentation,
           let rep = NSBitmapImageRep(data: tiff) else { return nil }
@@ -100,10 +94,9 @@ func jpegData(from image: NSImage) -> Data? {
 }
 
 func save(_ image: NSImage, baseURL: URL) throws {
-    guard let png = pngData(from: image), let jpg = jpegData(from: image) else {
+    guard let jpg = jpegData(from: image) else {
         throw NSError(domain: "render", code: 1)
     }
-    try png.write(to: baseURL.appendingPathExtension("png"))
     try jpg.write(to: baseURL.appendingPathExtension("jpg"))
 }
 
@@ -133,6 +126,21 @@ let dark = NSColor(calibratedRed: 0.12, green: 0.12, blue: 0.12, alpha: 1)
 let muted = NSColor(calibratedRed: 0.40, green: 0.40, blue: 0.40, alpha: 1)
 
 do {
+    // WeChat cover
+    do {
+        let r = Renderer(width: 2350, height: 1000, background: bg1)
+        roundedRect(NSRect(x: 70, y: 70, width: 2210, height: 860), radius: 36, fill: card, stroke: dark, lineWidth: 5)
+        line(from: CGPoint(x: 1175, y: 220), to: CGPoint(x: 1175, y: 780), color: dark, width: 5)
+        drawText("真正重要的事，只剩两种", in: NSRect(x: 260, y: 150, width: 1830, height: 90), font: .systemFont(ofSize: 86, weight: .bold), color: dark, alignment: .center, lineHeight: 96)
+        drawText("By Agent", in: NSRect(x: 210, y: 390, width: 760, height: 110), font: .systemFont(ofSize: 140, weight: .heavy), color: dark, alignment: .center, lineHeight: 146)
+        drawText("借助 Agent 做事", in: NSRect(x: 290, y: 590, width: 600, height: 52), font: .systemFont(ofSize: 48, weight: .medium), color: muted, alignment: .center, lineHeight: 54)
+        drawText("For Agent", in: NSRect(x: 1380, y: 390, width: 760, height: 110), font: .systemFont(ofSize: 140, weight: .heavy), color: dark, alignment: .center, lineHeight: 146)
+        drawText("为 Agent 提供能力", in: NSRect(x: 1460, y: 590, width: 600, height: 52), font: .systemFont(ofSize: 48, weight: .medium), color: muted, alignment: .center, lineHeight: 54)
+        addWatermark("@FEPulse", rect: NSRect(x: 1970, y: 845, width: 220, height: 34), color: muted)
+        r.finish()
+        try save(r.image, baseURL: outDir.appendingPathComponent("wechat-cover"))
+    }
+
     // Cover
     do {
         let r = Renderer(width: 1200, height: 675, background: bg1)

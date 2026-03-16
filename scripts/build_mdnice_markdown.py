@@ -12,7 +12,7 @@ JSDELIVR_TEMPLATE = "https://cdn.jsdelivr.net/gh/{repo}@{ref}/{path}"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build an mdnice-ready Markdown file with GitHub CDN image URLs."
+        description="Rewrite article image paths to GitHub CDN URLs."
     )
     parser.add_argument("source", help="Source markdown file path")
     parser.add_argument(
@@ -26,9 +26,11 @@ def parse_args() -> argparse.Namespace:
         help="Git ref to use in CDN URLs, usually main",
     )
     parser.add_argument(
-        "--output",
-        help="Output markdown path. Defaults to publishing/<source>-mdnice.md",
+        "--in-place",
+        action="store_true",
+        help="Rewrite the source markdown file in place",
     )
+    parser.add_argument("--output", help="Optional output markdown path")
     return parser.parse_args()
 
 
@@ -55,10 +57,12 @@ def rewrite_image_paths(content: str, source_path: Path, repo: str, ref: str) ->
 def main() -> int:
     args = parse_args()
     source = Path(args.source).resolve()
-    if args.output:
+    if args.in_place:
+        output = source
+    elif args.output:
         output = Path(args.output).resolve()
     else:
-        output = Path.cwd().resolve() / "publishing" / f"{source.stem}-mdnice{source.suffix}"
+        output = source.with_name(f"{source.stem}-cdn{source.suffix}")
 
     content = source.read_text(encoding="utf-8")
     rewritten = rewrite_image_paths(content, source, args.repo, args.ref)

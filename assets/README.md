@@ -5,6 +5,5 @@
 约定：
 
 - 每篇文章使用一个同名子目录
-- 图片文件优先使用简短文件名，例如 `cover.png`、`by.png`、`for.png`
+- 图片文件优先使用简短文件名，例如 `cover.jpg`、`by.jpg`、`for.jpg`
 - `articles/` 不再存放图片资源
-
