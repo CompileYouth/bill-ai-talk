@@ -2,17 +2,17 @@
 
 这个仓库用来持续沉淀和产出 AI 相关的公众号文章。
 
+从现在开始，这个仓库**不再维护本地规则文档**。  
+写作规范、配图规则、提交约定、交付流程，统一以 skill `$bill-wechat-daily` 为准。
+
 当前默认工作流：
 
 1. 先收集素材
    - 可以是和我在这里的对话整理
    - 也可以是你从别处粘贴过来的原文
 2. 将素材放入 `inbox/`
-3. 基于模板整理成公众号文章
+3. 使用 `$bill-wechat-daily` 生成公众号文章、配图和预览页
 4. 成稿存入 `articles/`
-5. 每次产出后，回写 `docs/article-format.md`，持续更新固定格式和写作偏好
-6. 提交时把“规范修改”和“当天文章”拆成不同 commit
-7. 生成 `articles/*.md` 时，同步生成对应的本地网页，方便直接复制到公众号
 
 目录说明：
 
@@ -20,15 +20,12 @@
 - `inbox/`：待整理素材
 - `drafts/`：中间草稿
 - `templates/`：文章模板
-- `docs/`：流程、规范、格式记忆
 - `assets/`：文章配图等静态资源
 - `preview/`：文章对应的本地网页预览产物
 
-其中关键文档：
+其中关键入口：
 
-- `docs/article-format.md`：记录已经形成的公众号格式偏好
-- `docs/workflow.md`：记录从选题到提交的执行流程和提交约定
-- `docs/writing-guidelines.md`：记录写作要求、风格和传播目标
+- `/Users/bytedance/.codex/skills/bill-wechat-daily/SKILL.md`：公众号日更 skill
 - `scripts/build_wechat_page.py`：把 Markdown 文章转成可复制到公众号的本地网页
 
 当前默认交付：
@@ -43,7 +40,7 @@
 
 - 你可以直接说一个主题，让我和你一起聊
 - 也可以把一段聊天记录或原文贴给我，我来整理
-- 如果你对文章风格、标题、结构、结尾、配图建议有新偏好，我会同步更新格式记忆
+- 后续规则变更统一更新到 `$bill-wechat-daily`，不再回写仓库文档
 
 本地网页生成功能：
 
@@ -52,9 +49,3 @@ python3 scripts/build_wechat_page.py articles/2026-03-17-ai-does-not-equal-profi
 ```
 
 我后续生成文章时，会同步产出 `preview/` 下的网页；需要手动补生时，也可以直接跑上面的命令。
-
-当前默认定位：
-
-- 主题：AI 思考、AI 使用技巧、AI 工作流、人与 AI 协作
-- 受众：对 AI 感兴趣但不一定技术背景很强的中文读者
-- 风格：通俗、具体、有观点、少空话
