@@ -18,12 +18,15 @@
 - `articles/`：正式文章
 - `assets/`：文章配图等静态资源
 - `preview/`：文章对应的本地网页预览页，和文章一起入库
-- `scripts/`：生成网页和配图的脚本
+- `scripts/`：通用工具脚本
+- `publishing-tracker.md`：标题、发送日期与文章数据记录
 
 其中关键入口：
 
 - `/Users/bytedance/.codex/skills/bill-wechat-daily/SKILL.md`：公众号日更 skill
 - `scripts/build_wechat_page.py`：把 Markdown 文章转成可复制到公众号的本地网页
+- `scripts/shift_publish_dates.py`：当插入新文章时，顺延后续文章的发送日期
+- 每篇文章对应的配图生成模板放在各自的 `assets/<date-slug>/render.swift`
 
 当前默认交付：
 
@@ -33,6 +36,8 @@
 - 每篇文章默认额外复制 3 张上传用图片到本地 `~/Downloads`
 - 每篇文章默认同步生成一个本地网页，并提供复制按钮用于直贴公众号
 - `preview/` 下的网页默认和文章一起保存
+- 每篇文章生成后默认做一次“是否具备传播潜力”的 review
+- 文章日期默认表示公众号发送日期，而不是创作日期
 
 建议协作方式：
 
