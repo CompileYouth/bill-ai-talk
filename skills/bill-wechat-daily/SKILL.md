@@ -77,9 +77,5 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 
 - `scripts/build_wechat_page.py`: build the local preview HTML with copy button
 - `scripts/shift_publish_dates.py`: shift later publish dates when a new article is inserted
-- article-specific image render templates live beside each article's assets, for example:
-  - `assets/2026-03-16-by-agent-or-for-agent/render.swift`
-  - `assets/2026-03-17-ai-like-precooked-meals/render.swift`
-  - `assets/2026-03-18-ai-does-not-equal-profit/render.swift`
-
-Reuse an existing article render template when the layout matches. Create a new one only when the visual pattern is materially different.
+- Image render templates may live with the corresponding article assets when needed.
+- Treat those render files as implementation details of the current article, not as stable skill-level knowledge.
