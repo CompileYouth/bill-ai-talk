@@ -19,14 +19,22 @@
 - `assets/`：文章配图等静态资源
 - `preview/`：文章对应的本地网页预览页，和文章一起入库
 - `scripts/`：通用工具脚本
+- `skills/`：随仓库保存的 Codex skill 镜像
 - `publishing-tracker.md`：标题、发送日期与文章数据记录
 
 其中关键入口：
 
 - `/Users/bytedance/.codex/skills/bill-wechat-daily/SKILL.md`：公众号日更 skill
+- `skills/bill-wechat-daily/`：用于远程持久化和跨设备同步的 skill 副本
 - `scripts/build_wechat_page.py`：把 Markdown 文章转成可复制到公众号的本地网页
 - `scripts/shift_publish_dates.py`：当插入新文章时，顺延后续文章的发送日期
 - 每篇文章对应的配图生成模板放在各自的 `assets/<date-slug>/render.swift`
+
+跨设备使用方式：
+
+1. 在新电脑上拉取这个仓库
+2. 将 `skills/bill-wechat-daily/` 复制到本机 `~/.codex/skills/bill-wechat-daily/`
+3. 之后即可像当前机器一样使用 `$bill-wechat-daily`
 
 当前默认交付：
 

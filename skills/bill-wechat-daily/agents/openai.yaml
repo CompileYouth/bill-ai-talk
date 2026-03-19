@@ -1,0 +1,7 @@
+interface:
+  display_name: "Bill 公众号日更"
+  short_description: "用于 Bill 的 AI 公众号日更写作与交付流程"
+  default_prompt: "Use $bill-wechat-daily to produce a publish-ready WeChat article with images and preview page."
+
+policy:
+  allow_implicit_invocation: true
