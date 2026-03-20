@@ -8,9 +8,10 @@
 
 | 发送日期 | 标题 | 文章 | 预览页 | 阅读 | 点赞 | 在看 | 分享 | 收藏 | 新增关注 | 留言/私信反馈 | 备注 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2026-03-16 | 真正重要的事，只剩两种：By Agent 和 For Agent | `articles/2026-03-16-by-agent-or-for-agent.md` | `preview/2026-03-16-by-agent-or-for-agent.html` |  |  |  |  |  |  |  |  |
-| 2026-03-17 | 今天的 AI，就像当年的预制菜 | `articles/2026-03-17-ai-like-precooked-meals.md` | `preview/2026-03-17-ai-like-precooked-meals.html` |  |  |  |  |  |  |  |  |
-| 2026-03-18 | 用了 AI，不等于有了生意 | `articles/2026-03-18-ai-does-not-equal-profit.md` | `preview/2026-03-18-ai-does-not-equal-profit.html` |  |  |  |  |  |  |  |  |
-| 2026-03-19 | 我为什么又开始日更这个公众号 | `articles/2026-03-19-why-i-start-daily-again.md` | `preview/2026-03-19-why-i-start-daily-again.html` |  |  |  |  |  |  |  |  |
-| 2026-03-20 | 判断自己是否成长，只看 AI 就够了 | `articles/2026-03-20-only-ai-growth-counts.md` | `preview/2026-03-20-only-ai-growth-counts.html` |  |  |  |  |  |  |  |  |
-| 2026-03-21 | AI 时代，木桶理论又回来了 | `articles/2026-03-21-ai-bucket-theory-is-back.md` | `preview/2026-03-21-ai-bucket-theory-is-back.html` |  |  |  |  |  |  |  |  |
+| 2026-03-16 | 真正重要的事，只剩两种：用 Agent 做事和为 Agent 服务 | `articles/2026-03-16：真正重要的事，只剩两种：用 Agent 做事和为 Agent 服务.md` | `preview/2026-03-16：真正重要的事，只剩两种：用 Agent 做事和为 Agent 服务.html` |  |  |  |  |  |  |  |  |
+| 2026-03-17 | 今天的 AI，就像当年的预制菜 | `articles/2026-03-17：今天的 AI，就像当年的预制菜.md` | `preview/2026-03-17：今天的 AI，就像当年的预制菜.html` |  |  |  |  |  |  |  |  |
+| 2026-03-18 | 用了 AI，不等于有了生意 | `articles/2026-03-18：用了 AI，不等于有了生意.md` | `preview/2026-03-18：用了 AI，不等于有了生意.html` |  |  |  |  |  |  |  |  |
+| 2026-03-19 | 我为什么又开始日更这个公众号 | `articles/2026-03-19：我为什么又开始日更这个公众号.md` | `preview/2026-03-19：我为什么又开始日更这个公众号.html` |  |  |  |  |  |  |  |  |
+| 2026-03-20 | 判断自己是否成长，只看 AI 就够了 | `articles/2026-03-20：判断自己是否成长，只看 AI 就够了.md` | `preview/2026-03-20：判断自己是否成长，只看 AI 就够了.html` |  |  |  |  |  |  |  |  |
+| 2026-03-21 | AI 时代，木桶理论又回来了 | `articles/2026-03-21：AI 时代，木桶理论又回来了.md` | `preview/2026-03-21：AI 时代，木桶理论又回来了.html` |  |  |  |  |  |  |  |  |
+| 2026-03-22 | AI 时代，最重要的是让自己进入正反馈链路 | `articles/2026-03-22：AI 时代，最重要的是让自己进入正反馈链路.md` | `preview/2026-03-22：AI 时代，最重要的是让自己进入正反馈链路.html` |  |  |  |  |  |  |  |  |

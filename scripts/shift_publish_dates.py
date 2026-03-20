@@ -9,19 +9,24 @@ from datetime import date, timedelta
 from pathlib import Path
 
 
-ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})-(?P<slug>.+)\.md$")
+ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
 TITLE_RE = re.compile(r"^# (?P<day>\d{4}-\d{2}-\d{2}): (?P<title>.+)$", re.MULTILINE)
+ASSET_RE = re.compile(r"\.\./assets/(?P<stem>\d{4}-\d{2}-\d{2}-[^/]+)/")
 @dataclass
 class ArticleItem:
     old_date: date
-    slug: str
+    title: str
+    asset_stem: str
 
     @property
     def old_stem(self) -> str:
-        return f"{self.old_date.isoformat()}-{self.slug}"
+        return f"{self.old_date.isoformat()}：{self.title}"
 
     def new_stem(self, new_date: date) -> str:
-        return f"{new_date.isoformat()}-{self.slug}"
+        return f"{new_date.isoformat()}：{self.title}"
+
+    def new_asset_stem(self, new_date: date) -> str:
+        return f"{new_date.isoformat()}{self.asset_stem[10:]}"
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,10 +41,15 @@ def load_articles(root: Path) -> list[ArticleItem]:
     for path in sorted((root / "articles").glob("*.md")):
         match = ARTICLE_RE.match(path.name)
         if match:
+            text = path.read_text(encoding="utf-8")
+            asset_match = ASSET_RE.search(text)
+            if not asset_match:
+                continue
             items.append(
                 ArticleItem(
                     old_date=date.fromisoformat(match.group("day")),
-                    slug=match.group("slug"),
+                    title=match.group("title"),
+                    asset_stem=asset_match.group("stem"),
                 )
             )
     return items
@@ -65,11 +75,13 @@ def main() -> None:
     for item, new_day in sorted(mappings, key=lambda pair: pair[0].old_date, reverse=args.days > 0):
         old_stem = item.old_stem
         new_stem = item.new_stem(new_day)
+        old_asset_stem = item.asset_stem
+        new_asset_stem = item.new_asset_stem(new_day)
 
         old_article = root / "articles" / f"{old_stem}.md"
         new_article = root / "articles" / f"{new_stem}.md"
-        old_assets = root / "assets" / old_stem
-        new_assets = root / "assets" / new_stem
+        old_assets = root / "assets" / old_asset_stem
+        new_assets = root / "assets" / new_asset_stem
         old_preview = root / "preview" / f"{old_stem}.html"
         new_preview = root / "preview" / f"{new_stem}.html"
 
@@ -86,11 +98,14 @@ def main() -> None:
     for item, new_day in mappings:
         old_stem = item.old_stem
         new_stem = item.new_stem(new_day)
+        old_asset_stem = item.asset_stem
+        new_asset_stem = item.new_asset_stem(new_day)
         article_path = root / "articles" / f"{new_stem}.md"
 
         text = article_path.read_text(encoding="utf-8")
         text = update_heading(text, new_day)
         text = text.replace(old_stem, new_stem)
+        text = text.replace(old_asset_stem, new_asset_stem)
         article_path.write_text(text, encoding="utf-8")
 
         if tracker_text:

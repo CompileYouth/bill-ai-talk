@@ -56,7 +56,7 @@
 本地网页生成功能：
 
 ```bash
-python3 scripts/build_wechat_page.py articles/2026-03-17-ai-does-not-equal-profit.md
+python3 scripts/build_wechat_page.py "articles/2026-03-17：今天的 AI，就像当年的预制菜.md"
 ```
 
 我后续生成文章时，会同步产出 `preview/` 下的网页；需要手动补生时，也可以直接跑上面的命令。
