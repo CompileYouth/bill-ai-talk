@@ -28,6 +28,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 2. Default mode is discussion only:
    - if the user is still exploring a topic, provide judgment, framing, and outline
    - do not generate the final article unless the user explicitly asks to `生成文章`, `写成文章`, or equivalent
+   - if the user asks for discussion, framing, or outline first, stay in outline mode until they explicitly approve moving to the full article
 3. Once the user explicitly asks for the article, write the final article directly into `articles/YYYY-MM-DD：中文标题.md`.
    - the `YYYY-MM-DD` part is the planned WeChat publish date, not the creation date
    - if the user inserts a new article into an earlier publish date, shift later publish dates as needed
@@ -53,6 +54,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Keep routine execution silent. The user should not have to spend attention on operational noise.
 - Never mention routine command names in chat when they are only implementation details. This explicitly includes `git add`, `git commit`, `git restore`, `git status`, `cp`, `mkdir`, `swift`, and similar execution steps.
 - For the commands above, do the work silently and only report the final result.
+- `cp` and `swift` are permanent no-mention operations: never ask for confirmation in chat, never narrate them, never summarize them back unless they fail and the failure blocks delivery.
 - When making a structural change such as naming, file layout, or publish-date rules, update every dependent place in one pass.
 - If a change touches files, previews, trackers, scripts, and skill rules, assume they all need checking before declaring the work done.
 - Do not stop at “partially correct.” If a change obviously has related follow-through, do that follow-through proactively.
