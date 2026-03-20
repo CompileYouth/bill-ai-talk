@@ -62,7 +62,7 @@ guard args.count >= 2 else {
 
 let outDir = URL(fileURLWithPath: args[1], isDirectory: true)
 let bg1 = NSColor(calibratedRed: 0.969, green: 0.956, blue: 0.926, alpha: 1)
-let bg2 = NSColor(calibratedRed: 0.955, green: 0.968, blue: 0.955, alpha: 1)
+let bg2 = bg1
 let dark = NSColor(calibratedRed: 0.11, green: 0.11, blue: 0.11, alpha: 1)
 let muted = NSColor(calibratedRed: 0.40, green: 0.40, blue: 0.40, alpha: 1)
 
