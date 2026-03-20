@@ -57,8 +57,10 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Images are for传播, not for re-explaining the whole article.
 - One image should carry one central judgment.
 - Text on images should stay sparse and decisive.
+- Default to one unified background tone across article images unless a specific article truly needs an exception.
 - Watermark must be `@Bill的精神时光屋`.
 - Watermark should stay near the bottom-right corner while preserving a safe margin from borders and content.
+- Default to one consistent watermark position across same-style images; only move it when needed to avoid borders or content.
 
 ## Commit Rules
 
@@ -71,7 +73,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 ## Low-Risk File Operations
 
 - For low-risk local file operations such as `mkdir`, `cp`, preview generation, and similar routine workspace preparation, execute directly.
-- Do not interrupt the user just to confirm these routine actions.
+- Do not interrupt the user or mention these routine actions in chat unless something actually fails.
 
 ## Key Scripts
 
