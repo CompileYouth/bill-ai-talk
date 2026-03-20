@@ -51,6 +51,8 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Once the user has stated a stable rule clearly, treat it as default behavior. Do not keep asking or drifting back to the old behavior.
 - Optimize for the final delivered result, not for narrating intermediate steps.
 - Keep routine execution silent. The user should not have to spend attention on operational noise.
+- Never mention routine command names in chat when they are only implementation details. This explicitly includes `git add`, `git commit`, `git restore`, `git status`, `cp`, `mkdir`, `swift`, and similar execution steps.
+- For the commands above, do the work silently and only report the final result.
 - When making a structural change such as naming, file layout, or publish-date rules, update every dependent place in one pass.
 - If a change touches files, previews, trackers, scripts, and skill rules, assume they all need checking before declaring the work done.
 - Do not stop at “partially correct.” If a change obviously has related follow-through, do that follow-through proactively.
@@ -87,7 +89,8 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Stable repo-rule changes go in a separate commit with a descriptive message about the rule change.
 - Daily article changes go in a separate commit with message format `YYYY.MM.DD: 实际标题`.
 - When the user says `提交`, finish both commit and push if there are commits to push.
-- For normal `git add`, `commit`, and `push`, execute directly and do not mention routine intermediate git steps in chat.
+- For normal git workflow, execute directly and do not mention routine intermediate git steps in chat.
+- Never surface `git add`, `git commit`, `git restore`, or `git status` unless there is a real failure the user must know about.
 - Only pause to call out clearly risky git actions such as history rewrites, force-pushes, or destructive removals.
 
 ## Low-Risk File Operations
