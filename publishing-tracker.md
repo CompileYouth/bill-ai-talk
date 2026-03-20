@@ -13,3 +13,4 @@
 | 2026-03-18 | 用了 AI，不等于有了生意 | `articles/2026-03-18-ai-does-not-equal-profit.md` | `preview/2026-03-18-ai-does-not-equal-profit.html` |  |  |  |  |  |  |  |  |
 | 2026-03-19 | 我为什么又开始日更这个公众号 | `articles/2026-03-19-why-i-start-daily-again.md` | `preview/2026-03-19-why-i-start-daily-again.html` |  |  |  |  |  |  |  |  |
 | 2026-03-20 | 判断自己是否成长，只看 AI 就够了 | `articles/2026-03-20-only-ai-growth-counts.md` | `preview/2026-03-20-only-ai-growth-counts.html` |  |  |  |  |  |  |  |  |
+| 2026-03-21 | AI 时代，木桶理论又回来了 | `articles/2026-03-21-ai-bucket-theory-is-back.md` | `preview/2026-03-21-ai-bucket-theory-is-back.html` |  |  |  |  |  |  |  |  |
