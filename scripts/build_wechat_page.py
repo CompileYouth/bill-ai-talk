@@ -12,6 +12,7 @@ from pathlib import Path
 
 IMAGE_RE = re.compile(r"!\[(.*?)\]\((.*?)\)")
 BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
+LINK_RE = re.compile(r"\[(.+?)\]\((.+?)\)")
 
 
 def parse_args() -> argparse.Namespace:
@@ -31,8 +32,21 @@ def escape(text: str) -> str:
 
 
 def inline_markup(text: str) -> str:
-    escaped = escape(text)
-    return BOLD_RE.sub(r"<strong>\1</strong>", escaped)
+    tokens: list[tuple[str, str]] = []
+
+    def store_link(match: re.Match[str]) -> str:
+        tokens.append((match.group(1), match.group(2)))
+        return f"@@LINK{len(tokens) - 1}@@"
+
+    escaped = escape(LINK_RE.sub(store_link, text))
+    escaped = BOLD_RE.sub(r"<strong>\1</strong>", escaped)
+
+    for idx, (label, href) in enumerate(tokens):
+        escaped = escaped.replace(
+            f"@@LINK{idx}@@",
+            f'<a class="article-link" href="{html.escape(href, quote=True)}">{escape(label)}</a>',
+        )
+    return escaped
 
 
 def image_to_data_uri(markdown_file: Path, image_path: str) -> str:

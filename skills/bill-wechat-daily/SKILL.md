@@ -45,6 +45,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 9. Update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
 10. If a new preference is stable rather than article-specific, update this skill immediately.
     - always update both copies: the live local skill under `~/.codex/skills/` and the mirrored copy under `skills/bill-wechat-daily/`
+   - do not wait for an extra reminder; after each substantial discussion, proactively extract and store stable rules, priorities, and strategic judgments
 11. When the user says `提交`, treat it as `commit + push` without asking again.
 
 ## Execution Discipline
@@ -58,6 +59,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - When making a structural change such as naming, file layout, or publish-date rules, update every dependent place in one pass.
 - If a change touches files, previews, trackers, scripts, and skill rules, assume they all need checking before declaring the work done.
 - Do not stop at “partially correct.” If a change obviously has related follow-through, do that follow-through proactively.
+- The same proactive rule applies to memory: if the user has clarified something that is obviously stable and reusable, store it immediately instead of waiting to be told.
 
 ## Writing Rules That Matter Most
 
@@ -67,6 +69,8 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Important claims may be bolded, but only when they are truly the central takeaway.
 - The article should make readers feel the account has a clear direction, not just a diary of thoughts.
 - After drafting, review whether the piece actually has a sharp enough shareable sentence and enough emotional or judgmental tension to spread.
+- The account's north star is not generic AI commentary; it is to build recognizable influence around AI-era individual upgrading and the road toward a one-person company.
+- When evaluating topics, prefer pieces that strengthen a repeatable account identity over isolated “interesting thoughts”.
 
 ## Image Rules That Matter Most
 
@@ -85,6 +89,29 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Watermark must be `@Bill的精神时光屋`.
 - Watermark should stay near the bottom-right corner while preserving a safe margin from borders and content.
 - Default to one consistent watermark position across same-style images; only move it when needed to avoid borders or content.
+
+## Distribution Heuristics
+
+- The goal comes before the tactic.
+- Group triggering, title design, and share hooks are distribution methods, not the strategic objective.
+- First clarify the target recognition position, then use content and distribution to strengthen it.
+- Do not think only about writing; think about trigger design.
+- For external distribution, especially AI groups, optimize for three reader actions: follow, save, and forward.
+- Group distribution should start from audience psychology, not from the author's desire to express a view.
+- The most common triggers in AI groups are:
+  - fear of falling behind
+  - desire for immediate efficiency gain
+  - desire to become an early adopter inside their circle
+  - desire to get low-cost ready-made answers instead of trial-and-error
+- Content sent into groups should usually satisfy at least two of the following:
+  - “this is directly about me”
+  - “this is worth saving for later”
+  - “I should follow this person because more of this is coming”
+- Prefer messages and titles that are reader-triggering rather than author-expressive.
+- A good group-distribution asset is not just an article link; it is usually:
+  - one sharp judgment
+  - one shareable image
+  - one line that signals this is part of an ongoing series
 
 ## Commit Rules
 

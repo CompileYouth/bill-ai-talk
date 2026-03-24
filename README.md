@@ -27,6 +27,7 @@
 - `/Users/bytedance/.codex/skills/bill-wechat-daily/SKILL.md`：公众号日更 skill
 - `skills/bill-wechat-daily/`：用于远程持久化和跨设备同步的 skill 副本
 - `scripts/build_wechat_page.py`：把 Markdown 文章转成可复制到公众号的本地网页
+- `scripts/run_heybill.py`：启动 `heyBill` 本地服务，直接读取 `articles/` 并一键复制富文本
 - `scripts/shift_publish_dates.py`：当插入新文章时，顺延后续文章的发送日期
 - 每篇文章对应的配图生成模板放在各自的 `assets/<date-slug>/render.swift`
 
@@ -43,6 +44,7 @@
 - 每篇文章默认提供 1 张 `2.35:1` 的公众号封面图
 - 每篇文章默认额外复制 3 张上传用图片到本地 `~/Downloads`
 - 每篇文章默认同步生成一个本地网页，并提供复制按钮用于直贴公众号
+- 默认提供一个本地 `heyBill` 服务，用于统一浏览和复制文章
 - `preview/` 下的网页默认和文章一起保存
 - 每篇文章生成后默认做一次“是否具备传播潜力”的 review
 - 文章日期默认表示公众号发送日期，而不是创作日期
