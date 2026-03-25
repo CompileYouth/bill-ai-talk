@@ -60,6 +60,18 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         "file": path.name,
         "html": "\n".join(blocks),
     }
+def load_copy_payload(file_name: str) -> dict[str, str]:
+    path = ARTICLES_DIR / file_name
+    if not path.exists() or not path.is_file():
+        raise FileNotFoundError(file_name)
+
+    match = ARTICLE_RE.match(path.name)
+    if not match:
+        raise FileNotFoundError(file_name)
+
+    html_payload = wechat.markdown_to_wechat_html(path)
+    text_payload = path.read_text(encoding="utf-8")
+    return {"html": html_payload, "text": text_payload}
 
 
 def shell_html() -> str:
@@ -72,22 +84,40 @@ def shell_html() -> str:
   <style>
     :root {{
       --bg: #f7f3ea;
-      --paper: #fffdf7;
+      --bg-2: #f3eee4;
+      --paper: rgba(255, 253, 247, 0.96);
+      --paper-2: rgba(255, 252, 244, 0.98);
       --ink: #181818;
-      --muted: #676056;
-      --line: #1f1f1f;
-      --accent: #d94f2b;
-      --panel: rgba(255, 253, 247, 0.88);
+      --muted: #68635b;
+      --line: rgba(66, 112, 255, 0.14);
+      --line-strong: rgba(66, 112, 255, 0.24);
+      --accent: #31cfff;
+      --accent-2: #7f6fff;
+      --glow: rgba(49, 207, 255, 0.12);
+      --panel: rgba(255, 253, 247, 0.86);
     }}
     * {{ box-sizing: border-box; }}
     body {{
       margin: 0;
       min-height: 100vh;
       color: var(--ink);
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-family: "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(217, 79, 43, 0.10), transparent 24%),
-        linear-gradient(180deg, #f8f3e8 0%, #f4efe3 100%);
+        radial-gradient(circle at top left, rgba(49, 207, 255, 0.08), transparent 22%),
+        radial-gradient(circle at 85% 12%, rgba(127, 111, 255, 0.08), transparent 20%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+    }}
+    body::before {{
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(24,24,24,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(24,24,24,0.022) 1px, transparent 1px);
+      background-size: 22px 22px;
+      mask-image: radial-gradient(circle at center, black 44%, transparent 100%);
+      opacity: 0.22;
     }}
     .page {{
       width: min(1400px, calc(100vw - 32px));
@@ -101,17 +131,21 @@ def shell_html() -> str:
       position: sticky;
       top: 20px;
       padding: 18px;
-      border: 2px solid rgba(31, 31, 31, 0.12);
+      border: 1px solid var(--line);
       border-radius: 24px;
       background: var(--panel);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 14px 40px rgba(38, 28, 10, 0.08);
+      backdrop-filter: blur(16px);
+      box-shadow:
+        0 18px 44px rgba(38, 28, 10, 0.08),
+        inset 0 0 0 1px rgba(255,255,255,0.55);
     }}
     .brand {{
       margin: 0 0 6px;
-      font-size: 30px;
+      font-size: 32px;
       font-weight: 800;
       letter-spacing: -0.03em;
+      color: #121212;
+      text-shadow: 0 0 12px rgba(49, 207, 255, 0.14);
     }}
     .subtitle {{
       margin: 0 0 18px;
@@ -119,33 +153,19 @@ def shell_html() -> str:
       font-size: 14px;
       line-height: 1.6;
     }}
-    .copy-button {{
-      width: 100%;
-      appearance: none;
-      border: 0;
-      border-radius: 999px;
-      padding: 13px 18px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-bottom: 18px;
-    }}
-    .copy-button:hover {{ background: #000; }}
     .list {{
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-height: calc(100vh - 220px);
+      max-height: calc(100vh - 170px);
       overflow: auto;
       padding-right: 4px;
     }}
     .item {{
       width: 100%;
       text-align: left;
-      border: 2px solid rgba(31, 31, 31, 0.10);
-      background: #fffdf8;
+      border: 1px solid rgba(66, 112, 255, 0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.80));
       border-radius: 18px;
       padding: 14px 14px 12px;
       cursor: pointer;
@@ -153,11 +173,13 @@ def shell_html() -> str:
     }}
     .item:hover {{
       transform: translateY(-1px);
-      border-color: rgba(31, 31, 31, 0.24);
+      border-color: rgba(49, 207, 255, 0.28);
+      background: linear-gradient(180deg, rgba(49,207,255,0.10), rgba(255,255,255,0.88));
     }}
     .item.active {{
-      border-color: var(--ink);
-      background: #fff6eb;
+      border-color: var(--line-strong);
+      background: linear-gradient(180deg, rgba(49,207,255,0.14), rgba(127,111,255,0.10));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.24);
     }}
     .item-date {{
       display: block;
@@ -172,20 +194,24 @@ def shell_html() -> str:
       font-size: 15px;
       line-height: 1.6;
       font-weight: 700;
-      color: var(--ink);
+      color: #171717;
     }}
     .viewer-shell {{ min-width: 0; }}
     .viewer-meta {{
       display: flex;
       justify-content: space-between;
       gap: 16px;
-      align-items: center;
+      align-items: flex-start;
       margin-bottom: 14px;
       padding: 14px 18px;
-      border: 2px solid rgba(31, 31, 31, 0.12);
+      border: 1px solid var(--line);
       border-radius: 20px;
       background: var(--panel);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(16px);
+    }}
+    .viewer-meta-main {{
+      min-width: 0;
+      flex: 1;
     }}
     .viewer-title {{
       margin: 0;
@@ -193,74 +219,128 @@ def shell_html() -> str:
       color: var(--muted);
       line-height: 1.5;
     }}
+    .viewer-actions {{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }}
+    .meta-button {{
+      appearance: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 140ms ease, filter 140ms ease;
+      white-space: nowrap;
+    }}
+    .meta-button:hover {{
+      filter: brightness(1.03);
+      transform: translateY(-1px);
+    }}
+    .meta-button-primary {{
+      border: 0;
+      background: linear-gradient(135deg, rgba(49, 207, 255, 0.92), rgba(127, 111, 255, 0.88));
+      color: #04111d;
+      box-shadow: 0 10px 24px rgba(49, 207, 255, 0.12);
+    }}
+    .meta-button-secondary {{
+      border: 1px solid rgba(66, 112, 255, 0.18);
+      background: rgba(255,255,255,0.8);
+      color: #245177;
+    }}
     .article {{
-      padding: 44px 40px 52px;
-      background: var(--paper);
-      border: 4px solid var(--line);
+      padding: 40px 28px 50px;
+      background:
+        linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 251, 244, 0.98));
+      border: 1px solid var(--line);
       border-radius: 28px;
-      box-shadow: 0 20px 60px rgba(38, 28, 10, 0.08);
+      box-shadow:
+        0 24px 60px rgba(38, 28, 10, 0.08),
+        inset 0 0 0 1px rgba(255,255,255,0.58);
     }}
     .article-title {{
       margin: 0 0 18px;
       font-size: 34px;
       line-height: 1.3;
       letter-spacing: -0.02em;
+      color: #111111;
+      text-shadow: 0 0 10px rgba(49, 207, 255, 0.08);
     }}
     .article-heading {{
       margin: 30px 0 10px;
       font-size: 24px;
       line-height: 1.4;
+      color: #1b1b1b;
     }}
     .article-subheading {{
       margin: 26px 0 10px;
       font-size: 20px;
       line-height: 1.45;
+      color: #202020;
     }}
     .article-paragraph {{
       margin: 0 0 20px;
-      font-size: 18px;
-      line-height: 1.95;
-      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.8;
+      color: #282828;
     }}
     .article strong {{
       font-weight: 800;
-      color: var(--ink);
+      color: #101010;
+    }}
+    .article code {{
+      display: inline-block;
+      padding: 0.08em 0.42em;
+      margin: 0 0.08em;
+      border-radius: 8px;
+      background: rgba(49, 207, 255, 0.10);
+      border: 1px solid rgba(49, 207, 255, 0.18);
+      color: #0c5a72;
+      font-size: 0.92em;
+      font-family: "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+      vertical-align: baseline;
     }}
     .article-link {{
       color: var(--accent);
       text-decoration: none;
-      border-bottom: 1px solid rgba(217, 79, 43, 0.36);
+      border-bottom: 1px solid rgba(49, 207, 255, 0.28);
     }}
     .article-link:hover {{ border-bottom-color: var(--accent); }}
     .article-quote {{
-      margin: 0 0 24px;
-      padding: 18px 20px;
-      background: #f5efe2;
-      border-left: 6px solid var(--accent);
+      margin: 0 0 14px;
+      padding: 12px 16px;
+      background: linear-gradient(180deg, rgba(49,207,255,0.08), rgba(127,111,255,0.06));
+      border-left: 4px solid var(--accent);
       border-radius: 16px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.42);
     }}
     .article-quote p {{
       margin: 0;
-      font-size: 16px;
-      line-height: 1.85;
-      color: #403b35;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #3c3730;
     }}
-    .article-quote p + p {{ margin-top: 8px; }}
-    .article-figure {{ margin: 28px 0; }}
+    .article-quote p + p {{ margin-top: 4px; }}
+    .article-figure {{ margin: 34px 0; }}
     .article-image {{
       display: block;
       width: 100%;
       height: auto;
       border-radius: 18px;
+      box-shadow: 0 12px 28px rgba(38, 28, 10, 0.10);
     }}
     .article-list {{
       margin: 0 0 20px;
       padding-left: 24px;
     }}
     .article-list-item {{
-      font-size: 18px;
-      line-height: 1.9;
+      font-size: 16px;
+      line-height: 1.8;
       margin-bottom: 8px;
+      color: #282828;
     }}
     @media (max-width: 980px) {{
       .page {{ grid-template-columns: 1fr; }}
@@ -273,13 +353,13 @@ def shell_html() -> str:
         margin: 14px auto 24px;
       }}
       .article {{
-        padding: 28px 22px 36px;
+        padding: 24px 18px 34px;
         border-width: 3px;
         border-radius: 22px;
       }}
       .article-title {{ font-size: 28px; }}
       .article-paragraph,
-      .article-list-item {{ font-size: 17px; }}
+      .article-list-item {{ font-size: 16px; }}
     }}
   </style>
 </head>
@@ -288,13 +368,18 @@ def shell_html() -> str:
     <aside class="sidebar">
       <h1 class="brand">heyBill</h1>
       <p class="subtitle">直接读取 articles 下的文章，按时间倒排浏览，并一键复制富文本到微信公众号。</p>
-      <button id="copy-button" class="copy-button" type="button">复制当前文章</button>
       <div id="article-list" class="list"></div>
     </aside>
 
     <section class="viewer-shell">
       <div class="viewer-meta">
-        <p id="viewer-meta" class="viewer-title">正在加载文章…</p>
+        <div class="viewer-meta-main">
+          <p id="viewer-meta" class="viewer-title">正在加载文章…</p>
+        </div>
+        <div class="viewer-actions">
+          <button id="copy-title-button" class="meta-button meta-button-secondary" type="button">复制标题</button>
+          <button id="copy-button" class="meta-button meta-button-primary" type="button">复制当前文章</button>
+        </div>
       </div>
       <article id="article-root" class="article"></article>
     </section>
@@ -303,6 +388,15 @@ def shell_html() -> str:
   <script>
     let articles = [];
     let currentIndex = 0;
+
+    function flashButton(button, text) {{
+      const original = button.dataset.originalText || button.textContent;
+      button.dataset.originalText = original;
+      button.textContent = text;
+      window.setTimeout(() => {{
+        button.textContent = original;
+      }}, 1600);
+    }}
 
     async function fetchJSON(url) {{
       const response = await fetch(url);
@@ -354,57 +448,75 @@ def shell_html() -> str:
       }}
     }}
 
-    function buildPayload() {{
-      const article = document.getElementById("article-root");
-      const clone = article.cloneNode(true);
-      copyComputedStyles(article, clone);
-      const wrapper = document.createElement("div");
-      wrapper.appendChild(clone);
-      return {{
-        htmlPayload: wrapper.innerHTML,
-        textPayload: article.innerText
-      }};
-    }}
-
     async function copyArticle() {{
-      const payload = buildPayload();
-      const legacyCopy = () => {{
-        const listener = (event) => {{
-          event.preventDefault();
-          event.clipboardData.setData("text/html", payload.htmlPayload);
-          event.clipboardData.setData("text/plain", payload.textPayload);
-        }};
-        document.addEventListener("copy", listener, {{ once: true }});
-        const ok = document.execCommand("copy");
-        if (!ok) throw new Error("execCommand copy failed");
-      }};
+      const current = articles[currentIndex];
+      const response = await fetch(`/api/copy-payload?file=${{encodeURIComponent(current.file)}}`);
+      if (!response.ok) {{
+        throw new Error("copy article failed");
+      }}
+      const payload = await response.json();
 
-      if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {{
-        await navigator.clipboard.write([
-          new ClipboardItem({{
-            "text/html": new Blob([payload.htmlPayload], {{ type: "text/html" }}),
-            "text/plain": new Blob([payload.textPayload], {{ type: "text/plain" }})
-          }})
-        ]);
+      if (window.ClipboardItem && navigator.clipboard?.write) {{
+        const item = new ClipboardItem({{
+          "text/html": new Blob([payload.html], {{ type: "text/html" }}),
+          "text/plain": new Blob([payload.text], {{ type: "text/plain" }})
+        }});
+        await navigator.clipboard.write([item]);
         return;
       }}
 
-      legacyCopy();
+      const listener = (event) => {{
+        event.preventDefault();
+        event.clipboardData.setData("text/html", payload.html);
+        event.clipboardData.setData("text/plain", payload.text);
+      }};
+      document.addEventListener("copy", listener, {{ once: true }});
+      const ok = document.execCommand("copy");
+      if (!ok) {{
+        throw new Error("copy article failed");
+      }}
+    }}
+
+    async function copyTitle() {{
+      const current = articles[currentIndex];
+      const text = current.title;
+      if (navigator.clipboard && window.isSecureContext) {{
+        await navigator.clipboard.writeText(text);
+        return;
+      }}
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "readonly");
+      textarea.style.position = "absolute";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!ok) throw new Error("copy title failed");
     }}
 
     document.getElementById("copy-button").addEventListener("click", async () => {{
       const button = document.getElementById("copy-button");
-      const original = button.textContent;
       try {{
         await copyArticle();
-        button.textContent = "已复制";
+        flashButton(button, "已复制");
       }} catch (error) {{
         console.error(error);
-        button.textContent = "复制失败";
+        flashButton(button, "复制失败");
       }}
-      window.setTimeout(() => {{
-        button.textContent = original;
-      }}, 1600);
+    }});
+
+    document.getElementById("copy-title-button").addEventListener("click", async () => {{
+      const button = document.getElementById("copy-title-button");
+      try {{
+        await copyTitle();
+        flashButton(button, "标题已复制");
+      }} catch (error) {{
+        console.error(error);
+        flashButton(button, "复制失败");
+      }}
     }});
 
     async function boot() {{
@@ -449,6 +561,17 @@ class Handler(BaseHTTPRequestHandler):
             file_name = parse_qs(parsed.query).get("file", [""])[0]
             try:
                 payload = load_article_payload(file_name)
+            except FileNotFoundError:
+                self._send(b'{"error":"not found"}', "application/json; charset=utf-8", HTTPStatus.NOT_FOUND)
+                return
+            body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+            self._send(body, "application/json; charset=utf-8")
+            return
+
+        if parsed.path == "/api/copy-payload":
+            file_name = parse_qs(parsed.query).get("file", [""])[0]
+            try:
+                payload = load_copy_payload(file_name)
             except FileNotFoundError:
                 self._send(b'{"error":"not found"}', "application/json; charset=utf-8", HTTPStatus.NOT_FOUND)
                 return

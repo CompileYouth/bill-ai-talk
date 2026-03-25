@@ -13,6 +13,24 @@ from pathlib import Path
 IMAGE_RE = re.compile(r"!\[(.*?)\]\((.*?)\)")
 BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
 LINK_RE = re.compile(r"\[(.+?)\]\((.+?)\)")
+CODE_RE = re.compile(r"`([^`]+)`")
+
+WECHAT_INLINE = {
+    "article": "box-sizing:border-box;width:100%;max-width:720px;margin:0 auto;padding:0 12px;background:#ffffff;color:#24324a;font-size:16px;line-height:1.8;letter-spacing:0.01em;text-align:left;font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',sans-serif;",
+    "title": "margin:0 0 18px;font-size:30px;line-height:1.34;letter-spacing:-0.02em;color:#161616;font-weight:800;",
+    "heading": "margin:32px 0 12px;padding:0 0 10px;border-bottom:1px solid rgba(89,166,255,0.24);font-size:24px;line-height:1.42;color:#172033;font-weight:800;",
+    "subheading": "margin:26px 0 10px;font-size:20px;line-height:1.5;color:#1d2b42;font-weight:800;",
+    "paragraph": "margin:0 0 20px;font-size:16px;line-height:1.8;color:#24324a;",
+    "strong": "font-weight:800;color:#13233d;",
+    "code": "display:inline-block;padding:0.08em 0.42em;margin:0 0.08em;border-radius:8px;background:rgba(49,207,255,0.10);border:1px solid rgba(49,207,255,0.18);color:#0c5a72;font-size:0.92em;font-family:'SFMono-Regular','JetBrains Mono','Menlo',monospace;vertical-align:baseline;",
+    "link": "color:#2f6bff;text-decoration:none;border-bottom:1px solid rgba(47,107,255,0.28);",
+    "quote": "margin:0 0 16px;padding:12px 16px;background:linear-gradient(180deg,rgba(49,207,255,0.08),rgba(127,111,255,0.06));border-left:4px solid #31cfff;border-radius:16px;",
+    "quote_p": "margin:0;font-size:15px;line-height:1.7;color:#3c3730;",
+    "figure": "margin:34px 0;",
+    "image": "display:block;width:100%;height:auto;border-radius:18px;box-shadow:0 12px 28px rgba(38,28,10,0.10);",
+    "list": "margin:0 0 20px;padding-left:24px;",
+    "list_item": "margin:0 0 8px;font-size:16px;line-height:1.8;color:#24324a;",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -32,16 +50,29 @@ def escape(text: str) -> str:
 
 
 def inline_markup(text: str) -> str:
-    tokens: list[tuple[str, str]] = []
+    link_tokens: list[tuple[str, str]] = []
+    code_tokens: list[str] = []
 
     def store_link(match: re.Match[str]) -> str:
-        tokens.append((match.group(1), match.group(2)))
-        return f"@@LINK{len(tokens) - 1}@@"
+        link_tokens.append((match.group(1), match.group(2)))
+        return f"@@LINK{len(link_tokens) - 1}@@"
 
-    escaped = escape(LINK_RE.sub(store_link, text))
+    def store_code(match: re.Match[str]) -> str:
+        code_tokens.append(match.group(1))
+        return f"@@CODE{len(code_tokens) - 1}@@"
+
+    escaped = LINK_RE.sub(store_link, text)
+    escaped = CODE_RE.sub(store_code, escaped)
+    escaped = escape(escaped)
     escaped = BOLD_RE.sub(r"<strong>\1</strong>", escaped)
 
-    for idx, (label, href) in enumerate(tokens):
+    for idx, code in enumerate(code_tokens):
+        escaped = escaped.replace(
+            f"@@CODE{idx}@@",
+            f"<code>{escape(code)}</code>",
+        )
+
+    for idx, (label, href) in enumerate(link_tokens):
         escaped = escaped.replace(
             f"@@LINK{idx}@@",
             f'<a class="article-link" href="{html.escape(href, quote=True)}">{escape(label)}</a>',
@@ -89,8 +120,6 @@ def markdown_to_blocks(markdown_file: Path) -> list[str]:
             content = line[1:].lstrip()
             if content:
                 rendered.append(f"<p>{inline_markup(content)}</p>")
-            else:
-                rendered.append("<p>&nbsp;</p>")
         blocks.append(f'<blockquote class="article-quote">{"".join(rendered)}</blockquote>')
         quote_lines = []
 
@@ -174,6 +203,152 @@ def markdown_to_blocks(markdown_file: Path) -> list[str]:
     flush_quote()
     flush_list()
     return blocks
+
+
+def inline_markup_wechat(text: str) -> str:
+    link_tokens: list[tuple[str, str]] = []
+    code_tokens: list[str] = []
+
+    def store_link(match: re.Match[str]) -> str:
+        link_tokens.append((match.group(1), match.group(2)))
+        return f"@@LINK{len(link_tokens) - 1}@@"
+
+    def store_code(match: re.Match[str]) -> str:
+        code_tokens.append(match.group(1))
+        return f"@@CODE{len(code_tokens) - 1}@@"
+
+    escaped = LINK_RE.sub(store_link, text)
+    escaped = CODE_RE.sub(store_code, escaped)
+    escaped = escape(escaped)
+    escaped = BOLD_RE.sub(
+        rf'<strong style="{WECHAT_INLINE["strong"]}">\1</strong>',
+        escaped,
+    )
+
+    for idx, code in enumerate(code_tokens):
+        escaped = escaped.replace(
+            f"@@CODE{idx}@@",
+            f'<code style="{WECHAT_INLINE["code"]}">{escape(code)}</code>',
+        )
+
+    for idx, (label, href) in enumerate(link_tokens):
+        escaped = escaped.replace(
+            f"@@LINK{idx}@@",
+            f'<a href="{html.escape(href, quote=True)}" style="{WECHAT_INLINE["link"]}">{escape(label)}</a>',
+        )
+    return escaped
+
+
+def markdown_to_wechat_html(markdown_file: Path) -> str:
+    parts: list[str] = [f'<article style="{WECHAT_INLINE["article"]}">']
+    paragraph_lines: list[str] = []
+    quote_lines: list[str] = []
+    list_items: list[str] = []
+    in_list = False
+    lines = markdown_file.read_text(encoding="utf-8").splitlines()
+
+    def flush_paragraph() -> None:
+        if not paragraph_lines:
+            return
+        text = " ".join(line.strip() for line in paragraph_lines).strip()
+        if text:
+            parts.append(f'<p style="{WECHAT_INLINE["paragraph"]}">{inline_markup_wechat(text)}</p>')
+        paragraph_lines.clear()
+
+    def flush_quote() -> None:
+        nonlocal quote_lines
+        if not quote_lines:
+            return
+        rendered: list[str] = []
+        for idx, line in enumerate(quote_lines):
+            content = line[1:].lstrip()
+            if content:
+                margin = "margin-top:4px;" if idx > 0 else ""
+                rendered.append(
+                    f'<p style="{WECHAT_INLINE["quote_p"]}{margin}">{inline_markup_wechat(content)}</p>'
+                )
+        parts.append(f'<blockquote style="{WECHAT_INLINE["quote"]}">{"".join(rendered)}</blockquote>')
+        quote_lines = []
+
+    def flush_list() -> None:
+        nonlocal list_items, in_list
+        if not list_items:
+            return
+        items_html = "".join(
+            f'<li style="{WECHAT_INLINE["list_item"]}">{inline_markup_wechat(item)}</li>'
+            for item in list_items
+        )
+        parts.append(f'<ul style="{WECHAT_INLINE["list"]}">{items_html}</ul>')
+        list_items = []
+        in_list = False
+
+    for raw_line in lines:
+        stripped = raw_line.strip()
+
+        if not stripped:
+            flush_paragraph()
+            flush_quote()
+            flush_list()
+            continue
+
+        if stripped.startswith(">"):
+            flush_paragraph()
+            flush_list()
+            quote_lines.append(stripped)
+            continue
+
+        if stripped.startswith("# "):
+            flush_paragraph()
+            flush_quote()
+            flush_list()
+            parts.append(f'<h1 style="{WECHAT_INLINE["title"]}">{inline_markup_wechat(stripped[2:].strip())}</h1>')
+            continue
+
+        if stripped.startswith("## "):
+            flush_paragraph()
+            flush_quote()
+            flush_list()
+            parts.append(f'<h2 style="{WECHAT_INLINE["heading"]}">{inline_markup_wechat(stripped[3:].strip())}</h2>')
+            continue
+
+        if stripped.startswith("### "):
+            flush_paragraph()
+            flush_quote()
+            flush_list()
+            parts.append(
+                f'<h3 style="{WECHAT_INLINE["subheading"]}">{inline_markup_wechat(stripped[4:].strip())}</h3>'
+            )
+            continue
+
+        image_match = IMAGE_RE.fullmatch(stripped)
+        if image_match:
+            flush_paragraph()
+            flush_quote()
+            flush_list()
+            alt_text, image_path = image_match.groups()
+            data_uri = image_to_data_uri(markdown_file, image_path)
+            parts.append(
+                f'<figure style="{WECHAT_INLINE["figure"]}"><img src="{data_uri}" alt="{html.escape(alt_text, quote=True)}" style="{WECHAT_INLINE["image"]}" /></figure>'
+            )
+            continue
+
+        if stripped.startswith("- "):
+            flush_paragraph()
+            flush_quote()
+            in_list = True
+            list_items.append(stripped[2:].strip())
+            continue
+
+        if in_list:
+            flush_list()
+
+        paragraph_lines.append(stripped)
+
+    flush_paragraph()
+    flush_quote()
+    flush_list()
+    parts.append("</article>")
+    return "".join(parts)
 
 
 def build_html(blocks: list[str], title: str) -> str:
@@ -275,8 +450,8 @@ def build_html(blocks: list[str], title: str) -> str:
 
     .article-paragraph {{
       margin: 0 0 20px;
-      font-size: 18px;
-      line-height: 1.95;
+      font-size: 16px;
+      line-height: 1.8;
       color: var(--ink);
     }}
 
@@ -285,9 +460,22 @@ def build_html(blocks: list[str], title: str) -> str:
       color: var(--ink);
     }}
 
+    .article code {{
+      display: inline-block;
+      padding: 0.08em 0.42em;
+      margin: 0 0.08em;
+      border-radius: 8px;
+      background: rgba(217, 79, 43, 0.10);
+      border: 1px solid rgba(217, 79, 43, 0.18);
+      color: #7a220d;
+      font-size: 0.92em;
+      font-family: "SFMono-Regular", "JetBrains Mono", "Menlo", monospace;
+      vertical-align: baseline;
+    }}
+
     .article-quote {{
-      margin: 0 0 24px;
-      padding: 18px 20px;
+      margin: 0 0 14px;
+      padding: 12px 16px;
       background: #f5efe2;
       border-left: 6px solid var(--accent);
       border-radius: 16px;
@@ -295,17 +483,17 @@ def build_html(blocks: list[str], title: str) -> str:
 
     .article-quote p {{
       margin: 0;
-      font-size: 16px;
-      line-height: 1.85;
+      font-size: 15px;
+      line-height: 1.7;
       color: #403b35;
     }}
 
     .article-quote p + p {{
-      margin-top: 8px;
+      margin-top: 4px;
     }}
 
     .article-figure {{
-      margin: 28px 0;
+      margin: 34px 0;
     }}
 
     .article-image {{
@@ -321,8 +509,8 @@ def build_html(blocks: list[str], title: str) -> str:
     }}
 
     .article-list-item {{
-      font-size: 18px;
-      line-height: 1.9;
+      font-size: 16px;
+      line-height: 1.8;
       margin-bottom: 8px;
     }}
 
