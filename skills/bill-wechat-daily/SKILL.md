@@ -29,12 +29,13 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
    - if the user is still exploring a topic, provide judgment, framing, and outline
    - do not generate the final article unless the user explicitly asks to `生成文章`, `写成文章`, or equivalent
    - if the user asks for discussion, framing, or outline first, stay in outline mode until they explicitly approve moving to the full article
+   - if there is any ambiguity, bias toward outline-only mode rather than drafting the article prematurely
 3. Once the user explicitly asks for the article, write the final article directly into `articles/YYYY-MM-DD：中文标题.md`.
    - the `YYYY-MM-DD` part is the planned WeChat publish date, not the creation date
    - if the user inserts a new article into an earlier publish date, shift later publish dates as needed
 4. Keep the article publish-ready:
-   - title format: `# YYYY-MM-DD: 中文标题`
    - article filename format: `YYYY-MM-DD：中文标题.md`
+   - do not include the article title inside the article body; the body should start from `TL;DR` or正文内容 so copy/paste into WeChat does not duplicate the title
    - include `TL;DR` in the required 3-line blockquote format
    - keep the style sharp, readable, and shareable
 5. Generate 1-2 shareable正文配图 into `assets/YYYY-MM-DD-slug/`.
@@ -66,6 +67,8 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - The post should state the final judgment directly, not replay the conversation.
 - Background provided by the user is for your understanding; only keep what strengthens the reader-facing argument.
 - For short观点文, prefer 3-4 compact sections or paragraphs.
+- Default article length is about 500 Chinese characters unless the user explicitly asks for a longer or expanded piece.
+- Default behavior is to compress, not to elaborate. Keep only the sharpest judgment, one strong analogy or example, and one strong closing line.
 - Important claims may be bolded, but only when they are truly the central takeaway.
 - The article should make readers feel the account has a clear direction, not just a diary of thoughts.
 - After drafting, review whether the piece actually has a sharp enough shareable sentence and enough emotional or judgmental tension to spread.
