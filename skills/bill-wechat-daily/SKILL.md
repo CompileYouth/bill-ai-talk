@@ -30,6 +30,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
    - do not generate the final article unless the user explicitly asks to `生成文章`, `写成文章`, or equivalent
    - if the user asks for discussion, framing, or outline first, stay in outline mode until they explicitly approve moving to the full article
    - if there is any ambiguity, bias toward outline-only mode rather than drafting the article prematurely
+   - even when the topic is detailed and article-like, still stop at outline first unless the user explicitly asks for the full article in the current turn
 3. Once the user explicitly asks for the article, write the final article directly into `articles/YYYY-MM-DD：中文标题.md`.
    - the `YYYY-MM-DD` part is the planned WeChat publish date, not the creation date
    - if the user inserts a new article into an earlier publish date, shift later publish dates as needed
@@ -65,10 +66,25 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 ## Writing Rules That Matter Most
 
 - The post should state the final judgment directly, not replay the conversation.
+- When using acronyms or abbreviations that a general公众号读者 may not know, always write the full term the first time it appears before using the short form.
 - Background provided by the user is for your understanding; only keep what strengthens the reader-facing argument.
 - For short观点文, prefer 3-4 compact sections or paragraphs.
-- Default article length is about 500 Chinese characters unless the user explicitly asks for a longer or expanded piece.
-- Default behavior is to compress, not to elaborate. Keep only the sharpest judgment, one strong analogy or example, and one strong closing line.
+- There are two default article modes:
+- Short judgment post: for casual daily观点文, default to about 500 Chinese characters.
+- Deep explanatory post: when the topic is clearly about explaining a framework, technical evolution, or a layered model, default to writing it through clearly even without the 500-character limit.
+- For short judgment posts, default behavior is to compress, not to elaborate. Keep only the sharpest judgment, one strong analogy or example, and one strong closing line.
+- For deep explanatory posts, optimize first for clarity, structure, and getting the thing fully explained; do not mechanically force it back into a short post shape.
+- In deep explanatory posts, the opening hook is only a hook. Once the topic is introduced, stop repeating the hook and drive the body around the real thesis.
+- Do not let a lead-in example, comment, or trigger phrase steal the article's center of gravity. The body should quickly pivot to the main framework and stay there.
+- In deep explanatory posts, title, body, headings, and images must all point at the same thesis. If any one of them is still orbiting the hook instead of the thesis, the piece is structurally wrong.
+- Do not write section headings as writing-process labels like “再回头看...” or “最后落到...”. Headings must carry information, not narrate the author's structure.
+- Do not add an image just to reach a count. A weak second image is worse than having only one strong image.
+- For deep posts, check explicitly for four failure modes before considering the draft acceptable: the hook stealing focus, repeated restatement of the hook, empty section headings, and decorative images with no information gain.
+- In deep posts, control is often more important than adding material. Ask first what should be deleted, not only what else could be explained.
+- Do not “explain more” when the real problem is structure. Fix thesis, paragraph roles, headings, and image purpose before adding any new exposition.
+- Before showing a deep post to the user, self-check whether any sentence is quietly judging the reader instead of only stating the author's view.
+- Do not hand the user a structural half-draft. A deep post should be checked for title-body alignment, hook retreat, heading information value, and image necessity before it is shown.
+- The operating order for deep posts is fixed: first lock the thesis, then delete distractions, then build structure, and only then polish sentences. Do not reverse this order.
 - Important claims may be bolded, but only when they are truly the central takeaway.
 - The article should make readers feel the account has a clear direction, not just a diary of thoughts.
 - After drafting, review whether the piece actually has a sharp enough shareable sentence and enough emotional or judgmental tension to spread.
@@ -89,6 +105,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Place each image near the paragraph block it is actually reinforcing; do not insert an abstract image while the local text is still on a concrete example.
 - Do not cluster images together by default; distribute them across the article so each image lands on its own semantic beat.
 - Default to one unified background tone across article images unless a specific article truly needs an exception.
+- Keep image text colors consistent within the same article. Do not introduce a one-off highlight color unless there is a clear, deliberate article-wide color rule.
 - Watermark must be `@Bill的精神时光屋`.
 - Watermark should stay near the bottom-right corner while preserving a safe margin from borders and content.
 - Default to one consistent watermark position across same-style images; only move it when needed to avoid borders or content.
