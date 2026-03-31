@@ -92,6 +92,63 @@ do {
         r.finish()
         try save(r.image, "2")
     }
+
+    do {
+        let r = Renderer(width: 1200, height: 780, background: bg)
+        rounded(NSRect(x: 60, y: 48, width: 1080, height: 684), radius: 24, fill: .white, stroke: dark, line: 4)
+        drawText("公司 / 产品 / 代表模型", rect: NSRect(x: 120, y: 92, width: 960, height: 48), font: .systemFont(ofSize: 40, weight: .bold), color: dark, align: .center, lineHeight: 48)
+
+        let tableX: CGFloat = 100
+        let tableY: CGFloat = 170
+        let tableW: CGFloat = 1000
+        let headerH: CGFloat = 74
+        let rowH: CGFloat = 118
+        let col1: CGFloat = 210
+        let col2: CGFloat = 300
+        let col3: CGFloat = 490
+
+        func line(_ from: CGPoint, _ to: CGPoint, width: CGFloat = 2) {
+            let path = NSBezierPath()
+            path.move(to: from)
+            path.line(to: to)
+            dark.setStroke()
+            path.lineWidth = width
+            path.stroke()
+        }
+
+        rounded(NSRect(x: tableX, y: tableY, width: tableW, height: headerH + rowH * 3), radius: 18, fill: bg, stroke: dark, line: 2)
+        rounded(NSRect(x: tableX, y: tableY, width: tableW, height: headerH), radius: 18, fill: .white, stroke: dark, line: 2)
+        line(CGPoint(x: tableX + col1, y: tableY), CGPoint(x: tableX + col1, y: tableY + headerH + rowH * 3))
+        line(CGPoint(x: tableX + col1 + col2, y: tableY), CGPoint(x: tableX + col1 + col2, y: tableY + headerH + rowH * 3))
+        line(CGPoint(x: tableX, y: tableY + headerH), CGPoint(x: tableX + tableW, y: tableY + headerH))
+        line(CGPoint(x: tableX, y: tableY + headerH + rowH), CGPoint(x: tableX + tableW, y: tableY + headerH + rowH))
+        line(CGPoint(x: tableX, y: tableY + headerH + rowH * 2), CGPoint(x: tableX + tableW, y: tableY + headerH + rowH * 2))
+
+        func cellText(_ x: CGFloat, _ y: CGFloat, _ w: CGFloat, _ h: CGFloat, _ text: String, _ font: NSFont, align: NSTextAlignment = .left) {
+            drawText(text, rect: NSRect(x: x + 22, y: y + 18, width: w - 44, height: h - 36), font: font, color: dark, align: align, lineHeight: 34)
+        }
+
+        cellText(tableX, tableY, col1, headerH, "公司", .systemFont(ofSize: 28, weight: .bold))
+        cellText(tableX + col1, tableY, col2, headerH, "产品", .systemFont(ofSize: 28, weight: .bold))
+        cellText(tableX + col1 + col2, tableY, col3, headerH, "代表模型", .systemFont(ofSize: 28, weight: .bold))
+
+        let rows = [
+            ("OpenAI", "ChatGPT", "GPT-5.4"),
+            ("Anthropic", "Claude / Claude Code", "Claude Opus 4.6"),
+            ("Google", "Gemini", "Gemini 3.1 Pro")
+        ]
+
+        for (index, row) in rows.enumerated() {
+            let y = tableY + headerH + rowH * CGFloat(index)
+            cellText(tableX, y, col1, rowH, row.0, .systemFont(ofSize: 30, weight: .semibold))
+            cellText(tableX + col1, y, col2, rowH, row.1, .systemFont(ofSize: 30, weight: .semibold))
+            cellText(tableX + col1 + col2, y, col3, rowH, row.2, .systemFont(ofSize: 30, weight: .semibold))
+        }
+
+        watermark("@Bill的精神时光屋", rect: NSRect(x: 820, y: 698, width: 230, height: 24), color: muted)
+        r.finish()
+        try save(r.image, "3")
+    }
 } catch {
     fputs("Render failed: \(error)\n", stderr)
     exit(1)
