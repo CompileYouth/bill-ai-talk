@@ -31,34 +31,35 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
    - if the user asks for discussion, framing, or outline first, stay in outline mode until they explicitly approve moving to the full article
    - if there is any ambiguity, bias toward outline-only mode rather than drafting the article prematurely
    - even when the topic is detailed and article-like, still stop at outline first unless the user explicitly asks for the full article in the current turn
-3. Once the user explicitly asks for the article, write the first publishable draft into `candidates/`.
-   - do not put a new draft into `articles/` until the user has explicitly assigned a publish date
+3. When the user explicitly asks for the article and has already specified a publish date, write it directly into `articles/YYYY-MM-DD：中文标题.md`.
+4. When the user explicitly asks for the article but has not specified a publish date, write the first publishable draft into `candidates/`.
+   - do not put an undated draft into `articles/`
    - candidate files should be easy to enumerate so the user can say “把候选里的第 2 篇排到 2026-03-31”
-4. After the user assigns a publish date, promote that candidate into `articles/YYYY-MM-DD：中文标题.md`.
+5. After the user assigns a publish date, promote that candidate into `articles/YYYY-MM-DD：中文标题.md`.
    - the `YYYY-MM-DD` part is the planned WeChat publish date, not the creation date
    - if the user inserts a new article into an earlier publish date, shift later publish dates as needed
-5. Keep the article publish-ready:
+6. Keep the article publish-ready:
    - article filename format: `YYYY-MM-DD：中文标题.md`
    - do not include the article title inside the article body; the body should start from `TL;DR` or正文内容 so copy/paste into WeChat does not duplicate the title
    - include `TL;DR` in the required 3-line blockquote format
    - keep the style sharp, readable, and shareable
-6. Generate 1-2 shareable正文配图 into `assets/`.
-7. Copy upload images to `~/Downloads/1.jpg`, `~/Downloads/2.jpg`, and `3.jpg` only when needed.
-8. Generate the matching preview page with `scripts/build_wechat_page.py`, output under `preview/`.
-9. After generating the article, do a short review focused on one thing only: does the piece have shareability and传播潜力, or is it too flat to get data.
+7. Generate 1-2 shareable正文配图 into `assets/`.
+8. Copy upload images to `~/Downloads/1.jpg`, `~/Downloads/2.jpg`, and `3.jpg` only when needed.
+9. Generate the matching preview page with `scripts/build_wechat_page.py`, output under `preview/`.
+10. After generating the article, do a short review focused on one thing only: does the piece have shareability and传播潜力, or is it too flat to get data.
    - Review not only the article, but also whether each image and its placement reinforce the article's real core judgment.
-10. Once a candidate is assigned a publish date, update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
-11. After a candidate is assigned a publish date, default to automatically configuring the WeChat backend using Chrome default profile, existing login state, and the repo's publish defaults.
+11. Once a candidate is assigned a publish date, update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
+12. After a candidate is assigned a publish date, default to automatically configuring the WeChat backend using Chrome default profile, existing login state, and the repo's publish defaults.
     - author: `编译青春`
     - reward: enabled
     - original: enabled
     - collection: `AI闲谈`
     - scheduled publish time: `08:00`
     - only stop for user input when the Chrome login state has expired and scanning is required
-12. If a new preference is stable rather than article-specific, update this skill immediately.
+13. If a new preference is stable rather than article-specific, update this skill immediately.
     - always update both copies: the live local skill under `~/.codex/skills/` and the mirrored copy under `skills/bill-wechat-daily/`
    - do not wait for an extra reminder; after each substantial discussion, proactively extract and store stable rules, priorities, and strategic judgments
-13. When the user says `提交`, treat it as `commit + push` without asking again.
+14. When the user says `提交`, treat it as `commit + push` without asking again.
 
 ## Execution Discipline
 
