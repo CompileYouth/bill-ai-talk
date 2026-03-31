@@ -31,24 +31,34 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
    - if the user asks for discussion, framing, or outline first, stay in outline mode until they explicitly approve moving to the full article
    - if there is any ambiguity, bias toward outline-only mode rather than drafting the article prematurely
    - even when the topic is detailed and article-like, still stop at outline first unless the user explicitly asks for the full article in the current turn
-3. Once the user explicitly asks for the article, write the final article directly into `articles/YYYY-MM-DD：中文标题.md`.
+3. Once the user explicitly asks for the article, write the first publishable draft into `candidates/`.
+   - do not put a new draft into `articles/` until the user has explicitly assigned a publish date
+   - candidate files should be easy to enumerate so the user can say “把候选里的第 2 篇排到 2026-03-31”
+4. After the user assigns a publish date, promote that candidate into `articles/YYYY-MM-DD：中文标题.md`.
    - the `YYYY-MM-DD` part is the planned WeChat publish date, not the creation date
    - if the user inserts a new article into an earlier publish date, shift later publish dates as needed
-4. Keep the article publish-ready:
+5. Keep the article publish-ready:
    - article filename format: `YYYY-MM-DD：中文标题.md`
    - do not include the article title inside the article body; the body should start from `TL;DR` or正文内容 so copy/paste into WeChat does not duplicate the title
    - include `TL;DR` in the required 3-line blockquote format
    - keep the style sharp, readable, and shareable
-5. Generate 1-2 shareable正文配图 into `assets/YYYY-MM-DD-slug/`.
-6. Copy upload images to `~/Downloads/1.jpg`, `~/Downloads/2.jpg`, and `3.jpg` only when needed.
-7. Generate the matching preview page with `scripts/build_wechat_page.py`, output under `preview/`.
-8. After generating the article, do a short review focused on one thing only: does the piece have shareability and传播潜力, or is it too flat to get data.
+6. Generate 1-2 shareable正文配图 into `assets/`.
+7. Copy upload images to `~/Downloads/1.jpg`, `~/Downloads/2.jpg`, and `3.jpg` only when needed.
+8. Generate the matching preview page with `scripts/build_wechat_page.py`, output under `preview/`.
+9. After generating the article, do a short review focused on one thing only: does the piece have shareability and传播潜力, or is it too flat to get data.
    - Review not only the article, but also whether each image and its placement reinforce the article's real core judgment.
-9. Update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
-10. If a new preference is stable rather than article-specific, update this skill immediately.
+10. Once a candidate is assigned a publish date, update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
+11. After a candidate is assigned a publish date, default to automatically configuring the WeChat backend using Chrome default profile, existing login state, and the repo's publish defaults.
+    - author: `编译青春`
+    - reward: enabled
+    - original: enabled
+    - collection: `AI闲谈`
+    - scheduled publish time: `08:00`
+    - only stop for user input when the Chrome login state has expired and scanning is required
+12. If a new preference is stable rather than article-specific, update this skill immediately.
     - always update both copies: the live local skill under `~/.codex/skills/` and the mirrored copy under `skills/bill-wechat-daily/`
    - do not wait for an extra reminder; after each substantial discussion, proactively extract and store stable rules, priorities, and strategic judgments
-11. When the user says `提交`, treat it as `commit + push` without asking again.
+13. When the user says `提交`, treat it as `commit + push` without asking again.
 
 ## Execution Discipline
 
@@ -62,12 +72,15 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - If a change touches files, previews, trackers, scripts, and skill rules, assume they all need checking before declaring the work done.
 - Do not stop at “partially correct.” If a change obviously has related follow-through, do that follow-through proactively.
 - The same proactive rule applies to memory: if the user has clarified something that is obviously stable and reusable, store it immediately instead of waiting to be told.
+- Remove obvious throwaway test artifacts proactively once they are no longer needed; do not leave fake article rows, fake preview pages, or placeholder publish records behind waiting for the user to notice.
 
 ## Writing Rules That Matter Most
 
 - The post should state the final judgment directly, not replay the conversation.
 - When using acronyms or abbreviations that a general公众号读者 may not know, always write the full term the first time it appears before using the short form.
 - Background provided by the user is for your understanding; only keep what strengthens the reader-facing argument.
+- Distinguish strictly between writing requirements and article content. Explanations about why a claim is safer, what evidence standard is being used, or what the model is trying to avoid are internal guidance unless they naturally belong to the reader-facing argument.
+- Never leak backstage framing into the article. Sentences that sound like “I say this because…”, “the point here is…”, or “the real basis is…” are often process notes in disguise and should be cut unless the reader genuinely needs them.
 - For short观点文, prefer 3-4 compact sections or paragraphs.
 - There are two default article modes:
 - Short judgment post: for casual daily观点文, default to about 500 Chinese characters.
@@ -86,14 +99,24 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Do not hand the user a structural half-draft. A deep post should be checked for title-body alignment, hook retreat, heading information value, and image necessity before it is shown.
 - The operating order for deep posts is fixed: first lock the thesis, then delete distractions, then build structure, and only then polish sentences. Do not reverse this order.
 - Important claims may be bolded, but only when they are truly the central takeaway.
+- Inline code / backticks must be used sparingly. Do not wrap every product name or common term in backticks; keep them only for genuinely necessary emphasis, exact identifiers, commands, paths, or terms that would otherwise be ambiguous.
 - The article should make readers feel the account has a clear direction, not just a diary of thoughts.
 - After drafting, review whether the piece actually has a sharp enough shareable sentence and enough emotional or judgmental tension to spread.
 - The account's north star is not generic AI commentary; it is to build recognizable influence around AI-era individual upgrading and the road toward a one-person company.
 - When evaluating topics, prefer pieces that strengthen a repeatable account identity over isolated “interesting thoughts”.
+- When the user changes an article title, treat it as a full propagation change: update the article filename, preview filename, tracker entry, and any local site entry points in one pass before saying the change is done.
+- Do not use weak proxies like user scale or vendor self-description as proof that a product is first-tier. If an article makes a first-tier or ranking claim, prefer third-party cross-model evaluations and keep the wording restrained.
+- Meta-instructions about evidence standard, compliance, tone, or framing are writing constraints by default, not article sentences.
+- For product-comparison articles, prefer concrete product positioning and the user's real usage split over generic “who is strongest” framing.
+- When the user changes an article title, treat it as a full propagation change: update the article filename, preview filename, tracker entry, and anything the local site uses in one pass before saying it is changed.
+- Do not use user-growth, vendor self-description, or other weak proxies as proof that something is first-tier. If the article makes a ranking or first-tier claim, prefer third-party cross-model evaluations and keep the wording restrained.
+- When the user gives meta-instructions about evidence standard, compliance, tone, or framing, treat them as writing constraints by default, not as sentences for the article.
+- For product-comparison articles, prefer concrete product positioning and the user's real usage split over generic "who is strongest" framing.
 
 ## Image Rules That Matter Most
 
 - Images are for传播, not for re-explaining the whole article.
+- WeChat cover text should be extremely compressed: no more than 4 Chinese characters by default, and it should capture the article's core judgment as precisely as possible.
 - One image should carry one central judgment.
 - Prefer the article's real center of gravity, not a local example detail.
 - If an image sentence only restates a case detail, it is usually the wrong sentence.
@@ -102,10 +125,13 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Text on images should stay sparse and decisive.
 - Prefer plain, instantly understood wording on images; avoid internal jargon like “高摩擦任务” unless the reader can understand it at a glance.
 - If the reader would need the surrounding article context to understand the image sentence, the image copy is probably too weak.
+- When the article's center of gravity is an action path or direction, the image should not stop at a half-judgment reminder; it should carry both the problem and the direction.
 - Place each image near the paragraph block it is actually reinforcing; do not insert an abstract image while the local text is still on a concrete example.
 - Do not cluster images together by default; distribute them across the article so each image lands on its own semantic beat.
 - Default to one unified background tone across article images unless a specific article truly needs an exception.
 - Keep image text colors consistent within the same article. Do not introduce a one-off highlight color unless there is a clear, deliberate article-wide color rule.
+- When fixing rendering issues in an image, preserve the repository's established house style. Do not switch to a temporary font or visual system that makes the new image feel unrelated to the rest of the account.
+- Image line spacing must be judged visually, not mechanically. When adjacent lines use different font sizes, adjust spacing by perceived visual gap rather than equal numeric offsets.
 - Watermark must be `@Bill的精神时光屋`.
 - Watermark should stay near the bottom-right corner while preserving a safe margin from borders and content.
 - Default to one consistent watermark position across same-style images; only move it when needed to avoid borders or content.
