@@ -77,6 +77,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 ## Writing Rules That Matter Most
 
 - The post should state the final judgment directly, not replay the conversation.
+- Titles should say the human meaning first and only then introduce any jargon or technical term inside the body when needed.
 - When using acronyms or abbreviations that a general公众号读者 may not know, always write the full term the first time it appears before using the short form.
 - Background provided by the user is for your understanding; only keep what strengthens the reader-facing argument.
 - Distinguish strictly between writing requirements and article content. Explanations about why a claim is safer, what evidence standard is being used, or what the model is trying to avoid are internal guidance unless they naturally belong to the reader-facing argument.
@@ -119,6 +120,9 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Do not use user-growth, vendor self-description, or other weak proxies as proof that something is first-tier. If the article makes a ranking or first-tier claim, prefer third-party cross-model evaluations and keep the wording restrained.
 - When the user gives meta-instructions about evidence standard, compliance, tone, or framing, treat them as writing constraints by default, not as sentences for the article.
 - For product-comparison articles, prefer concrete product positioning and the user's real usage split over generic "who is strongest" framing.
+- Unscheduled drafts must be publishable on their own. Do not rely on relative timing phrases like “昨天/前天/上一期” inside an unscheduled article.
+- Review unscheduled drafts to the same standard as scheduled articles. Do not lower the bar just because the send date is not fixed yet.
+- Only persist cross-article rules into long-term memory. Do not store one-off structure choices or single-article quirks as reusable defaults.
 
 ## Image Rules That Matter Most
 
@@ -139,6 +143,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Keep image text colors consistent within the same article. Do not introduce a one-off highlight color unless there is a clear, deliberate article-wide color rule.
 - When fixing rendering issues in an image, preserve the repository's established house style. Do not switch to a temporary font or visual system that makes the new image feel unrelated to the rest of the account.
 - Image line spacing must be judged visually, not mechanically. When adjacent lines use different font sizes, adjust spacing by perceived visual gap rather than equal numeric offsets.
+- When rendering image text, default to a generous safety area. Text boxes and line heights should err on the loose side, not the tight side, and no line may be visibly cropped.
 - Watermark must be `@Bill的精神时光屋`.
 - Watermark should stay near the bottom-right corner while preserving a safe margin from borders and content.
 - Default to one consistent watermark position across same-style images; only move it when needed to avoid borders or content.
