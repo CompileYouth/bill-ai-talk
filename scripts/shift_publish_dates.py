@@ -38,7 +38,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_articles(root: Path) -> list[ArticleItem]:
     items: list[ArticleItem] = []
-    for path in sorted((root / "articles").glob("*.md")):
+    for path in sorted((root / "articles").rglob("*.md")):
         match = ARTICLE_RE.match(path.name)
         if match:
             text = path.read_text(encoding="utf-8")
@@ -78,8 +78,10 @@ def main() -> None:
         old_asset_stem = item.asset_stem
         new_asset_stem = item.new_asset_stem(new_day)
 
-        old_article = root / "articles" / f"{old_stem}.md"
-        new_article = root / "articles" / f"{new_stem}.md"
+        old_article = root / "articles" / item.old_date.isoformat()[:7] / f"{old_stem}.md"
+        new_article_dir = root / "articles" / new_day.isoformat()[:7]
+        new_article_dir.mkdir(parents=True, exist_ok=True)
+        new_article = new_article_dir / f"{new_stem}.md"
         old_assets = root / "assets" / old_asset_stem
         new_assets = root / "assets" / new_asset_stem
         if old_assets.exists():
@@ -95,7 +97,7 @@ def main() -> None:
         new_stem = item.new_stem(new_day)
         old_asset_stem = item.asset_stem
         new_asset_stem = item.new_asset_stem(new_day)
-        article_path = root / "articles" / f"{new_stem}.md"
+        article_path = root / "articles" / new_day.isoformat()[:7] / f"{new_stem}.md"
 
         text = article_path.read_text(encoding="utf-8")
         text = update_heading(text, new_day)
@@ -105,11 +107,11 @@ def main() -> None:
 
         if tracker_text:
             pattern = re.compile(
-                rf"^\| {re.escape(item.old_date.isoformat())} \|(?P<title>.+?)\| `articles/{re.escape(old_stem)}\.md` \|(?P<tail>.*)$",
+                rf"^\| {re.escape(item.old_date.isoformat())} \|(?P<title>.+?)\| `articles/{re.escape(item.old_date.isoformat()[:7])}/{re.escape(old_stem)}\.md` \|(?P<tail>.*)$",
                 re.MULTILINE,
             )
             tracker_text = pattern.sub(
-                rf"| {new_day.isoformat()} |\g<title>| `articles/{new_stem}.md` |\g<tail>",
+                rf"| {new_day.isoformat()} |\g<title>| `articles/{new_day.isoformat()[:7]}/{new_stem}.md` |\g<tail>",
                 tracker_text,
                 count=1,
             )

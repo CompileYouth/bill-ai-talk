@@ -6,6 +6,7 @@ import argparse
 import html
 import json
 import re
+from datetime import date
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -20,19 +21,27 @@ ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
 PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
 
 
+def _iter_article_paths() -> list[Path]:
+    return sorted(
+        [path for path in ARTICLES_DIR.rglob("*.md") if path.is_file() and path.name != ".DS_Store"],
+        reverse=True,
+    )
+
+
 def load_article_list() -> list[dict[str, str]]:
-    scheduled: list[dict[str, str]] = []
+    scheduled_by_month: dict[str, list[dict[str, str]]] = {}
     pending: list[dict[str, str]] = []
-    for path in sorted(ARTICLES_DIR.glob("*.md"), reverse=True):
-        if path.name == ".DS_Store":
-            continue
+    for path in _iter_article_paths():
         match = ARTICLE_RE.match(path.name)
         if match:
-            scheduled.append(
+            month = match.group("day")[:7]
+            scheduled_by_month.setdefault(month, []).append(
                 {
                     "date": match.group("day"),
                     "title": match.group("title"),
-                    "file": path.name,
+                    "file": path.relative_to(ARTICLES_DIR).as_posix(),
+                    "month": month,
+                    "pending": False,
                 }
             )
             continue
@@ -42,10 +51,25 @@ def load_article_list() -> list[dict[str, str]]:
                 {
                     "date": "未排期",
                     "title": pending_match.group("title"),
-                    "file": path.name,
+                    "file": path.relative_to(ARTICLES_DIR).as_posix(),
+                    "month": "未排期",
+                    "pending": True,
                 }
             )
-    return pending + scheduled
+
+    current_month = date.today().isoformat()[:7]
+    groups: list[dict[str, object]] = []
+    if pending:
+        groups.append({"label": "候选", "expanded": True, "articles": pending})
+    for month in sorted(scheduled_by_month.keys(), reverse=True):
+        groups.append(
+            {
+                "label": month,
+                "expanded": month == current_month,
+                "articles": scheduled_by_month[month],
+            }
+        )
+    return groups
 
 
 def load_article_payload(file_name: str) -> dict[str, str]:
@@ -69,7 +93,7 @@ def load_article_payload(file_name: str) -> dict[str, str]:
     return {
         "date": match.group("day") if match else "未排期",
         "title": title,
-        "file": path.name,
+        "file": path.relative_to(ARTICLES_DIR).as_posix(),
         "html": "\n".join(blocks),
     }
 def load_copy_payload(file_name: str) -> dict[str, str]:
@@ -136,13 +160,16 @@ def shell_html() -> str:
       width: min(1400px, calc(100vw - 32px));
       margin: 24px auto;
       display: grid;
-      grid-template-columns: 320px minmax(0, 1fr);
+      grid-template-columns: minmax(320px, 320px) minmax(0, 1fr);
       gap: 20px;
       align-items: start;
     }}
     .sidebar {{
       position: sticky;
       top: 20px;
+      width: 320px;
+      min-width: 320px;
+      max-width: 320px;
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: 24px;
@@ -170,9 +197,58 @@ def shell_html() -> str:
       display: flex;
       flex-direction: column;
       gap: 10px;
+      width: 100%;
       max-height: calc(100vh - 170px);
-      overflow: auto;
-      padding-right: 4px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: transparent transparent;
+    }}
+    .list::-webkit-scrollbar {{
+      width: 7px;
+    }}
+    .list::-webkit-scrollbar-track {{
+      background: transparent;
+    }}
+    .list::-webkit-scrollbar-thumb {{
+      border-radius: 999px;
+      background: transparent;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }}
+    .sidebar:hover .list {{
+      scrollbar-color: rgba(66, 112, 255, 0.22) transparent;
+    }}
+    .sidebar:hover .list::-webkit-scrollbar-thumb {{
+      background: linear-gradient(180deg, rgba(66, 112, 255, 0.30), rgba(49, 207, 255, 0.24));
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }}
+    .month-group {{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }}
+    .month-header {{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(66, 112, 255, 0.12);
+      border-radius: 16px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.72);
+      color: #244562;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+    }}
+    .month-body {{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }}
     .item {{
       width: 100%;
@@ -263,6 +339,11 @@ def shell_html() -> str:
       border: 1px solid rgba(66, 112, 255, 0.18);
       background: rgba(255,255,255,0.8);
       color: #245177;
+    }}
+    .meta-button-tertiary {{
+      border: 1px solid rgba(36,81,119,0.16);
+      background: rgba(255,251,244,0.92);
+      color: #244562;
     }}
     .article {{
       padding: 40px 28px 50px;
@@ -390,6 +471,7 @@ def shell_html() -> str:
           <p id="viewer-meta" class="viewer-title">正在加载文章…</p>
         </div>
         <div class="viewer-actions">
+          <button id="schedule-button" class="meta-button meta-button-tertiary" type="button" style="display:none">分配发送日期</button>
           <button id="copy-title-button" class="meta-button meta-button-secondary" type="button">复制标题</button>
           <button id="copy-button" class="meta-button meta-button-primary" type="button">复制当前文章</button>
         </div>
@@ -399,7 +481,8 @@ def shell_html() -> str:
   </div>
 
   <script>
-    let articles = [];
+    let groups = [];
+    let flatArticles = [];
     let currentIndex = 0;
 
     function flashButton(button, text) {{
@@ -423,28 +506,60 @@ def shell_html() -> str:
       const list = document.getElementById("article-list");
       list.innerHTML = "";
 
-      articles.forEach((article, index) => {{
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `item${{index === currentIndex ? " active" : ""}}`;
-        button.innerHTML = `
-          <span class="item-date">${{article.date}}</span>
-          <span class="item-title">${{article.title}}</span>
+      groups.forEach((group) => {{
+        const wrapper = document.createElement("section");
+        wrapper.className = "month-group";
+
+        const header = document.createElement("button");
+        header.type = "button";
+        header.className = "month-header";
+        header.setAttribute("data-expanded", group.expanded ? "true" : "false");
+        header.innerHTML = `
+          <span>${{group.label}}</span>
+          <span>${{group.expanded ? "−" : "+"}}</span>
         `;
-        button.addEventListener("click", async () => {{
-          currentIndex = index;
-          await renderCurrentArticle();
+
+        const body = document.createElement("div");
+        body.className = "month-body";
+        if (!group.expanded) body.style.display = "none";
+
+        header.addEventListener("click", () => {{
+          group.expanded = !group.expanded;
           renderList();
         }});
-        list.appendChild(button);
+
+        group.articles.forEach((article) => {{
+          const index = flatArticles.findIndex((item) => item.file === article.file);
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `item${{index === currentIndex ? " active" : ""}}`;
+          button.innerHTML = `
+            <span class="item-date">${{article.date}}</span>
+            <span class="item-title">${{article.title}}</span>
+          `;
+          button.addEventListener("click", async () => {{
+            currentIndex = index;
+            await renderCurrentArticle();
+            renderList();
+          }});
+          body.appendChild(button);
+        }});
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(body);
+        list.appendChild(wrapper);
       }});
     }}
 
     async function renderCurrentArticle() {{
-      const current = articles[currentIndex];
+      const current = flatArticles[currentIndex];
       const payload = await fetchJSON(`/api/article?file=${{encodeURIComponent(current.file)}}`);
       document.getElementById("article-root").innerHTML = payload.html;
       document.getElementById("viewer-meta").textContent = `${{payload.date}} · ${{payload.title}}`;
+      const isPending = current.pending;
+      document.getElementById("schedule-button").style.display = isPending ? "inline-flex" : "none";
+      document.getElementById("copy-title-button").style.display = isPending ? "none" : "inline-flex";
+      document.getElementById("copy-button").style.display = isPending ? "none" : "inline-flex";
     }}
 
     function copyComputedStyles(sourceNode, targetNode) {{
@@ -462,7 +577,7 @@ def shell_html() -> str:
     }}
 
     async function copyArticle() {{
-      const current = articles[currentIndex];
+      const current = flatArticles[currentIndex];
       const response = await fetch(`/api/copy-payload?file=${{encodeURIComponent(current.file)}}`);
       if (!response.ok) {{
         throw new Error("copy article failed");
@@ -491,7 +606,7 @@ def shell_html() -> str:
     }}
 
     async function copyTitle() {{
-      const current = articles[currentIndex];
+      const current = flatArticles[currentIndex];
       const text = current.title;
       if (navigator.clipboard && window.isSecureContext) {{
         await navigator.clipboard.writeText(text);
@@ -532,8 +647,34 @@ def shell_html() -> str:
       }}
     }});
 
+    document.getElementById("schedule-button").addEventListener("click", async () => {{
+      const current = flatArticles[currentIndex];
+      const value = window.prompt("请输入发送日期（YYYY-MM-DD）");
+      if (!value) return;
+      const button = document.getElementById("schedule-button");
+      try {{
+        const response = await fetch("/api/schedule", {{
+          method: "POST",
+          headers: {{ "Content-Type": "application/json" }},
+          body: JSON.stringify({{ file: current.file, date: value }})
+        }});
+        if (!response.ok) throw new Error("schedule failed");
+        const result = await response.json();
+        groups = await fetchJSON("/api/articles");
+        flatArticles = groups.flatMap((group) => group.articles);
+        currentIndex = Math.max(flatArticles.findIndex((item) => item.file === result.file), 0);
+        await renderCurrentArticle();
+        renderList();
+        flashButton(button, "已分配");
+      }} catch (error) {{
+        console.error(error);
+        flashButton(button, "分配失败");
+      }}
+    }});
+
     async function boot() {{
-      articles = await fetchJSON("/api/articles");
+      groups = await fetchJSON("/api/articles");
+      flatArticles = groups.flatMap((group) => group.articles);
       await renderCurrentArticle();
       renderList();
     }}
@@ -593,6 +734,30 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         self._send(b"Not Found", "text/plain; charset=utf-8", HTTPStatus.NOT_FOUND)
+
+    def do_POST(self) -> None:
+        parsed = urlparse(self.path)
+        if parsed.path != "/api/schedule":
+            self._send(b"Not Found", "text/plain; charset=utf-8", HTTPStatus.NOT_FOUND)
+            return
+
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            raw = self.rfile.read(length)
+            payload = json.loads(raw.decode("utf-8"))
+            from publish_pipeline import schedule_article
+
+            article_path = schedule_article(payload["file"], payload["date"])
+            body = json.dumps(
+                {
+                    "file": article_path.relative_to(ARTICLES_DIR).as_posix(),
+                    "date": payload["date"],
+                },
+                ensure_ascii=False,
+            ).encode("utf-8")
+            self._send(body, "application/json; charset=utf-8")
+        except Exception:
+            self._send(b'{"error":"schedule failed"}', "application/json; charset=utf-8", HTTPStatus.BAD_REQUEST)
 
     def log_message(self, format: str, *args) -> None:
         return

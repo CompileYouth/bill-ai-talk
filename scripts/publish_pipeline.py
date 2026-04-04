@@ -18,10 +18,12 @@ PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
 TRACKER_ROW_RE = re.compile(
     r"^\| (?P<date>\d{4}-\d{2}-\d{2}) \| (?P<title>.+?) \| `(?P<article>articles/.+?\.md)` \| (?P<metrics>.+) \|$"
 )
+ASSET_PATH_RE = re.compile(r"(?P<prefix>\.\./assets/|\.\./\.\./assets/)(?P<stem>[^/]+)/")
+DATE_PREFIX_RE = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2})(?P<rest>.*)$")
 
 
 def _shift_if_needed(publish_date: str) -> None:
-    if any(path.name.startswith(f"{publish_date}：") for path in ARTICLES_DIR.glob("*.md")):
+    if any(path.name.startswith(f"{publish_date}：") for path in ARTICLES_DIR.rglob("*.md")):
         subprocess.run(
             [sys.executable, str(ROOT / "scripts" / "shift_publish_dates.py"), publish_date, "1"],
             cwd=ROOT,
@@ -48,8 +50,9 @@ def _insert_tracker_row(publish_date: str, title: str, article_path: Path) -> No
             if not seen_table or not rows:
                 header.append(line)
 
-    new_row = f"| {publish_date} | {title} | `articles/{article_path.name}` |  |  |  |  |  |  |"
-    rows = [row for row in rows if f"`articles/{article_path.name}`" not in row]
+    rel_path = article_path.relative_to(ROOT).as_posix()
+    new_row = f"| {publish_date} | {title} | `{rel_path}` |  |  |  |  |  |  |"
+    rows = [row for row in rows if f"`{rel_path}`" not in row]
     rows.append(new_row)
     rows.sort(key=lambda row: TRACKER_ROW_RE.match(row).group("date") if TRACKER_ROW_RE.match(row) else "9999-99-99")
     TRACKER_PATH.write_text("\n".join(header + rows) + "\n", encoding="utf-8")
@@ -62,9 +65,28 @@ def schedule_article(article_file: str, publish_date: str) -> Path:
         raise FileNotFoundError(f"Unscheduled article not found: {article_file}")
 
     title = match.group("title")
+    original_text = old_path.read_text(encoding="utf-8")
     _shift_if_needed(publish_date)
-    new_path = ARTICLES_DIR / f"{publish_date}：{title}.md"
-    old_path.rename(new_path)
+    month_dir = ARTICLES_DIR / publish_date[:7]
+    month_dir.mkdir(parents=True, exist_ok=True)
+    new_path = month_dir / f"{publish_date}：{title}.md"
+
+    asset_stems = list(dict.fromkeys(ASSET_PATH_RE.findall(original_text)))
+    updated_text = original_text.replace("../assets/", "../../assets/")
+
+    if asset_stems:
+        old_asset_stem = asset_stems[0][1]
+        date_match = DATE_PREFIX_RE.match(old_asset_stem)
+        if date_match:
+            new_asset_stem = f"{publish_date}{date_match.group('rest')}"
+            old_asset_dir = ROOT / "assets" / old_asset_stem
+            new_asset_dir = ROOT / "assets" / new_asset_stem
+            if old_asset_dir.exists() and old_asset_dir != new_asset_dir:
+                old_asset_dir.rename(new_asset_dir)
+            updated_text = updated_text.replace(old_asset_stem, new_asset_stem)
+
+    new_path.write_text(updated_text, encoding="utf-8")
+    old_path.unlink()
     _insert_tracker_row(publish_date, title, new_path)
     return new_path
 

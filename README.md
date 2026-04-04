@@ -15,7 +15,7 @@
 
 目录说明：
 
-- `articles/`：正式文章
+- `articles/`：正式文章，按月份分组保存；未排期文章直接放在根目录
 - `assets/`：文章配图等静态资源
 - `heybill`：从 `articles/` 实时渲染的本地预览与复制入口
 - `scripts/`：通用工具脚本
@@ -29,8 +29,8 @@
 - `scripts/build_wechat_page.py`：把 Markdown 文章转成可复制到公众号的本地网页
 - `scripts/run_heybill.py`：启动 `heyBill` 本地服务，直接读取 `articles/` 并一键复制富文本
 - `scripts/shift_publish_dates.py`：当插入新文章时，顺延后续文章的发送日期
-- `scripts/publish_pipeline.py`：候选文章转正式文章并更新排期
-- `scripts/publish_candidate.py`：一条命令完成候选排期，并可继续触发公众号发布
+- `scripts/publish_pipeline.py`：未排期文章转正式文章并更新排期
+- `scripts/publish_candidate.py`：一条命令完成未排期文章排期，并可继续触发公众号发布
 - `scripts/wechat_publisher.py`：公众号后台与封面图自动发布辅助脚本
 - 每篇文章对应的配图生成模板放在各自的 `assets/<date-slug>/render.swift`
 
@@ -42,7 +42,7 @@
 
 当前默认交付：
 
-- `articles/` 中统一保存文章；已排期文章使用 `YYYY-MM-DD：标题.md`，未排期文章使用 `未排期：标题.md`
+- `articles/` 中统一保存文章；已排期文章放在 `articles/YYYY-MM/YYYY-MM-DD：标题.md`，未排期文章使用 `articles/未排期：标题.md`
 - `assets/` 中保存正文配图和公众号横版封面
 - 每篇文章默认提供 1 张 `2.35:1` 的公众号封面图
 - 每篇文章默认额外复制 3 张上传用图片到本地 `~/Downloads`

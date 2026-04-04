@@ -31,13 +31,14 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
    - if the user asks for discussion, framing, or outline first, stay in outline mode until they explicitly approve moving to the full article
    - if there is any ambiguity, bias toward outline-only mode rather than drafting the article prematurely
    - even when the topic is detailed and article-like, still stop at outline first unless the user explicitly asks for the full article in the current turn
-3. When the user explicitly asks for the article and has already specified a publish date, write it directly into `articles/YYYY-MM-DD：中文标题.md`.
+3. When the user explicitly asks for the article and has already specified a publish date, write it directly into `articles/YYYY-MM/YYYY-MM-DD：中文标题.md`.
 4. When the user explicitly asks for the article but has not specified a publish date, write it directly into `articles/` as `未排期：中文标题.md`.
-5. After the user assigns a publish date, rename that unscheduled article into `articles/YYYY-MM-DD：中文标题.md`.
+5. After the user assigns a publish date, rename that unscheduled article into `articles/YYYY-MM/YYYY-MM-DD：中文标题.md`.
    - the `YYYY-MM-DD` part is the planned WeChat publish date, not the creation date
    - if the user inserts a new article into an earlier publish date, shift later publish dates as needed
 6. Keep the article publish-ready:
-   - article filename format: `YYYY-MM-DD：中文标题.md`
+   - scheduled article filename format: `articles/YYYY-MM/YYYY-MM-DD：中文标题.md`
+   - unscheduled article filename format: `articles/未排期：中文标题.md`
    - do not include the article title inside the article body; the body should start from `TL;DR` or正文内容 so copy/paste into WeChat does not duplicate the title
    - include `TL;DR` in the required 3-line blockquote format
    - keep the style sharp, readable, and shareable
