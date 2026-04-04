@@ -17,24 +17,35 @@ import build_wechat_page as wechat
 ROOT = Path(__file__).resolve().parent.parent
 ARTICLES_DIR = ROOT / "articles"
 ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
+PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
 
 
 def load_article_list() -> list[dict[str, str]]:
-    items: list[dict[str, str]] = []
+    scheduled: list[dict[str, str]] = []
+    pending: list[dict[str, str]] = []
     for path in sorted(ARTICLES_DIR.glob("*.md"), reverse=True):
         if path.name == ".DS_Store":
             continue
         match = ARTICLE_RE.match(path.name)
-        if not match:
+        if match:
+            scheduled.append(
+                {
+                    "date": match.group("day"),
+                    "title": match.group("title"),
+                    "file": path.name,
+                }
+            )
             continue
-        items.append(
-            {
-                "date": match.group("day"),
-                "title": match.group("title"),
-                "file": path.name,
-            }
-        )
-    return items
+        pending_match = PENDING_RE.match(path.name)
+        if pending_match:
+            pending.append(
+                {
+                    "date": "未排期",
+                    "title": pending_match.group("title"),
+                    "file": path.name,
+                }
+            )
+    return pending + scheduled
 
 
 def load_article_payload(file_name: str) -> dict[str, str]:
@@ -43,11 +54,12 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         raise FileNotFoundError(file_name)
 
     match = ARTICLE_RE.match(path.name)
-    if not match:
+    pending_match = PENDING_RE.match(path.name)
+    if not match and not pending_match:
         raise FileNotFoundError(file_name)
 
     blocks = wechat.markdown_to_blocks(path)
-    title = match.group("title")
+    title = match.group("title") if match else pending_match.group("title")
     for block in blocks:
         if block.startswith('<h1 class="article-title">'):
             title = re.sub(r"^<h1 class=\"article-title\">|</h1>$", "", block)
@@ -55,7 +67,7 @@ def load_article_payload(file_name: str) -> dict[str, str]:
             break
 
     return {
-        "date": match.group("day"),
+        "date": match.group("day") if match else "未排期",
         "title": title,
         "file": path.name,
         "html": "\n".join(blocks),
@@ -66,7 +78,8 @@ def load_copy_payload(file_name: str) -> dict[str, str]:
         raise FileNotFoundError(file_name)
 
     match = ARTICLE_RE.match(path.name)
-    if not match:
+    pending_match = PENDING_RE.match(path.name)
+    if not match and not pending_match:
         raise FileNotFoundError(file_name)
 
     html_payload = wechat.markdown_to_wechat_html(path)

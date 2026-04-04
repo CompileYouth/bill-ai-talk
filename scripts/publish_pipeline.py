@@ -2,73 +2,31 @@
 
 from __future__ import annotations
 
+import argparse
 import re
-import shutil
 import subprocess
 import sys
-from dataclasses import dataclass
-from datetime import date
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_DIR))
 
-ROOT = SCRIPT_DIR.parent
-CANDIDATES_DIR = ROOT / "candidates"
+ROOT = Path(__file__).resolve().parent.parent
 ARTICLES_DIR = ROOT / "articles"
-ASSETS_DIR = ROOT / "assets"
 TRACKER_PATH = ROOT / "publishing-tracker.md"
 
-CANDIDATE_RE = re.compile(r"^(?P<id>\d{8}-\d{6})：(?P<title>.+)\.md$")
-ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
+SCHEDULED_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
+PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
 TRACKER_ROW_RE = re.compile(
     r"^\| (?P<date>\d{4}-\d{2}-\d{2}) \| (?P<title>.+?) \| `(?P<article>articles/.+?\.md)` \| (?P<metrics>.+) \|$"
 )
 
 
-@dataclass
-class CandidateItem:
-    candidate_id: str
-    title: str
-    markdown_path: Path
-
-    @property
-    def asset_dir(self) -> Path:
-        return ASSETS_DIR / "candidates" / self.candidate_id
-
-def ensure_candidate_dirs() -> None:
-    CANDIDATES_DIR.mkdir(parents=True, exist_ok=True)
-    (ASSETS_DIR / "candidates").mkdir(parents=True, exist_ok=True)
-
-
-def list_candidates() -> list[CandidateItem]:
-    ensure_candidate_dirs()
-    items: list[CandidateItem] = []
-    for path in sorted(CANDIDATES_DIR.glob("*.md"), reverse=True):
-        match = CANDIDATE_RE.match(path.name)
-        if not match:
-            continue
-        items.append(
-            CandidateItem(
-                candidate_id=match.group("id"),
-                title=match.group("title"),
-                markdown_path=path,
-            )
+def _shift_if_needed(publish_date: str) -> None:
+    if any(path.name.startswith(f"{publish_date}：") for path in ARTICLES_DIR.glob("*.md")):
+        subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "shift_publish_dates.py"), publish_date, "1"],
+            cwd=ROOT,
+            check=True,
         )
-    return items
-
-
-def candidate_by_name(file_name: str) -> CandidateItem:
-    path = CANDIDATES_DIR / file_name
-    match = CANDIDATE_RE.match(path.name)
-    if not path.exists() or not match:
-        raise FileNotFoundError(f"Candidate not found: {file_name}")
-    return CandidateItem(
-        candidate_id=match.group("id"),
-        title=match.group("title"),
-        markdown_path=path,
-    )
 
 
 def _insert_tracker_row(publish_date: str, title: str, article_path: Path) -> None:
@@ -89,57 +47,44 @@ def _insert_tracker_row(publish_date: str, title: str, article_path: Path) -> No
         else:
             if not seen_table or not rows:
                 header.append(line)
-            else:
-                # No extra content currently expected after table.
-                pass
 
-    new_row = (
-        f"| {publish_date} | {title} | "
-        f"`articles/{article_path.name}` |  |  |  |  |  |  |"
-    )
+    new_row = f"| {publish_date} | {title} | `articles/{article_path.name}` |  |  |  |  |  |  |"
     rows = [row for row in rows if f"`articles/{article_path.name}`" not in row]
     rows.append(new_row)
-
-    def row_date(row: str) -> str:
-        match = TRACKER_ROW_RE.match(row)
-        return match.group("date") if match else "9999-99-99"
-
-    rows.sort(key=row_date)
+    rows.sort(key=lambda row: TRACKER_ROW_RE.match(row).group("date") if TRACKER_ROW_RE.match(row) else "9999-99-99")
     TRACKER_PATH.write_text("\n".join(header + rows) + "\n", encoding="utf-8")
 
 
-def _shift_if_needed(publish_date: str) -> None:
-    target_article = ARTICLES_DIR / f"{publish_date}："
-    if any(path.name.startswith(target_article.name) for path in ARTICLES_DIR.glob("*.md")):
-        subprocess.run(
-            [sys.executable, str(ROOT / "scripts" / "shift_publish_dates.py"), publish_date, "1"],
-            cwd=ROOT,
-            check=True,
-        )
+def schedule_article(article_file: str, publish_date: str) -> Path:
+    old_path = ARTICLES_DIR / article_file
+    match = PENDING_RE.match(old_path.name)
+    if not old_path.exists() or not match:
+        raise FileNotFoundError(f"Unscheduled article not found: {article_file}")
 
-
-def promote_candidate(candidate_file: str, publish_date: str) -> Path:
-    item = candidate_by_name(candidate_file)
+    title = match.group("title")
     _shift_if_needed(publish_date)
+    new_path = ARTICLES_DIR / f"{publish_date}：{title}.md"
+    old_path.rename(new_path)
+    _insert_tracker_row(publish_date, title, new_path)
+    return new_path
 
-    article_name = f"{publish_date}：{item.title}.md"
-    article_path = ARTICLES_DIR / article_name
-    asset_stem = f"{publish_date}-{item.candidate_id}"
-    asset_dir = ASSETS_DIR / asset_stem
 
-    text = item.markdown_path.read_text(encoding="utf-8")
-    old_asset_prefix = f"../assets/candidates/{item.candidate_id}/"
-    new_asset_prefix = f"../assets/{asset_stem}/"
-    text = text.replace(old_asset_prefix, new_asset_prefix)
-    article_path.write_text(text, encoding="utf-8")
+def list_unscheduled() -> list[Path]:
+    return sorted([path for path in ARTICLES_DIR.glob("未排期：*.md") if path.is_file()], reverse=True)
 
-    if item.asset_dir.exists():
-        if asset_dir.exists():
-            shutil.rmtree(asset_dir)
-        asset_dir.parent.mkdir(parents=True, exist_ok=True)
-        item.asset_dir.rename(asset_dir)
 
-    _insert_tracker_row(publish_date, item.title, article_path)
-    item.markdown_path.unlink()
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Assign a publish date to an unscheduled article.")
+    parser.add_argument("article_file", help="Unscheduled article filename under articles/")
+    parser.add_argument("--date", required=True, help="Publish date in YYYY-MM-DD")
+    return parser.parse_args()
 
-    return article_path
+
+def main() -> None:
+    args = parse_args()
+    article_path = schedule_article(args.article_file, args.date)
+    print(article_path)
+
+
+if __name__ == "__main__":
+    main()

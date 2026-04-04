@@ -32,10 +32,8 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
    - if there is any ambiguity, bias toward outline-only mode rather than drafting the article prematurely
    - even when the topic is detailed and article-like, still stop at outline first unless the user explicitly asks for the full article in the current turn
 3. When the user explicitly asks for the article and has already specified a publish date, write it directly into `articles/YYYY-MM-DD：中文标题.md`.
-4. When the user explicitly asks for the article but has not specified a publish date, write the first publishable draft into `candidates/`.
-   - do not put an undated draft into `articles/`
-   - candidate files should be easy to enumerate so the user can say “把候选里的第 2 篇排到 2026-03-31”
-5. After the user assigns a publish date, promote that candidate into `articles/YYYY-MM-DD：中文标题.md`.
+4. When the user explicitly asks for the article but has not specified a publish date, write it directly into `articles/` as `未排期：中文标题.md`.
+5. After the user assigns a publish date, rename that unscheduled article into `articles/YYYY-MM-DD：中文标题.md`.
    - the `YYYY-MM-DD` part is the planned WeChat publish date, not the creation date
    - if the user inserts a new article into an earlier publish date, shift later publish dates as needed
 6. Keep the article publish-ready:
@@ -48,8 +46,8 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 9. Ensure the local site can render the article directly from `articles/`; do not create a separate preview artifact.
 10. After generating the article, do a short review focused on one thing only: does the piece have shareability and传播潜力, or is it too flat to get data.
    - Review not only the article, but also whether each image and its placement reinforce the article's real core judgment.
-11. Once a candidate is assigned a publish date, update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
-12. After a candidate is assigned a publish date, default to automatically configuring the WeChat backend using Chrome default profile, existing login state, and the repo's publish defaults.
+11. Once an unscheduled article is assigned a publish date, update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
+12. After an unscheduled article is assigned a publish date, default to automatically configuring the WeChat backend using Chrome default profile, existing login state, and the repo's publish defaults.
     - author: `编译青春`
     - reward: enabled
     - original: enabled
