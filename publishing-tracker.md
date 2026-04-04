@@ -27,3 +27,4 @@
 | 2026-04-01 | 为什么我开始更多用 Codex，而不是 ChatGPT | `articles/2026-04-01：为什么我开始更多用 Codex，而不是 ChatGPT.md` | `preview/2026-04-01：为什么我开始更多用 Codex，而不是 ChatGPT.html` |  |  |  |  |  |  |
 | 2026-04-02 | AI 时代，真正被低估的是文件系统 | `articles/2026-04-02：AI 时代，真正被低估的是文件系统.md` | `preview/2026-04-02：AI 时代，真正被低估的是文件系统.html` |  |  |  |  |  |  |
 | 2026-04-03 | 没有记忆，AI 只是高级聊天框 | `articles/2026-04-03：没有记忆，AI 只是高级聊天框.md` | `preview/2026-04-03：没有记忆，AI 只是高级聊天框.html` |  |  |  |  |  |  |
+| 2026-04-04 | bash，让 Agent 从说到做 | `articles/2026-04-04：bash，让 Agent 从说到做.md` | `preview/2026-04-04：bash，让 Agent 从说到做.html` |  |  |  |  |  |  |
