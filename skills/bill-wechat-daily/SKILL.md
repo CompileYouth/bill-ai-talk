@@ -1,6 +1,6 @@
 ---
 name: bill-wechat-daily
-description: Use when working in /Users/bytedance/Documents/my-projects/bill-ai-talk to draft, revise, package, and publish-ready daily WeChat articles for Bill的精神时光屋, including article writing, image generation, preview-page generation, formatting-memory updates, and commit/push workflow.
+description: Use when working in /Users/bytedance/Documents/my-projects/bill-ai-talk to draft, revise, package, and publish-ready daily WeChat articles for Bill的精神时光屋, including article writing, image generation, real-time local preview, formatting-memory updates, and commit/push workflow.
 ---
 
 # Bill Wechat Daily
@@ -11,7 +11,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 
 - turning a chat topic into a publishable WeChat article
 - generating matching正文配图 and syncing upload copies to `~/Downloads`
-- generating a local preview page with a copy button
+- generating a real-time local preview and copy surface from `articles/`
 - updating stable writing/formatting rules when a new preference should be remembered
 - committing and pushing with the repo's required commit split
 
@@ -45,7 +45,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
    - keep the style sharp, readable, and shareable
 7. Generate 1-2 shareable正文配图 into `assets/`.
 8. Copy upload images to `~/Downloads/1.jpg`, `~/Downloads/2.jpg`, and `3.jpg` only when needed.
-9. Generate the matching preview page with `scripts/build_wechat_page.py`, output under `preview/`.
+9. Ensure the local site can render the article directly from `articles/`; do not create a separate preview artifact.
 10. After generating the article, do a short review focused on one thing only: does the piece have shareability and传播潜力, or is it too flat to get data.
    - Review not only the article, but also whether each image and its placement reinforce the article's real core judgment.
 11. Once a candidate is assigned a publish date, update `publishing-tracker.md` with publish date, title, file paths, and leave metric fields ready for the user to fill in.
@@ -73,7 +73,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - If a change touches files, previews, trackers, scripts, and skill rules, assume they all need checking before declaring the work done.
 - Do not stop at “partially correct.” If a change obviously has related follow-through, do that follow-through proactively.
 - The same proactive rule applies to memory: if the user has clarified something that is obviously stable and reusable, store it immediately instead of waiting to be told.
-- Remove obvious throwaway test artifacts proactively once they are no longer needed; do not leave fake article rows, fake preview pages, or placeholder publish records behind waiting for the user to notice.
+- Remove obvious throwaway test artifacts proactively once they are no longer needed; do not leave fake article rows or placeholder publish records behind waiting for the user to notice.
 
 ## Writing Rules That Matter Most
 
@@ -112,11 +112,11 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - After drafting, review whether the piece actually has a sharp enough shareable sentence and enough emotional or judgmental tension to spread.
 - The account's north star is not generic AI commentary; it is to build recognizable influence around AI-era individual upgrading and the road toward a one-person company.
 - When evaluating topics, prefer pieces that strengthen a repeatable account identity over isolated “interesting thoughts”.
-- When the user changes an article title, treat it as a full propagation change: update the article filename, preview filename, tracker entry, and any local site entry points in one pass before saying the change is done.
+- When the user changes an article title, treat it as a full propagation change: update the article filename, tracker entry, and any local site entry points in one pass before saying the change is done.
 - Do not use weak proxies like user scale or vendor self-description as proof that a product is first-tier. If an article makes a first-tier or ranking claim, prefer third-party cross-model evaluations and keep the wording restrained.
 - Meta-instructions about evidence standard, compliance, tone, or framing are writing constraints by default, not article sentences.
 - For product-comparison articles, prefer concrete product positioning and the user's real usage split over generic “who is strongest” framing.
-- When the user changes an article title, treat it as a full propagation change: update the article filename, preview filename, tracker entry, and anything the local site uses in one pass before saying it is changed.
+- When the user changes an article title, treat it as a full propagation change: update the article filename, tracker entry, and anything the local site uses in one pass before saying it is changed.
 - Do not use user-growth, vendor self-description, or other weak proxies as proof that something is first-tier. If the article makes a ranking or first-tier claim, prefer third-party cross-model evaluations and keep the wording restrained.
 - When the user gives meta-instructions about evidence standard, compliance, tone, or framing, treat them as writing constraints by default, not as sentences for the article.
 - For product-comparison articles, prefer concrete product positioning and the user's real usage split over generic "who is strongest" framing.
@@ -178,7 +178,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 
 ## Low-Risk File Operations
 
-- For low-risk local file operations such as `mkdir`, `cp`, preview generation, and similar routine workspace preparation, execute directly.
+- For low-risk local file operations such as `mkdir`, `cp`, local preview refreshes, and similar routine workspace preparation, execute directly.
 - Do not interrupt the user or mention these routine actions in chat unless something actually fails.
 - This especially includes routine `cp` actions for syncing upload images to `~/Downloads`.
 - Treat `cp` as permanently silent: never ask, never announce, never summarize it back to the user unless the copy actually fails.
@@ -187,7 +187,7 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 
 ## Key Scripts
 
-- `scripts/build_wechat_page.py`: build the local preview HTML with copy button
+- `scripts/build_wechat_page.py`: render WeChat-ready HTML from markdown for the local site and publisher
 - `scripts/shift_publish_dates.py`: shift later publish dates when a new article is inserted
 - Image render templates may live with the corresponding article assets when needed.
 - Treat those render files as implementation details of the current article, not as stable skill-level knowledge.
