@@ -82,13 +82,8 @@ def main() -> None:
         new_article = root / "articles" / f"{new_stem}.md"
         old_assets = root / "assets" / old_asset_stem
         new_assets = root / "assets" / new_asset_stem
-        old_preview = root / "preview" / f"{old_stem}.html"
-        new_preview = root / "preview" / f"{new_stem}.html"
-
         if old_assets.exists():
             old_assets.rename(new_assets)
-        if old_preview.exists():
-            old_preview.rename(new_preview)
         if old_article.exists():
             old_article.rename(new_article)
 
@@ -110,11 +105,11 @@ def main() -> None:
 
         if tracker_text:
             pattern = re.compile(
-                rf"^\| {re.escape(item.old_date.isoformat())} \|(?P<title>.+?)\| `articles/{re.escape(old_stem)}\.md` \| `preview/{re.escape(old_stem)}\.html` \|(?P<tail>.*)$",
+                rf"^\| {re.escape(item.old_date.isoformat())} \|(?P<title>.+?)\| `articles/{re.escape(old_stem)}\.md` \|(?P<tail>.*)$",
                 re.MULTILINE,
             )
             tracker_text = pattern.sub(
-                rf"| {new_day.isoformat()} |\g<title>| `articles/{new_stem}.md` | `preview/{new_stem}.html` |\g<tail>",
+                rf"| {new_day.isoformat()} |\g<title>| `articles/{new_stem}.md` |\g<tail>",
                 tracker_text,
                 count=1,
             )

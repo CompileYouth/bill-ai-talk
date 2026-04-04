@@ -8,17 +8,16 @@ Important directories:
 
 - `articles/`: final Markdown articles only
 - `assets/`: image assets grouped by article asset stem
-- `preview/`: generated local HTML preview pages
-- `scripts/`: image renderers and preview-page builder
+- `scripts/`: image renderers, publish pipeline, and local preview server
 - `publishing-tracker.md`: publish schedule and post-performance tracking
 
 Important repo rules:
 
 - `articles/*.md` uses `YYYY-MM-DD：中文标题.md` and is final publish-ready copy
-- each article should also have a matching `preview/*.html`
+- no standalone `preview/*.html` files are required; the local site renders directly from article markdown
 - article date prefixes represent publish dates, not creation dates
 - image upload copies go to `~/Downloads`
-- preview HTML is tracked in git with the article
+- the local site reads articles directly, so there is no tracked preview artifact per article
 - if a rule is stable, update the skill instead of leaving it only in one article
 
 Useful scripts:

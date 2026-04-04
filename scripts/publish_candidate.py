@@ -23,7 +23,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
-    article_path, _preview_path = publish_pipeline.promote_candidate(args.candidate_file, args.date)
+    article_path = publish_pipeline.promote_candidate(args.candidate_file, args.date)
     if args.publish:
         bundle = wechat_publisher.publish_article(article_path, args.date)
         print(bundle)

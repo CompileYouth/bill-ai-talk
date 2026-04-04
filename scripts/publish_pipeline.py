@@ -14,20 +14,16 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-import build_wechat_page as wechat
-
-
 ROOT = SCRIPT_DIR.parent
 CANDIDATES_DIR = ROOT / "candidates"
 ARTICLES_DIR = ROOT / "articles"
 ASSETS_DIR = ROOT / "assets"
-PREVIEW_DIR = ROOT / "preview"
 TRACKER_PATH = ROOT / "publishing-tracker.md"
 
 CANDIDATE_RE = re.compile(r"^(?P<id>\d{8}-\d{6})：(?P<title>.+)\.md$")
 ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
 TRACKER_ROW_RE = re.compile(
-    r"^\| (?P<date>\d{4}-\d{2}-\d{2}) \| (?P<title>.+?) \| `(?P<article>articles/.+?\.md)` \| `(?P<preview>preview/.+?\.html)` \| (?P<metrics>.+) \|$"
+    r"^\| (?P<date>\d{4}-\d{2}-\d{2}) \| (?P<title>.+?) \| `(?P<article>articles/.+?\.md)` \| (?P<metrics>.+) \|$"
 )
 
 
@@ -41,15 +37,9 @@ class CandidateItem:
     def asset_dir(self) -> Path:
         return ASSETS_DIR / "candidates" / self.candidate_id
 
-    @property
-    def preview_path(self) -> Path:
-        return PREVIEW_DIR / "candidates" / f"{self.candidate_id}.html"
-
-
 def ensure_candidate_dirs() -> None:
     CANDIDATES_DIR.mkdir(parents=True, exist_ok=True)
     (ASSETS_DIR / "candidates").mkdir(parents=True, exist_ok=True)
-    (PREVIEW_DIR / "candidates").mkdir(parents=True, exist_ok=True)
 
 
 def list_candidates() -> list[CandidateItem]:
@@ -81,15 +71,7 @@ def candidate_by_name(file_name: str) -> CandidateItem:
     )
 
 
-def build_preview(markdown_path: Path, output_path: Path) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    blocks = wechat.markdown_to_blocks(markdown_path)
-    title = markdown_path.stem.split("：", 1)[1] if "：" in markdown_path.stem else markdown_path.stem
-    html = wechat.build_html(blocks, title)
-    output_path.write_text(html, encoding="utf-8")
-
-
-def _insert_tracker_row(publish_date: str, title: str, article_path: Path, preview_path: Path) -> None:
+def _insert_tracker_row(publish_date: str, title: str, article_path: Path) -> None:
     if not TRACKER_PATH.exists():
         raise FileNotFoundError("publishing-tracker.md not found")
 
@@ -113,7 +95,7 @@ def _insert_tracker_row(publish_date: str, title: str, article_path: Path, previ
 
     new_row = (
         f"| {publish_date} | {title} | "
-        f"`articles/{article_path.name}` | `preview/{preview_path.name}` |  |  |  |  |  |  |"
+        f"`articles/{article_path.name}` |  |  |  |  |  |  |"
     )
     rows = [row for row in rows if f"`articles/{article_path.name}`" not in row]
     rows.append(new_row)
@@ -136,7 +118,7 @@ def _shift_if_needed(publish_date: str) -> None:
         )
 
 
-def promote_candidate(candidate_file: str, publish_date: str) -> tuple[Path, Path]:
+def promote_candidate(candidate_file: str, publish_date: str) -> Path:
     item = candidate_by_name(candidate_file)
     _shift_if_needed(publish_date)
 
@@ -144,7 +126,6 @@ def promote_candidate(candidate_file: str, publish_date: str) -> tuple[Path, Pat
     article_path = ARTICLES_DIR / article_name
     asset_stem = f"{publish_date}-{item.candidate_id}"
     asset_dir = ASSETS_DIR / asset_stem
-    preview_path = PREVIEW_DIR / f"{publish_date}：{item.title}.html"
 
     text = item.markdown_path.read_text(encoding="utf-8")
     old_asset_prefix = f"../assets/candidates/{item.candidate_id}/"
@@ -158,11 +139,7 @@ def promote_candidate(candidate_file: str, publish_date: str) -> tuple[Path, Pat
         asset_dir.parent.mkdir(parents=True, exist_ok=True)
         item.asset_dir.rename(asset_dir)
 
-    build_preview(article_path, preview_path)
-    _insert_tracker_row(publish_date, item.title, article_path, preview_path)
-
-    if item.preview_path.exists():
-        item.preview_path.unlink()
+    _insert_tracker_row(publish_date, item.title, article_path)
     item.markdown_path.unlink()
 
-    return article_path, preview_path
+    return article_path

@@ -35,12 +35,12 @@ WECHAT_INLINE = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build a clean HTML preview page with a copy button for WeChat pasting."
+        description="Render clean WeChat-ready HTML from a markdown article."
     )
     parser.add_argument("markdown_file", help="Markdown article file under articles/")
     parser.add_argument(
         "--output",
-        help="Optional output HTML path. Defaults to preview/<article-name>.html",
+        help="Optional output HTML path. Only write a file when this flag is provided.",
     )
     return parser.parse_args()
 
@@ -644,13 +644,6 @@ def main() -> None:
     if not markdown_file.exists():
         raise SystemExit(f"Markdown not found: {markdown_file}")
 
-    output = (
-        Path(args.output).resolve()
-        if args.output
-        else markdown_file.parent.parent / "preview" / f"{markdown_file.stem}.html"
-    )
-    output.parent.mkdir(parents=True, exist_ok=True)
-
     blocks = markdown_to_blocks(markdown_file)
     title = markdown_file.stem
     for block in blocks:
@@ -659,8 +652,14 @@ def main() -> None:
             title = re.sub(r"<.*?>", "", title)
             break
 
-    output.write_text(build_html(blocks, title), encoding="utf-8")
-    print(output)
+    html_output = build_html(blocks, title)
+    if args.output:
+        output = Path(args.output).resolve()
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(html_output, encoding="utf-8")
+        print(output)
+    else:
+        print(html_output)
 
 
 if __name__ == "__main__":

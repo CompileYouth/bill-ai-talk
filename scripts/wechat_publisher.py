@@ -670,7 +670,8 @@ def publish_article(article_path: Path, publish_date: str) -> Path:
             summary=summary,
         )
     )
-    bundle_path = ROOT / "preview" / "last-publish-bundle.json"
+    bundle_path = ROOT / ".publish" / "last-publish-bundle.json"
+    bundle_path.parent.mkdir(parents=True, exist_ok=True)
     bundle_path.write_text(
         json.dumps(
             {
