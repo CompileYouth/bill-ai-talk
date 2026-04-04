@@ -315,6 +315,13 @@ def shell_html() -> str:
       justify-content: flex-end;
       flex-wrap: wrap;
     }}
+    .schedule-hidden-input {{
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }}
     .meta-button {{
       appearance: none;
       border-radius: 999px;
@@ -472,6 +479,7 @@ def shell_html() -> str:
         </div>
         <div class="viewer-actions">
           <button id="schedule-button" class="meta-button meta-button-tertiary" type="button" style="display:none">分配发送日期</button>
+          <input id="schedule-date-input" class="schedule-hidden-input" type="date" />
           <button id="copy-title-button" class="meta-button meta-button-secondary" type="button">复制标题</button>
           <button id="copy-button" class="meta-button meta-button-primary" type="button">复制当前文章</button>
         </div>
@@ -648,10 +656,23 @@ def shell_html() -> str:
     }});
 
     document.getElementById("schedule-button").addEventListener("click", async () => {{
+      const input = document.getElementById("schedule-date-input");
+      const today = new Date();
+      input.value = input.value || today.toISOString().slice(0, 10);
+      input.focus();
+      if (typeof input.showPicker === "function") {{
+        input.showPicker();
+      }} else {{
+        input.click();
+      }}
+    }});
+
+    document.getElementById("schedule-date-input").addEventListener("change", async () => {{
       const current = flatArticles[currentIndex];
-      const value = window.prompt("请输入发送日期（YYYY-MM-DD）");
-      if (!value) return;
       const button = document.getElementById("schedule-button");
+      const input = document.getElementById("schedule-date-input");
+      const value = input.value;
+      if (!value) return;
       try {{
         const response = await fetch("/api/schedule", {{
           method: "POST",
