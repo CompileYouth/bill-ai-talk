@@ -92,7 +92,14 @@ Use this skill when the user wants to create or revise a daily公众号文章 in
 - Do not let a lead-in example, comment, or trigger phrase steal the article's center of gravity. The body should quickly pivot to the main framework and stay there.
 - In deep explanatory posts, title, body, headings, and images must all point at the same thesis. If any one of them is still orbiting the hook instead of the thesis, the piece is structurally wrong.
 - Do not write section headings as writing-process labels like “再回头看...” or “最后落到...”. Headings must carry information, not narrate the author's structure.
+- When the user wants several reasons or benefits presented "in one paragraph" or "in one section", keep them under one section heading but still structure them internally with clear markers such as “第一、第二、第三” or bolded lead-ins. Do not collapse them into one unreadable wall of text.
+- Section headings must sound like real information labels, not conversational filler. Avoid headings that read like spoken meta-commentary such as “这也是为什么我会...” unless the user explicitly wants that tone.
+- Avoid habitual spoken transition crutches in正文, especially phrases like “这也是为什么我越来越觉得…”, “顺着这个话题…”, or similar filler that weakens the sentence. Prefer direct judgment sentences.
+- When listing 2 or more rules, takeaways, review points, or decisions, present them as clearly separated flat bullets or short numbered items. Do not cram multiple points into one dense paragraph.
+- If a title contains jargon that may feel clever but not immediately land for general公众号 readers, prefer a sharper, more direct judgment title over a niche insider term.
 - Do not add an image just to reach a count. A weak second image is worse than having only one strong image.
+- Default to two images for an article. Only fall back to one when a second image genuinely cannot add independent value without becoming filler.
+- When the topic looks technical or infrastructure-heavy (for example bash, files, memory, protocols), actively translate it to ordinary-user relevance with concrete non-programmer examples. Do not leave the piece feeling like it only matters to engineers.
 - For deep posts, check explicitly for four failure modes before considering the draft acceptable: the hook stealing focus, repeated restatement of the hook, empty section headings, and decorative images with no information gain.
 - In deep posts, control is often more important than adding material. Ask first what should be deleted, not only what else could be explained.
 - Do not “explain more” when the real problem is structure. Fix thesis, paragraph roles, headings, and image purpose before adding any new exposition.
