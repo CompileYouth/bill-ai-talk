@@ -40,5 +40,45 @@ Use this skill when the user wants to create, revise, package, or publish aå…¬ä¼
 
 - Keep routine execution silent unless it fails.
 - Do not create alternate article sources outside `articles/`.
+- Do not modify the content of already-sent articles by default. If follow-up is needed, write a new article instead.
+- If an already-sent article truly needs modification, get the user's explicit approval first.
 - Do not leave durable packaging or feedback decisions only in runtime files.
 - When a structural change affects files, scripts, trackers, preview, or skill rules, follow through in one pass before claiming completion.
+
+## Review Checklist
+
+When reviewing an article, always check these dimensions:
+
+- Title
+  - Is it immediately understandable?
+  - Does it create click interest?
+  - Does it match the article's core judgment?
+
+- Core Judgment
+  - Is the article clearly about one thing?
+  - Does the hook stay a hook instead of stealing the article?
+  - Does the piece drift away from its main point?
+
+- Structure
+  - Do paragraphs progress naturally?
+  - Is there repetition?
+  - Do headings carry information instead of describing writing moves?
+
+- Reader Accessibility
+  - Are there too many terms or unexplained concepts?
+  - Has any writing intent leaked into the body?
+  - Can a general reader follow the piece?
+
+- Shareability
+  - Is there at least one memorable line or judgment?
+  - Does the piece have save/share potential instead of reading like documentation?
+
+- Images
+  - Are images aligned with the article's core judgment?
+  - Are they inserted at the right semantic position?
+  - Does each image have standalone value?
+  - Are style, text safety area, and rendering all correct?
+
+- Delivery Completeness
+  - Are title, body, images, and site view all synced?
+  - Does the final output follow the repo's stable rules?
