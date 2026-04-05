@@ -6,7 +6,7 @@ import argparse
 import html
 import json
 import re
-from datetime import date
+from datetime import date, datetime
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -17,8 +17,30 @@ import build_wechat_page as wechat
 
 ROOT = Path(__file__).resolve().parent.parent
 ARTICLES_DIR = ROOT / "articles"
+COVER_SELECTIONS_PATH = ROOT / ".publish" / "cover-selections.json"
 ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
 PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
+NOISE_WORDS = (
+    "AI",
+    "Agent",
+    "Codex",
+    "ChatGPT",
+    "Claude",
+    "Gemini",
+    "为什么",
+    "怎么",
+    "不是",
+    "只是",
+    "还得",
+    "真正",
+    "开始",
+    "更多",
+    "时候",
+    "这个",
+    "那个",
+    "今天",
+    "时代",
+)
 
 
 def _iter_article_paths() -> list[Path]:
@@ -72,6 +94,111 @@ def load_article_list() -> list[dict[str, str]]:
     return groups
 
 
+def extract_tldr_summary(markdown_text: str) -> str:
+    lines = markdown_text.splitlines()
+    in_tldr = False
+    parts: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped == "> TL;DR":
+            in_tldr = True
+            continue
+        if in_tldr:
+            if stripped.startswith(">"):
+                content = stripped[1:].strip()
+                if content:
+                    parts.append(content.replace("`", ""))
+                continue
+            break
+    return " ".join(parts).strip()
+
+
+def load_cover_selections() -> dict[str, dict[str, str]]:
+    if not COVER_SELECTIONS_PATH.exists():
+        return {}
+    return json.loads(COVER_SELECTIONS_PATH.read_text(encoding="utf-8"))
+
+
+def load_cover_selection(file_name: str) -> dict[str, str] | None:
+    return load_cover_selections().get(file_name)
+
+
+def save_cover_selection(file_name: str, text: str, background: str) -> dict[str, str]:
+    selection = {
+        "text": text.strip()[:4],
+        "background": background.strip(),
+        "confirmed_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    selections = load_cover_selections()
+    selections[file_name] = selection
+    COVER_SELECTIONS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    COVER_SELECTIONS_PATH.write_text(
+        json.dumps(selections, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return selection
+
+
+def _unique_short_phrases(text: str) -> list[str]:
+    normalized = (
+        text.replace("：", " ")
+        .replace("，", " ")
+        .replace("。", " ")
+        .replace("、", " ")
+        .replace("！", " ")
+        .replace("？", " ")
+        .replace("(", " ")
+        .replace(")", " ")
+        .replace("“", " ")
+        .replace("”", " ")
+        .replace("《", " ")
+        .replace("》", " ")
+        .replace("-", " ")
+    )
+    raw_tokens = [token.strip() for token in normalized.split() if token.strip()]
+    candidates: list[str] = []
+    for token in raw_tokens:
+        cleaned = token
+        for noise in NOISE_WORDS:
+            cleaned = cleaned.replace(noise, "")
+        cleaned = cleaned.strip()
+        if 2 <= len(cleaned) <= 4 and cleaned not in candidates:
+            candidates.append(cleaned)
+        if len(candidates) >= 6:
+            break
+    return candidates
+
+
+def derive_cover_candidates(title: str, summary: str) -> list[str]:
+    candidates: list[str] = []
+    for token in _unique_short_phrases(title):
+        if token not in candidates:
+            candidates.append(token)
+    for segment in re.split(r"[，。；：\s]+", summary):
+        phrase = segment.strip().replace("`", "")
+        if re.fullmatch(r"[A-Za-z0-9]+", phrase or ""):
+            continue
+        if len(phrase) > 4:
+            phrase = phrase[:4]
+        if 2 <= len(phrase) <= 4 and phrase not in candidates:
+            candidates.append(phrase)
+        if len(candidates) >= 3:
+            break
+    if not candidates:
+        fallback = title.replace("AI", "").replace("Agent", "").replace(" ", "")
+        fallback = re.sub(r"[，。！？：、“”《》\-]", "", fallback)
+        if len(fallback) >= 4:
+            candidates.append(fallback[:4])
+    while len(candidates) < 3:
+        seed = candidates[0] if candidates else "核心判断"
+        variant = seed[: max(2, min(4, len(seed)))]
+        if variant not in candidates:
+            candidates.append(variant)
+        else:
+            candidates.append(("判断" + str(len(candidates) + 1))[:4])
+    return candidates[:3]
+
+
 def load_article_payload(file_name: str) -> dict[str, str]:
     path = ARTICLES_DIR / file_name
     if not path.exists() or not path.is_file():
@@ -83,6 +210,8 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         raise FileNotFoundError(file_name)
 
     blocks = wechat.markdown_to_blocks(path)
+    markdown_text = path.read_text(encoding="utf-8")
+    summary = extract_tldr_summary(markdown_text)
     title = match.group("title") if match else pending_match.group("title")
     for block in blocks:
         if block.startswith('<h1 class="article-title">'):
@@ -95,7 +224,12 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         "title": title,
         "file": path.relative_to(ARTICLES_DIR).as_posix(),
         "html": "\n".join(blocks),
+        "tldr": summary,
+        "coverCandidates": derive_cover_candidates(title, summary),
+        "savedCover": load_cover_selection(path.relative_to(ARTICLES_DIR).as_posix()),
     }
+
+
 def load_copy_payload(file_name: str) -> dict[str, str]:
     path = ARTICLES_DIR / file_name
     if not path.exists() or not path.is_file():
@@ -108,7 +242,8 @@ def load_copy_payload(file_name: str) -> dict[str, str]:
 
     html_payload = wechat.markdown_to_wechat_html(path)
     text_payload = path.read_text(encoding="utf-8")
-    return {"html": html_payload, "text": text_payload}
+    summary = extract_tldr_summary(text_payload)
+    return {"html": html_payload, "text": text_payload, "summary": summary}
 
 
 def shell_html() -> str:
@@ -315,6 +450,144 @@ def shell_html() -> str:
       justify-content: flex-end;
       flex-wrap: wrap;
     }}
+    .cover-studio {{
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 360px);
+      gap: 18px;
+      margin-bottom: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      box-shadow:
+        0 18px 44px rgba(38, 28, 10, 0.08),
+        inset 0 0 0 1px rgba(255,255,255,0.55);
+    }}
+    .cover-preview-wrap {{
+      min-width: 0;
+    }}
+    .cover-preview-frame {{
+      padding: 14px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,251,244,0.9));
+      border: 1px solid rgba(66, 112, 255, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.52);
+    }}
+    .cover-preview-frame canvas {{
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+    }}
+    .cover-studio-title {{
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.4;
+      color: #161616;
+      font-weight: 800;
+    }}
+    .cover-studio-subtitle {{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }}
+    .cover-controls {{
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }}
+    .cover-controls[data-locked="true"] .cover-edit-only {{
+      display: none !important;
+    }}
+    .cover-controls[data-locked="false"] .cover-locked-only {{
+      display: none !important;
+    }}
+    .cover-section-label {{
+      display: block;
+      margin: 0 0 8px;
+      color: #244562;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }}
+    .cover-options {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }}
+    .cover-chip {{
+      appearance: none;
+      border: 1px solid rgba(66, 112, 255, 0.16);
+      background: rgba(255,255,255,0.82);
+      color: #244562;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }}
+    .cover-chip:hover {{
+      transform: translateY(-1px);
+      border-color: rgba(49, 207, 255, 0.36);
+      background: rgba(49, 207, 255, 0.10);
+    }}
+    .cover-chip.active {{
+      color: #04111d;
+      border-color: rgba(49, 207, 255, 0.28);
+      background: linear-gradient(135deg, rgba(49, 207, 255, 0.92), rgba(127, 111, 255, 0.88));
+    }}
+    .cover-input {{
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(66, 112, 255, 0.16);
+      background: rgba(255,255,255,0.84);
+      color: #181818;
+      font-size: 15px;
+      font-weight: 600;
+      outline: none;
+    }}
+    .cover-input:focus {{
+      border-color: rgba(49, 207, 255, 0.42);
+      box-shadow: 0 0 0 4px rgba(49, 207, 255, 0.10);
+    }}
+    .cover-meta-row {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      flex-wrap: wrap;
+    }}
+    .cover-color-swatch {{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(66, 112, 255, 0.12);
+      font-weight: 700;
+      color: #244562;
+    }}
+    .cover-color-dot {{
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #ffffff;
+    }}
+    .cover-status {{
+      margin: 0;
+      color: #244562;
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 20px;
+    }}
     .schedule-hidden-input {{
       position: absolute;
       width: 1px;
@@ -447,6 +720,7 @@ def shell_html() -> str:
       .page {{ grid-template-columns: 1fr; }}
       .sidebar {{ position: static; }}
       .list {{ max-height: none; }}
+      .cover-studio {{ grid-template-columns: 1fr; }}
     }}
     @media (max-width: 700px) {{
       .page {{
@@ -468,7 +742,7 @@ def shell_html() -> str:
   <div class="page">
     <aside class="sidebar">
       <h1 class="brand">heyBill</h1>
-      <p class="subtitle">直接读取 articles 下的文章，按时间倒排浏览，并一键复制富文本到微信公众号。</p>
+      <p class="subtitle">直接读取 articles 下的文章，按时间倒排浏览，并在同一页完成封面图、标题、简介和正文复制。</p>
       <div id="article-list" class="list"></div>
     </aside>
 
@@ -481,9 +755,42 @@ def shell_html() -> str:
           <button id="schedule-button" class="meta-button meta-button-tertiary" type="button" style="display:none">分配发送日期</button>
           <input id="schedule-date-input" class="schedule-hidden-input" type="date" />
           <button id="copy-title-button" class="meta-button meta-button-secondary" type="button">复制标题</button>
+          <button id="copy-summary-button" class="meta-button meta-button-secondary" type="button">复制简介</button>
           <button id="copy-button" class="meta-button meta-button-primary" type="button">复制当前文章</button>
         </div>
       </div>
+      <section class="cover-studio">
+        <div class="cover-preview-wrap">
+          <h2 class="cover-studio-title">封面图</h2>
+          <div class="cover-preview-frame">
+            <canvas id="cover-canvas" width="1175" height="500"></canvas>
+          </div>
+          <p class="cover-studio-subtitle">极简纯色封面，默认从文章里提 3 个词，你也可以手改，再随机切背景色。</p>
+        </div>
+        <div id="cover-controls" class="cover-controls" data-locked="false">
+          <div class="cover-edit-only">
+            <span class="cover-section-label">候选词</span>
+            <div id="cover-options" class="cover-options"></div>
+          </div>
+          <div class="cover-edit-only">
+            <label class="cover-section-label" for="cover-custom-input">自定义文案</label>
+            <input id="cover-custom-input" class="cover-input" type="text" maxlength="4" placeholder="最多 4 个字" />
+          </div>
+          <p id="cover-status" class="cover-status"></p>
+          <div class="cover-meta-row">
+            <span id="cover-color-value" class="cover-color-swatch">
+              <span id="cover-color-dot" class="cover-color-dot"></span>
+              <span>颜色</span>
+            </span>
+            <div class="viewer-actions">
+              <button id="cover-reroll-button" class="meta-button meta-button-secondary cover-edit-only" type="button">换个颜色</button>
+              <button id="cover-confirm-button" class="meta-button meta-button-primary cover-edit-only" type="button">确定</button>
+              <button id="cover-download-button" class="meta-button meta-button-primary cover-locked-only" type="button">下载封面</button>
+              <button id="cover-edit-button" class="meta-button meta-button-secondary cover-locked-only" type="button">重新修改</button>
+            </div>
+          </div>
+        </div>
+      </section>
       <article id="article-root" class="article"></article>
     </section>
   </div>
@@ -492,6 +799,138 @@ def shell_html() -> str:
     let groups = [];
     let flatArticles = [];
     let currentIndex = 0;
+    let currentArticlePayload = null;
+    let currentCoverText = "";
+    let currentCoverColor = "#244562";
+    let currentCoverLocked = false;
+
+    function hslToRgb(h, s, l) {{
+      s /= 100;
+      l /= 100;
+      const k = (n) => (n + h / 30) % 12;
+      const a = s * Math.min(l, 1 - l);
+      const f = (n) =>
+        l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+      return {{
+        r: Math.round(255 * f(0)),
+        g: Math.round(255 * f(8)),
+        b: Math.round(255 * f(4)),
+      }};
+    }}
+
+    function rgbToHex(r, g, b) {{
+      const toHex = (n) => n.toString(16).padStart(2, "0");
+      return `#${{toHex(r)}}${{toHex(g)}}${{toHex(b)}}`;
+    }}
+
+    function randomNiceColor() {{
+      const h = Math.random() * 360;
+      const s = 55 + Math.random() * 30;
+      const l = 35 + Math.random() * 20;
+      const {{ r, g, b }} = hslToRgb(h, s, l);
+      return rgbToHex(r, g, b);
+    }}
+
+    function textColorFor(bg) {{
+      const hex = bg.replace("#", "");
+      const num = parseInt(hex, 16);
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+      const brightness = r * 0.299 + g * 0.587 + b * 0.114;
+      return brightness > 150 ? "#111827" : "#f9fafb";
+    }}
+
+    function fitFontSize(ctx, lines) {{
+      const targetMaxWidth = 350;
+      const targetMaxHeight = 350;
+      let fontSize = 220;
+      while (fontSize > 10) {{
+        ctx.font = `${{fontSize}}px system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif`;
+        let maxLineWidth = 0;
+        for (const line of lines) {{
+          maxLineWidth = Math.max(maxLineWidth, ctx.measureText(line).width);
+        }}
+        const lineHeight = fontSize * 1.2;
+        const totalHeight = lineHeight * lines.length;
+        if (maxLineWidth <= targetMaxWidth && totalHeight <= targetMaxHeight) break;
+        fontSize -= 2;
+      }}
+      return fontSize;
+    }}
+
+    function drawCover() {{
+      const canvas = document.getElementById("cover-canvas");
+      const ctx = canvas.getContext("2d");
+      const text = (currentCoverText || "封面").trim().slice(0, 4);
+      const lines = text.split(/\\r?\\n/).filter(Boolean);
+      const bg = currentCoverColor || randomNiceColor();
+      const fg = textColorFor(bg);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const fontSize = fitFontSize(ctx, lines);
+      const lineHeight = fontSize * 1.2;
+      const totalHeight = lineHeight * lines.length;
+      let startY = (canvas.height - totalHeight) / 2 + fontSize * 0.84;
+
+      ctx.textAlign = "center";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillStyle = fg;
+      ctx.font = `${{fontSize}}px system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif`;
+      for (const line of lines) {{
+        ctx.fillText(line, canvas.width / 2, startY);
+        startY += lineHeight;
+      }}
+
+      document.getElementById("cover-color-value").lastElementChild.textContent = bg.toUpperCase();
+      document.getElementById("cover-color-dot").style.background = bg;
+    }}
+
+    function syncCoverSelection() {{
+      const options = Array.from(document.querySelectorAll(".cover-chip"));
+      options.forEach((button) => {{
+        button.classList.toggle("active", button.dataset.value === currentCoverText);
+      }});
+      document.getElementById("cover-custom-input").value = currentCoverText;
+      drawCover();
+    }}
+
+    function setCoverLocked(locked, confirmedAt = "") {{
+      currentCoverLocked = locked;
+      document.getElementById("cover-controls").dataset.locked = locked ? "true" : "false";
+      const status = document.getElementById("cover-status");
+      if (locked) {{
+        status.textContent = confirmedAt ? `已确认 ${{
+          confirmedAt.replace("T", " ").slice(0, 16)
+        }}` : "已确认";
+      }} else {{
+        status.textContent = "确认后会记住这篇文章的封面文字和背景色。";
+      }}
+    }}
+
+    function setCoverText(value) {{
+      currentCoverText = (value || "").trim().slice(0, 4);
+      syncCoverSelection();
+    }}
+
+    function renderCoverOptions(candidates) {{
+      const root = document.getElementById("cover-options");
+      root.innerHTML = "";
+      candidates.forEach((candidate, index) => {{
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `cover-chip${{index === 0 ? " active" : ""}}`;
+        button.dataset.value = candidate;
+        button.textContent = candidate;
+        button.addEventListener("click", () => {{
+          setCoverText(candidate);
+        }});
+        root.appendChild(button);
+      }});
+    }}
 
     function flashButton(button, text) {{
       const original = button.dataset.originalText || button.textContent;
@@ -562,12 +1001,24 @@ def shell_html() -> str:
     async function renderCurrentArticle() {{
       const current = flatArticles[currentIndex];
       const payload = await fetchJSON(`/api/article?file=${{encodeURIComponent(current.file)}}`);
+      currentArticlePayload = payload;
       document.getElementById("article-root").innerHTML = payload.html;
       document.getElementById("viewer-meta").textContent = `${{payload.date}} · ${{payload.title}}`;
       const isPending = current.pending;
       document.getElementById("schedule-button").style.display = isPending ? "inline-flex" : "none";
       document.getElementById("copy-title-button").style.display = isPending ? "none" : "inline-flex";
+      document.getElementById("copy-summary-button").style.display = isPending ? "none" : "inline-flex";
       document.getElementById("copy-button").style.display = isPending ? "none" : "inline-flex";
+      renderCoverOptions(payload.coverCandidates || []);
+      if (payload.savedCover) {{
+        currentCoverColor = payload.savedCover.background;
+        setCoverText(payload.savedCover.text);
+        setCoverLocked(true, payload.savedCover.confirmed_at || "");
+      }} else {{
+        currentCoverColor = randomNiceColor();
+        setCoverText((payload.coverCandidates || [payload.title.slice(0, 4)])[0] || "封面");
+        setCoverLocked(false);
+      }}
     }}
 
     function copyComputedStyles(sourceNode, targetNode) {{
@@ -633,6 +1084,31 @@ def shell_html() -> str:
       if (!ok) throw new Error("copy title failed");
     }}
 
+    async function copySummary() {{
+      const current = flatArticles[currentIndex];
+      const response = await fetch(`/api/copy-payload?file=${{encodeURIComponent(current.file)}}`);
+      if (!response.ok) {{
+        throw new Error("copy summary failed");
+      }}
+      const payload = await response.json();
+      const text = payload.summary || "";
+      if (navigator.clipboard && window.isSecureContext) {{
+        await navigator.clipboard.writeText(text);
+        return;
+      }}
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "readonly");
+      textarea.style.position = "absolute";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!ok) throw new Error("copy summary failed");
+    }}
+
     document.getElementById("copy-button").addEventListener("click", async () => {{
       const button = document.getElementById("copy-button");
       try {{
@@ -649,6 +1125,17 @@ def shell_html() -> str:
       try {{
         await copyTitle();
         flashButton(button, "标题已复制");
+      }} catch (error) {{
+        console.error(error);
+        flashButton(button, "复制失败");
+      }}
+    }});
+
+    document.getElementById("copy-summary-button").addEventListener("click", async () => {{
+      const button = document.getElementById("copy-summary-button");
+      try {{
+        await copySummary();
+        flashButton(button, "简介已复制");
       }} catch (error) {{
         console.error(error);
         flashButton(button, "复制失败");
@@ -691,6 +1178,57 @@ def shell_html() -> str:
         console.error(error);
         flashButton(button, "分配失败");
       }}
+    }});
+
+    document.getElementById("cover-custom-input").addEventListener("input", (event) => {{
+      setCoverText(event.target.value);
+    }});
+
+    document.getElementById("cover-reroll-button").addEventListener("click", () => {{
+      currentCoverColor = randomNiceColor();
+      drawCover();
+    }});
+
+    document.getElementById("cover-confirm-button").addEventListener("click", async () => {{
+      const current = flatArticles[currentIndex];
+      const button = document.getElementById("cover-confirm-button");
+      if (!currentCoverText.trim()) {{
+        flashButton(button, "先填文案");
+        return;
+      }}
+      try {{
+        const response = await fetch("/api/cover-selection", {{
+          method: "POST",
+          headers: {{ "Content-Type": "application/json" }},
+          body: JSON.stringify({{
+            file: current.file,
+            text: currentCoverText,
+            background: currentCoverColor,
+          }}),
+        }});
+        if (!response.ok) throw new Error("save cover failed");
+        const payload = await response.json();
+        currentArticlePayload.savedCover = payload.selection;
+        setCoverLocked(true, payload.selection.confirmed_at || "");
+        flashButton(button, "已确认");
+      }} catch (error) {{
+        console.error(error);
+        flashButton(button, "确认失败");
+      }}
+    }});
+
+    document.getElementById("cover-download-button").addEventListener("click", () => {{
+      const canvas = document.getElementById("cover-canvas");
+      const link = document.createElement("a");
+      const current = flatArticles[currentIndex];
+      const safeTitle = (currentCoverText || current.title || "cover").replace(/\\s+/g, "-");
+      link.href = canvas.toDataURL("image/png");
+      link.download = `${{safeTitle}}-cover.png`;
+      link.click();
+    }});
+
+    document.getElementById("cover-edit-button").addEventListener("click", () => {{
+      setCoverLocked(false);
     }});
 
     async function boot() {{
@@ -754,11 +1292,21 @@ class Handler(BaseHTTPRequestHandler):
             self._send(body, "application/json; charset=utf-8")
             return
 
+        if parsed.path == "/api/cover-selection":
+            file_name = parse_qs(parsed.query).get("file", [""])[0]
+            selection = load_cover_selection(file_name)
+            if selection is None:
+                self._send(b'{"error":"not found"}', "application/json; charset=utf-8", HTTPStatus.NOT_FOUND)
+                return
+            body = json.dumps({"selection": selection}, ensure_ascii=False).encode("utf-8")
+            self._send(body, "application/json; charset=utf-8")
+            return
+
         self._send(b"Not Found", "text/plain; charset=utf-8", HTTPStatus.NOT_FOUND)
 
     def do_POST(self) -> None:
         parsed = urlparse(self.path)
-        if parsed.path != "/api/schedule":
+        if parsed.path not in {"/api/schedule", "/api/cover-selection"}:
             self._send(b"Not Found", "text/plain; charset=utf-8", HTTPStatus.NOT_FOUND)
             return
 
@@ -766,6 +1314,16 @@ class Handler(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length)
             payload = json.loads(raw.decode("utf-8"))
+            if parsed.path == "/api/cover-selection":
+                selection = save_cover_selection(
+                    payload["file"],
+                    text=payload["text"],
+                    background=payload["background"],
+                )
+                body = json.dumps({"selection": selection}, ensure_ascii=False).encode("utf-8")
+                self._send(body, "application/json; charset=utf-8")
+                return
+
             from publish_pipeline import schedule_article
 
             article_path = schedule_article(payload["file"], payload["date"])
