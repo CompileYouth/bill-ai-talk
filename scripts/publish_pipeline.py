@@ -20,6 +20,7 @@ TRACKER_ROW_RE = re.compile(
 )
 ASSET_PATH_RE = re.compile(r"(?P<prefix>\.\./assets/|\.\./\.\./assets/)(?P<stem>[^/]+)/")
 DATE_PREFIX_RE = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2})(?P<rest>.*)$")
+PENDING_ASSET_PREFIX_RE = re.compile(r"^未排期(?P<rest>.*)$")
 
 
 def _shift_if_needed(publish_date: str) -> None:
@@ -77,8 +78,16 @@ def schedule_article(article_file: str, publish_date: str) -> Path:
     if asset_stems:
         old_asset_stem = asset_stems[0][1]
         date_match = DATE_PREFIX_RE.match(old_asset_stem)
+        pending_match = PENDING_ASSET_PREFIX_RE.match(old_asset_stem)
         if date_match:
             new_asset_stem = f"{publish_date}{date_match.group('rest')}"
+            old_asset_dir = ROOT / "assets" / old_asset_stem
+            new_asset_dir = ROOT / "assets" / new_asset_stem
+            if old_asset_dir.exists() and old_asset_dir != new_asset_dir:
+                old_asset_dir.rename(new_asset_dir)
+            updated_text = updated_text.replace(old_asset_stem, new_asset_stem)
+        elif pending_match:
+            new_asset_stem = f"{publish_date}{pending_match.group('rest')}"
             old_asset_dir = ROOT / "assets" / old_asset_stem
             new_asset_dir = ROOT / "assets" / new_asset_stem
             if old_asset_dir.exists() and old_asset_dir != new_asset_dir:
