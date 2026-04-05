@@ -1,6 +1,10 @@
 # Article State Schema
 
-Each article state file lives under `article-state/articles/` and is keyed by article path.
+Each article state file lives under `article-state/articles/` and is keyed by a stable `article_id`.
+For readability, the filename also carries a date prefix:
+
+- scheduled article: `YYYY-MM-DD__article_id.json`
+- unscheduled article: `未排期__article_id.json`
 
 Example shape:
 

@@ -18,6 +18,7 @@ COVER_SELECTIONS_PATH = ROOT / ".publish" / "cover-selections.json"
 
 SCHEDULED_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
 PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
+ARTICLE_ID_COMMENT_RE = re.compile(r"^<!--\s*article_id:\s*(?P<id>[a-z0-9_-]+)\s*-->$")
 TRACKER_ROW_RE = re.compile(
     r"^\| (?P<date>\d{4}-\d{2}-\d{2}) \| (?P<title>.+?) \| `(?P<article>articles/.+?\.md)` \| (?P<metrics>.+) \|$"
 )
@@ -26,21 +27,60 @@ DATE_PREFIX_RE = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2})(?P<rest>.*)$")
 PENDING_ASSET_PREFIX_RE = re.compile(r"^未排期(?P<rest>.*)$")
 
 
-def _state_path(file_name: str) -> Path:
+def _extract_article_id(article_path: Path) -> str | None:
+    if not article_path.exists():
+        return None
+    for line in article_path.read_text(encoding="utf-8").splitlines()[:5]:
+        match = ARTICLE_ID_COMMENT_RE.fullmatch(line.strip())
+        if match:
+            return match.group("id")
+    return None
+
+
+def _state_name_prefix(file_name: str) -> str:
+    name = Path(file_name).name
+    match = SCHEDULED_RE.match(name)
+    if match:
+        return match.group("day")
+    if PENDING_RE.match(name):
+        return "未排期"
+    return "unknown"
+
+
+def _state_path(file_name: str, article_id: str | None = None) -> Path:
+    if article_id:
+        return ARTICLE_STATE_DIR / f"{_state_name_prefix(file_name)}__{article_id}.json"
     safe_name = file_name.replace("/", "__").removesuffix(".md")
     return ARTICLE_STATE_DIR / f"{safe_name}.json"
 
 
 def _migrate_article_state(old_file_name: str, new_file_name: str) -> None:
-    old_state_path = _state_path(old_file_name)
-    new_state_path = _state_path(new_file_name)
+    old_article_path = ARTICLES_DIR / old_file_name
+    new_article_path = ARTICLES_DIR / new_file_name
+    article_id = _extract_article_id(old_article_path) or _extract_article_id(new_article_path)
+    old_state_path = _state_path(old_file_name, article_id)
+    if not old_state_path.exists() and article_id:
+        matches = list(ARTICLE_STATE_DIR.glob(f"*__{article_id}.json"))
+        if matches:
+            old_state_path = matches[0]
+    legacy_old_state_path = _state_path(old_file_name)
+    new_state_path = _state_path(new_file_name, article_id)
     if old_state_path.exists():
         ARTICLE_STATE_DIR.mkdir(parents=True, exist_ok=True)
         state = json.loads(old_state_path.read_text(encoding="utf-8"))
         if isinstance(state, dict):
+            state["article_id"] = article_id or state.get("article_id", "")
             state["article_file"] = new_file_name
         new_state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         old_state_path.unlink()
+    elif legacy_old_state_path.exists():
+        ARTICLE_STATE_DIR.mkdir(parents=True, exist_ok=True)
+        state = json.loads(legacy_old_state_path.read_text(encoding="utf-8"))
+        if isinstance(state, dict):
+            state["article_id"] = article_id or state.get("article_id", "")
+            state["article_file"] = new_file_name
+        new_state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        legacy_old_state_path.unlink()
 
     if COVER_SELECTIONS_PATH.exists():
         selections = json.loads(COVER_SELECTIONS_PATH.read_text(encoding="utf-8"))

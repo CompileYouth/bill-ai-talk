@@ -131,11 +131,38 @@ def clean_markdown_text(markdown_text: str) -> str:
     )
 
 
+def state_name_prefix(file_name: str | None) -> str:
+    name = Path(file_name or "").name
+    match = ARTICLE_RE.match(name)
+    if match:
+        return match.group("day")
+    pending_match = PENDING_RE.match(name)
+    if pending_match:
+        return "未排期"
+    return "unknown"
+
+
 def article_state_path(file_name: str | None = None, article_id: str | None = None) -> Path:
     if article_id:
-        return ARTICLE_STATE_DIR / f"{article_id}.json"
+        return ARTICLE_STATE_DIR / f"{state_name_prefix(file_name)}__{article_id}.json"
     safe_name = (file_name or "unknown").replace("/", "__").removesuffix(".md")
     return ARTICLE_STATE_DIR / f"{safe_name}.json"
+
+
+def find_article_state_path(file_name: str, article_id: str | None) -> Path:
+    if article_id:
+        preferred = article_state_path(file_name, article_id)
+        if preferred.exists():
+            return preferred
+        for candidate in ARTICLE_STATE_DIR.glob(f"*__{article_id}.json"):
+            return candidate
+        legacy_id_path = ARTICLE_STATE_DIR / f"{article_id}.json"
+        if legacy_id_path.exists():
+            return legacy_id_path
+    legacy_path = article_state_path(file_name=file_name)
+    if legacy_path.exists():
+        return legacy_path
+    return article_state_path(file_name, article_id)
 
 
 def default_article_state(file_name: str, article_id: str | None = None) -> dict[str, object]:
@@ -172,16 +199,27 @@ def default_article_state(file_name: str, article_id: str | None = None) -> dict
 def read_article_state(file_name: str) -> dict[str, object]:
     article_path = ARTICLES_DIR / file_name
     article_id = extract_article_id(article_path)
-    path = article_state_path(file_name, article_id)
+    path = find_article_state_path(file_name, article_id)
     legacy_path = article_state_path(file_name=file_name)
+    preferred_path = article_state_path(file_name, article_id)
+    if path.exists() and path != preferred_path:
+        state = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(state, dict):
+            state["article_id"] = article_id or state.get("article_id", "")
+            state["article_file"] = file_name
+        ARTICLE_STATE_DIR.mkdir(parents=True, exist_ok=True)
+        preferred_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        path.unlink()
+        path = preferred_path
     if not path.exists() and legacy_path.exists() and legacy_path != path:
         state = json.loads(legacy_path.read_text(encoding="utf-8"))
         if isinstance(state, dict):
             state["article_id"] = article_id or state.get("article_id", "")
             state["article_file"] = file_name
         ARTICLE_STATE_DIR.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        preferred_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         legacy_path.unlink()
+        path = preferred_path
     if not path.exists():
         return default_article_state(file_name, article_id)
     return json.loads(path.read_text(encoding="utf-8"))

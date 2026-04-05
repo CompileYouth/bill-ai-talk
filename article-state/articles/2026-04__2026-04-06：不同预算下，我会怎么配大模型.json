@@ -1,0 +1,31 @@
+{
+  "article_file": "2026-04/2026-04-06：不同预算下，我会怎么配大模型.md",
+  "article": {
+    "title": "",
+    "tldr": "",
+    "core_judgment": "",
+    "publish_date": ""
+  },
+  "strategy": {
+    "article_type": "",
+    "topic_tags": [],
+    "target_reader": "",
+    "distribution_hook": "",
+    "packaging_hypothesis": ""
+  },
+  "packaging": {
+    "cover": {
+      "text": "模型选配",
+      "background": "#3082a4",
+      "confirmed_at": "2026-04-05T16:15:43"
+    },
+    "images": []
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  }
+}
