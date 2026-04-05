@@ -1,17 +1,19 @@
 {
   "article_file": "2026-04/2026-04-01：为什么我开始更多用 Codex，而不是 ChatGPT.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "为什么我开始更多用 Codex，而不是 ChatGPT",
+    "tldr": "不是 ChatGPT 不重要了，而是当 AI 真正进入生产过程之后，单纯的聊天框开始显得太轻了。ChatGPT 更像入口，Codex 更像工作台。",
+    "core_judgment": "不是 ChatGPT 不重要了，而是当 AI 真正进入生产过程之后，单纯的聊天框开始显得太轻了",
+    "publish_date": "2026-04-01"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "model"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“我用”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

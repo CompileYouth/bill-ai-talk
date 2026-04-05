@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-29：顶级模型和普通模型，真正拉开差距的是能力层次.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "顶级模型和普通模型，真正拉开差距的是能力层次",
+    "tldr": "顶级模型和普通模型的差距，不只是某一个单点指标，而是**能力层次的差距**。如果把 ChatGPT 之后这几年的 AI 演进压缩来看，大概可以分成三层：静态回答、动态求解、环境执行。越往后，差距通常越大。",
+    "core_judgment": "顶级模型和普通模型的差距，不只是某一个单点指标，而是**能力层次的差距**",
+    "publish_date": "2026-03-29"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "model"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“顶级模型”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

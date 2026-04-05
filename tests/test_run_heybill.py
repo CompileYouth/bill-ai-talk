@@ -106,6 +106,10 @@ class HeyBillCoverSelectionTests(unittest.TestCase):
         self.assertEqual(state["outcomes"]["likes"], 8)
         self.assertEqual(state["review"]["human_note"], "标题还可以更直接")
         self.assertTrue(state["review"]["next_adjustment"])
+        self.assertEqual(state["article"]["title"], "测试文章")
+        self.assertEqual(state["article"]["tldr"], "这是摘要")
+        self.assertTrue(state["strategy"]["article_type"])
+        self.assertTrue(state["strategy"]["target_reader"])
 
 
 if __name__ == "__main__":

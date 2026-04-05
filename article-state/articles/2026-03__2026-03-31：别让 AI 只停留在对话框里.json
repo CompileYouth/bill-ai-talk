@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-31：别让 AI 只停留在对话框里.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "别让 AI 只停留在对话框里",
+    "tldr": "很多人已经在用 AI 了，但 AI 还只停留在对话框里。真正大的变化，不是它偶尔帮你答一个问题，而是它开始进入你的工作流，持续帮你把事情往前推。",
+    "core_judgment": "很多人已经在用 AI 了，但 AI 还只停留在对话框里",
+    "publish_date": "2026-03-31"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "workflow"
+    ],
+    "target_reader": "knowledge_workers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“别让”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

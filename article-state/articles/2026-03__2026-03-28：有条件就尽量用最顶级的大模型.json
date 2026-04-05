@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-28：有条件就尽量用最顶级的大模型.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "有条件就尽量用最顶级的大模型",
+    "tldr": "国内大模型和海外最顶级模型，今天依然有明显差距。很多人感觉不到，不是因为差距真的小，而是因为自己给 AI 出的题太简单。**有条件，就尽量去用最顶级的模型。**",
+    "core_judgment": "国内大模型和海外最顶级模型，今天依然有明显差距",
+    "publish_date": "2026-03-28"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "model"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“国内大模”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},
@@ -22,7 +24,56 @@
     "likes": 13,
     "watches": 5,
     "shares": 46,
-    "reader_feedback": "17"
+    "reader_feedback": "17",
+    "reader_feedback_digest": {
+      "source": "微信公众号评论接口",
+      "captured_at": "2026-04-05",
+      "title": "有条件就尽量用最顶级的大模型",
+      "total_root_comments": 7,
+      "total_count_contains_reply": 17,
+      "total_elected_count_contains_reply": 12,
+      "themes": [
+        "读者会主动拿 Claude、Gemini、GPT 和国内模型做横向对比",
+        "差距是否会在专业场景里显著放大，是留言里的高频确认点",
+        "价格和订阅成本是最主要的现实阻力",
+        "国内模型是否足够好用，是读者自然延展出的追问方向",
+        "上下文长度被读者明确提到，是他们感知差距的重要维度之一"
+      ],
+      "representative_comments": [
+        {
+          "author": "Bob.Ceng",
+          "content": "现在claude越来越强大了，各种内部agent运行非常顺滑，反观gemini3.1pro日常挂一漏万，用的形容词夸张，而gpt5.4是车轱辘话来回说，至于国内的大模型，先深度研究模块先能上传多张图片再说吧",
+          "signal": "高强度真实使用者反馈，主动用多家模型的真实体验验证文章判断"
+        },
+        {
+          "author": "专业代画效果图",
+          "content": "这也太拉跨了吧",
+          "author_reply": "按理说现在顶级模型的幻觉已经很少了，不知道是不是前面的上下文跟它提到了5.2",
+          "signal": "读者会拿具体失败案例质疑模型表现，评论区对具体场景差异有讨论价值"
+        },
+        {
+          "author": "心一",
+          "content": "专业情景下确实差别很明显",
+          "signal": "专业场景差距明显，是文章被读者确认的关键结论之一"
+        },
+        {
+          "author": "秋",
+          "content": "顶级的模型贵啊，opus4.6，你不花200美元一个月，基本就很难满足需求呀",
+          "author_reply": "也没必要直接拉满，对于大部分人来说20美金的gpt就够用了，再搭配个20美金的cc做一些复杂任务",
+          "signal": "成本是最主要的反对点，也是可以继续展开写下一篇的方向"
+        },
+        {
+          "author": "rain",
+          "content": "智谱的呢",
+          "signal": "读者会自然把话题延展到国内模型代表厂商"
+        },
+        {
+          "author": "Teenyee Zeng",
+          "content": "主要是 最大上下文长度 差距太大了",
+          "signal": "上下文长度是读者明确感知模型差距的具体维度"
+        }
+      ]
+    }
   },
   "review": {
     "human_note": "这篇明显跑出来了；分享意愿明显；有17条留言或私信反馈",

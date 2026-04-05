@@ -1,17 +1,21 @@
 {
   "article_file": "2026-03/2026-03-25：我用 Agent 生成文章，写一篇高质量内容只需要 1 分钟.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "我用 Agent 生成文章，写一篇高质量内容只需要 1 分钟",
+    "tldr": "我把一篇 AI 相关文章从“手工串流程 30 分钟”改造成了“执行一个 Agent，1 分钟出成品”。真正的变化，不是省了 29 分钟，而是把内容生产变成了一个会持续优化的系统。",
+    "core_judgment": "我把一篇 AI 相关文章从“手工串流程 30 分钟”改造成了“执行一个 Agent，1 分钟出成品”",
+    "publish_date": "2026-03-25"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "agent",
+      "workflow",
+      "writing"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“我用”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-20：判断自己是否成长，只看 AI 就够了.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "判断自己是否成长，只看 AI 就够了",
+    "tldr": "今天判断自己有没有成长，最简单也最残酷的标准，就是看你对 **AI 的理解有没有更深一点，使用 AI 的能力有没有更强一点**。如果这两件事没有变化，别的“成长”都不算数。",
+    "core_judgment": "今天判断自己有没有成长，最简单也最残酷的标准，就是看你对 **AI 的理解有没有更深一点，使用 AI 的能力有没有更强一点**",
+    "publish_date": "2026-03-20"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“只看”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

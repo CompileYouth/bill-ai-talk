@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-19：我为什么又开始日更这个公众号.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "我为什么又开始日更这个公众号",
+    "tldr": "我重新开始日更，不是因为突然有了表达欲，而是因为 **AI 已经重要到没法绕开**。以后这里会更集中地写我对 AI 的理解，以及一些真正能用起来的方法。",
+    "core_judgment": "我重新开始日更，不是因为突然有了表达欲，而是因为 **AI 已经重要到没法绕开**",
+    "publish_date": "2026-03-19"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“我重新开”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

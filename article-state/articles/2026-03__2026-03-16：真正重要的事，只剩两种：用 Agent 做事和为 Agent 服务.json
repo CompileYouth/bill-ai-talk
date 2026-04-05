@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-16：真正重要的事，只剩两种：用 Agent 做事和为 Agent 服务.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "真正重要的事，只剩两种：用 Agent 做事和为 Agent 服务",
+    "tldr": "判断一件事是否值得长期投入，最简单的标准，就是看它是在借 Agent 放大自己，还是在为 Agent 提供能力。",
+    "core_judgment": "判断一件事是否值得长期投入，最简单的标准，就是看它是在借 Agent 放大自己，还是在为 Agent 提供能力",
+    "publish_date": "2026-03-16"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "agent"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“重要的事”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

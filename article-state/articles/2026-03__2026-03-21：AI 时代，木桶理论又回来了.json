@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-21：AI 时代，木桶理论又回来了.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "AI 时代，木桶理论又回来了",
+    "tldr": "以前工作里大家总说要看长板，短板可以靠团队协作补上。但到了 AI 时代，很多短板第一次变得可以低成本补齐，于是短板重新变成了必答题。",
+    "core_judgment": "以前工作里大家总说要看长板，短板可以靠团队协作补上",
+    "publish_date": "2026-03-21"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“以前工作”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

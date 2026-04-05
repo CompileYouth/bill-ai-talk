@@ -1,17 +1,20 @@
 {
   "article_file": "2026-04/2026-04-03：没有记忆，AI 只是高级聊天框.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "没有记忆，AI 只是高级聊天框",
+    "tldr": "AI 从“聊天框”走向“长期协作者”的关键一步，不是模型再多会一点，而是终于开始具备了记忆。只是这里的记忆，已经不是单纯保存聊天记录，而是把规则写下来，把状态存下来，把经验沉淀下来。",
+    "core_judgment": "AI 从“聊天框”走向“长期协作者”的关键一步，不是模型再多会一点，而是终于开始具备了记忆",
+    "publish_date": "2026-04-03"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "memory",
+      "model"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“没有记忆”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

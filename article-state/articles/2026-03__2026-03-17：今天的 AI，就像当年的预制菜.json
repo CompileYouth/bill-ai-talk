@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-17：今天的 AI，就像当年的预制菜.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "今天的 AI，就像当年的预制菜",
+    "tldr": "今天面对 AI，最重要的不是研究、观望和争论，而是三个字：**用起来。**",
+    "core_judgment": "今天面对 AI，最重要的不是研究、观望和争论，而是三个字：**用起来",
+    "publish_date": "2026-03-17"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“今天面对”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

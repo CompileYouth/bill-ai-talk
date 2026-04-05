@@ -2,16 +2,18 @@
   "article_file": "2026-04/2026-04-05：AI 会做还不够，还得限制 AI 做什么.md",
   "article": {
     "title": "AI 会做还不够，还得限制 AI 做什么",
-    "tldr": "",
-    "core_judgment": "",
+    "tldr": "Bash 让 Agent 从“会说”走向“会做”，但光会做还不够。Agent 一旦开始执行，真正重要的就不只是能力，而是边界。没有边界，AI 越能干活，你反而越不敢把事情交给它。",
+    "core_judgment": "Bash 让 Agent 从“会说”走向“会做”，但光会做还不够",
     "publish_date": "2026-04-05"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "agent"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“沙箱”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {

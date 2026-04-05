@@ -1,17 +1,20 @@
 {
   "article_file": "2026-04/2026-04-04：bash，让 Agent 从说到做.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "bash，让 Agent 从说到做",
+    "tldr": "Agent 时代最重要的变化，不是 AI 说得更好了，而是它终于开始能做了。而在“让 AI 从说到做”这件事上，bash 是一个经常被低估、但非常关键的执行层。",
+    "core_judgment": "Agent 时代最重要的变化，不是 AI 说得更好了，而是它终于开始能做了",
+    "publish_date": "2026-04-04"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "agent",
+      "workflow"
+    ],
+    "target_reader": "ai_builders_and_engineers",
+    "distribution_hook": "counterintuitive_reframe",
+    "packaging_hypothesis": "用“bash”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

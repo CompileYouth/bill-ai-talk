@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-22：AI 时代，最重要的是让自己进入正反馈链路.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "AI 时代，最重要的是让自己进入正反馈链路",
+    "tldr": "AI 时代，真正拉开差距的，不是谁多做了一次，而是谁更早建立起自己的正反馈链路。**别让 AI 每次都从零理解你。**",
+    "core_judgment": "AI 时代，真正拉开差距的，不是谁多做了一次，而是谁更早建立起自己的正反馈链路",
+    "publish_date": "2026-03-22"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“时代”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

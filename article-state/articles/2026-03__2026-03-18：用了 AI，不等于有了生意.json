@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-18：用了 AI，不等于有了生意.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "用了 AI，不等于有了生意",
+    "tldr": "AI 能显著降低生产成本，但它不能替你完成定位、获客、转化和留存。**用了 AI，不等于有了生意。**",
+    "core_judgment": "AI 能显著降低生产成本，但它不能替你完成定位、获客、转化和留存",
+    "publish_date": "2026-03-18"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“用了”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

@@ -258,7 +258,25 @@ def autofill_article_state(file_name: str, title: str, summary: str, publish_dat
 
 
 def update_article_review(file_name: str, metrics: dict[str, object] | None = None, subjective_note: str = "") -> dict[str, object]:
-    state = read_article_state(file_name)
+    article_path = ARTICLES_DIR / file_name
+    title = file_name.removesuffix(".md").split("：", 1)[1] if "：" in file_name else file_name.removesuffix(".md")
+    summary = ""
+    publish_date = ""
+    if article_path.exists():
+        markdown_text = article_path.read_text(encoding="utf-8")
+        summary = extract_tldr_summary(markdown_text)
+        article_match = ARTICLE_RE.match(article_path.name)
+        if article_match:
+            publish_date = article_match.group("day")
+    cover = load_cover_selection(file_name)
+    cover_candidates = [cover["text"]] if cover and cover.get("text") else derive_cover_candidates(title, summary)
+    state = autofill_article_state(
+        file_name,
+        title=title,
+        summary=summary,
+        publish_date=publish_date,
+        cover_candidates=cover_candidates,
+    )
     outcomes = state.setdefault("outcomes", {})
     review = state.setdefault("review", {})
     if metrics:

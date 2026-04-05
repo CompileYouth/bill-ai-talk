@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-26：AI 会写代码了，软件工程反而更重要.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "AI 会写代码了，软件工程反而更重要",
+    "tldr": "很多人以为 AI 会写代码了，软件工程就不重要了。我正好相反地觉得，**软件工程在 AI 时代比以往任何时候都更重要。**",
+    "core_judgment": "很多人以为 AI 会写代码了，软件工程就不重要了",
+    "publish_date": "2026-03-26"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_builders_and_engineers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“很多人以”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

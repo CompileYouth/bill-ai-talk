@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-24：AI 时代，应该降低自己的容忍阈值.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "AI 时代，应该降低自己的容忍阈值",
+    "tldr": "AI 时代，一个很重要的变化是：**要主动降低自己对“不舒服”的容忍阈值。**很多以前忍一忍就算了的问题，现在其实都可以很快被优化掉。",
+    "core_judgment": "AI 时代，一个很重要的变化是：**要主动降低自己对“不舒服”的容忍阈值",
+    "publish_date": "2026-03-24"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“时代”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

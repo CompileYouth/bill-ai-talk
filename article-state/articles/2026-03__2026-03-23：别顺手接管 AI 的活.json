@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-23：别顺手接管 AI 的活.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "别顺手接管 AI 的活",
+    "tldr": "建立正反馈链路的一个重要提醒是：**别发现 AI 做得不够好，就自己顺手改掉。把反馈还给 AI，才会让它越来越懂你。**",
+    "core_judgment": "建立正反馈链路的一个重要提醒是：**别发现 AI 做得不够好，就自己顺手改掉",
+    "publish_date": "2026-03-23"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "general_ai"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "sharp_judgment",
+    "packaging_hypothesis": "用“的活”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},

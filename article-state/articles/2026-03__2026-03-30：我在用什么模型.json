@@ -1,17 +1,19 @@
 {
   "article_file": "2026-03/2026-03-30：我在用什么模型.md",
   "article": {
-    "title": "",
-    "tldr": "",
-    "core_judgment": "",
-    "publish_date": ""
+    "title": "我在用什么模型",
+    "tldr": "现在最值得关注的第一梯队 AI 产品，基本还是 ChatGPT、Claude、Gemini。真正高效的用法，不是反复问谁绝对最强，而是搞清楚它们各自强在哪，再按场景分工使用。",
+    "core_judgment": "现在最值得关注的第一梯队 AI 产品，基本还是 ChatGPT、Claude、Gemini",
+    "publish_date": "2026-03-30"
   },
   "strategy": {
-    "article_type": "",
-    "topic_tags": [],
-    "target_reader": "",
-    "distribution_hook": "",
-    "packaging_hypothesis": ""
+    "article_type": "deep_explainer",
+    "topic_tags": [
+      "model"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用“现在最值”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},
