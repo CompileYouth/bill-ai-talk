@@ -1,18 +1,18 @@
 {
-  "article_file": "2026-03/2026-03-22：AI 时代，最重要的是让自己进入正反馈链路.md",
+  "article_file": "2026-03/2026-03-24：AI 时代，应该降低自己的容忍阈值.md",
   "article": {
-    "title": "AI 时代，最重要的是让自己进入正反馈链路",
-    "tldr": "AI 时代，真正拉开差距的，不是谁多做了一次，而是谁更早建立起自己的正反馈链路。**别让 AI 每次都从零理解你。**",
-    "core_judgment": "AI 时代，真正拉开差距的，不是谁多做了一次，而是谁更早建立起自己的正反馈链路",
-    "publish_date": "2026-03-22"
+    "title": "AI 时代，应该降低自己的容忍阈值",
+    "tldr": "AI 时代，一个很重要的变化是：**要主动降低自己对“不舒服”的容忍阈值。**很多以前忍一忍就算了的问题，现在其实都可以很快被优化掉。",
+    "core_judgment": "AI 时代，一个很重要的变化是：**要主动降低自己对“不舒服”的容忍阈值",
+    "publish_date": "2026-03-24"
   },
   "strategy": {
-    "article_type": "deep_explainer",
+    "article_type": "short_judgment",
     "topic_tags": [
       "general_ai"
     ],
     "target_reader": "ai_curious_readers",
-    "distribution_hook": "clear_explanation",
+    "distribution_hook": "sharp_judgment",
     "packaging_hypothesis": "用“时代”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
@@ -20,10 +20,10 @@
     "images": []
   },
   "outcomes": {
-    "reads": 13,
+    "reads": 16,
     "likes": 2,
     "watches": 0,
-    "shares": 1,
+    "shares": 0,
     "reader_feedback": "0"
   },
   "review": {
@@ -31,5 +31,6 @@
     "what_worked": "读后反馈比例不差，正文判断有一定共鸣。",
     "what_failed": "这篇启动偏弱，说明选题表达或包装钩子还不够强。",
     "next_adjustment": "下次优先把标题和封面词再压缩得更直接。"
-  }
+  },
+  "article_id": "art_e5ee0c17e3f8"
 }

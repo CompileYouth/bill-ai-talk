@@ -1,3 +1,4 @@
+<!-- article_id: art_aff817de95ff -->
 > TL;DR
 >
 > 不是 ChatGPT 不重要了，而是当 AI 真正进入生产过程之后，单纯的聊天框开始显得太轻了。ChatGPT 更像入口，Codex 更像工作台。

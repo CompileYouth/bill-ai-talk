@@ -21,6 +21,7 @@ ARTICLE_STATE_DIR = ROOT / "article-state" / "articles"
 COVER_SELECTIONS_PATH = ROOT / ".publish" / "cover-selections.json"
 ARTICLE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
 PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
+ARTICLE_ID_COMMENT_RE = re.compile(r"^<!--\s*article_id:\s*(?P<id>[a-z0-9_-]+)\s*-->$")
 NOISE_WORDS = (
     "AI",
     "Agent",
@@ -114,13 +115,32 @@ def extract_tldr_summary(markdown_text: str) -> str:
     return " ".join(parts).strip()
 
 
-def article_state_path(file_name: str) -> Path:
-    safe_name = file_name.replace("/", "__").removesuffix(".md")
+def extract_article_id(article_path: Path) -> str | None:
+    if not article_path.exists():
+        return None
+    for line in article_path.read_text(encoding="utf-8").splitlines()[:5]:
+        match = ARTICLE_ID_COMMENT_RE.fullmatch(line.strip())
+        if match:
+            return match.group("id")
+    return None
+
+
+def clean_markdown_text(markdown_text: str) -> str:
+    return "\n".join(
+        line for line in markdown_text.splitlines() if not ARTICLE_ID_COMMENT_RE.fullmatch(line.strip())
+    )
+
+
+def article_state_path(file_name: str | None = None, article_id: str | None = None) -> Path:
+    if article_id:
+        return ARTICLE_STATE_DIR / f"{article_id}.json"
+    safe_name = (file_name or "unknown").replace("/", "__").removesuffix(".md")
     return ARTICLE_STATE_DIR / f"{safe_name}.json"
 
 
-def default_article_state(file_name: str) -> dict[str, object]:
+def default_article_state(file_name: str, article_id: str | None = None) -> dict[str, object]:
     return {
+        "article_id": article_id or "",
         "article_file": file_name,
         "article": {
             "title": "",
@@ -150,15 +170,30 @@ def default_article_state(file_name: str) -> dict[str, object]:
 
 
 def read_article_state(file_name: str) -> dict[str, object]:
-    path = article_state_path(file_name)
+    article_path = ARTICLES_DIR / file_name
+    article_id = extract_article_id(article_path)
+    path = article_state_path(file_name, article_id)
+    legacy_path = article_state_path(file_name=file_name)
+    if not path.exists() and legacy_path.exists() and legacy_path != path:
+        state = json.loads(legacy_path.read_text(encoding="utf-8"))
+        if isinstance(state, dict):
+            state["article_id"] = article_id or state.get("article_id", "")
+            state["article_file"] = file_name
+        ARTICLE_STATE_DIR.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        legacy_path.unlink()
     if not path.exists():
-        return default_article_state(file_name)
+        return default_article_state(file_name, article_id)
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def write_article_state(file_name: str, state: dict[str, object]) -> dict[str, object]:
     ARTICLE_STATE_DIR.mkdir(parents=True, exist_ok=True)
-    path = article_state_path(file_name)
+    article_path = ARTICLES_DIR / file_name
+    article_id = extract_article_id(article_path)
+    path = article_state_path(file_name, article_id)
+    state["article_id"] = article_id or state.get("article_id", "")
+    state["article_file"] = file_name
     path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return state
 
@@ -263,7 +298,7 @@ def update_article_review(file_name: str, metrics: dict[str, object] | None = No
     summary = ""
     publish_date = ""
     if article_path.exists():
-        markdown_text = article_path.read_text(encoding="utf-8")
+        markdown_text = clean_markdown_text(article_path.read_text(encoding="utf-8"))
         summary = extract_tldr_summary(markdown_text)
         article_match = ARTICLE_RE.match(article_path.name)
         if article_match:
@@ -401,7 +436,7 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         raise FileNotFoundError(file_name)
 
     blocks = wechat.markdown_to_blocks(path)
-    markdown_text = path.read_text(encoding="utf-8")
+    markdown_text = clean_markdown_text(path.read_text(encoding="utf-8"))
     summary = extract_tldr_summary(markdown_text)
     title = match.group("title") if match else pending_match.group("title")
     for block in blocks:
@@ -442,7 +477,7 @@ def load_copy_payload(file_name: str) -> dict[str, str]:
         raise FileNotFoundError(file_name)
 
     html_payload = wechat.markdown_to_wechat_html(path)
-    text_payload = path.read_text(encoding="utf-8")
+    text_payload = clean_markdown_text(path.read_text(encoding="utf-8"))
     summary = extract_tldr_summary(text_payload)
     return {"html": html_payload, "text": text_payload, "summary": summary}
 
@@ -975,7 +1010,7 @@ def shell_html() -> str:
           </div>
           <div class="cover-edit-only">
             <label class="cover-section-label" for="cover-custom-input">自定义文案</label>
-            <input id="cover-custom-input" class="cover-input" type="text" maxlength="4" placeholder="最多 4 个字" />
+            <input id="cover-custom-input" class="cover-input" type="text" placeholder="最多 4 个字" />
           </div>
           <p id="cover-status" class="cover-status"></p>
           <div class="cover-meta-row">
@@ -1381,7 +1416,20 @@ def shell_html() -> str:
       }}
     }});
 
-    document.getElementById("cover-custom-input").addEventListener("input", (event) => {{
+    const coverCustomInput = document.getElementById("cover-custom-input");
+    let coverCustomComposing = false;
+
+    coverCustomInput.addEventListener("compositionstart", () => {{
+      coverCustomComposing = true;
+    }});
+
+    coverCustomInput.addEventListener("compositionend", (event) => {{
+      coverCustomComposing = false;
+      setCoverText(event.target.value);
+    }});
+
+    coverCustomInput.addEventListener("input", (event) => {{
+      if (coverCustomComposing) return;
       setCoverText(event.target.value);
     }});
 

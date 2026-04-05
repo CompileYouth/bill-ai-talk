@@ -1,3 +1,4 @@
+<!-- article_id: art_592bcb28d6fd -->
 # 2026-03-16: 真正重要的事，只剩两种：用 Agent 做事和为 Agent 服务
 
 ![公众号封面图](../../assets/2026-03-16-by-agent-or-for-agent/wechat-cover.jpg)

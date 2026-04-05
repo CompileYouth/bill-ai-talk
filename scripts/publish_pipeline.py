@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -12,6 +13,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ARTICLES_DIR = ROOT / "articles"
 TRACKER_PATH = ROOT / "publishing-tracker.md"
+ARTICLE_STATE_DIR = ROOT / "article-state" / "articles"
+COVER_SELECTIONS_PATH = ROOT / ".publish" / "cover-selections.json"
 
 SCHEDULED_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})：(?P<title>.+)\.md$")
 PENDING_RE = re.compile(r"^未排期：(?P<title>.+)\.md$")
@@ -21,6 +24,29 @@ TRACKER_ROW_RE = re.compile(
 ASSET_PATH_RE = re.compile(r"(?P<prefix>\.\./assets/|\.\./\.\./assets/)(?P<stem>[^/]+)/")
 DATE_PREFIX_RE = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2})(?P<rest>.*)$")
 PENDING_ASSET_PREFIX_RE = re.compile(r"^未排期(?P<rest>.*)$")
+
+
+def _state_path(file_name: str) -> Path:
+    safe_name = file_name.replace("/", "__").removesuffix(".md")
+    return ARTICLE_STATE_DIR / f"{safe_name}.json"
+
+
+def _migrate_article_state(old_file_name: str, new_file_name: str) -> None:
+    old_state_path = _state_path(old_file_name)
+    new_state_path = _state_path(new_file_name)
+    if old_state_path.exists():
+        ARTICLE_STATE_DIR.mkdir(parents=True, exist_ok=True)
+        state = json.loads(old_state_path.read_text(encoding="utf-8"))
+        if isinstance(state, dict):
+            state["article_file"] = new_file_name
+        new_state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        old_state_path.unlink()
+
+    if COVER_SELECTIONS_PATH.exists():
+        selections = json.loads(COVER_SELECTIONS_PATH.read_text(encoding="utf-8"))
+        if old_file_name in selections:
+            selections[new_file_name] = selections.pop(old_file_name)
+            COVER_SELECTIONS_PATH.write_text(json.dumps(selections, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def _shift_if_needed(publish_date: str) -> None:
@@ -71,6 +97,7 @@ def schedule_article(article_file: str, publish_date: str) -> Path:
     month_dir = ARTICLES_DIR / publish_date[:7]
     month_dir.mkdir(parents=True, exist_ok=True)
     new_path = month_dir / f"{publish_date}：{title}.md"
+    new_file_name = new_path.relative_to(ARTICLES_DIR).as_posix()
 
     asset_stems = list(dict.fromkeys(ASSET_PATH_RE.findall(original_text)))
     updated_text = original_text.replace("../assets/", "../../assets/")
@@ -96,6 +123,7 @@ def schedule_article(article_file: str, publish_date: str) -> Path:
 
     new_path.write_text(updated_text, encoding="utf-8")
     old_path.unlink()
+    _migrate_article_state(article_file, new_file_name)
     _insert_tracker_row(publish_date, title, new_path)
     return new_path
 

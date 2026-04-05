@@ -1,10 +1,10 @@
 {
-  "article_file": "2026-03/2026-03-17：今天的 AI，就像当年的预制菜.md",
+  "article_file": "2026-03/2026-03-18：用了 AI，不等于有了生意.md",
   "article": {
-    "title": "今天的 AI，就像当年的预制菜",
-    "tldr": "今天面对 AI，最重要的不是研究、观望和争论，而是三个字：**用起来。**",
-    "core_judgment": "今天面对 AI，最重要的不是研究、观望和争论，而是三个字：**用起来",
-    "publish_date": "2026-03-17"
+    "title": "用了 AI，不等于有了生意",
+    "tldr": "AI 能显著降低生产成本，但它不能替你完成定位、获客、转化和留存。**用了 AI，不等于有了生意。**",
+    "core_judgment": "AI 能显著降低生产成本，但它不能替你完成定位、获客、转化和留存",
+    "publish_date": "2026-03-18"
   },
   "strategy": {
     "article_type": "short_judgment",
@@ -13,17 +13,17 @@
     ],
     "target_reader": "ai_curious_readers",
     "distribution_hook": "sharp_judgment",
-    "packaging_hypothesis": "用“今天面对”承接文章主判断，并用直接标题降低读者理解门槛。"
+    "packaging_hypothesis": "用“用了”承接文章主判断，并用直接标题降低读者理解门槛。"
   },
   "packaging": {
     "cover": {},
     "images": []
   },
   "outcomes": {
-    "reads": 16,
-    "likes": 3,
+    "reads": 7,
+    "likes": 7,
     "watches": 0,
-    "shares": 1,
+    "shares": 0,
     "reader_feedback": "0"
   },
   "review": {
@@ -31,5 +31,6 @@
     "what_worked": "读后反馈比例不差，正文判断有一定共鸣。",
     "what_failed": "这篇启动偏弱，说明选题表达或包装钩子还不够强。",
     "next_adjustment": "下次优先把标题和封面词再压缩得更直接。"
-  }
+  },
+  "article_id": "art_73554ab29279"
 }
