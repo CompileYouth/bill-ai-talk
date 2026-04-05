@@ -18,6 +18,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 import build_wechat_page as wechat
+import run_heybill
 
 
 ROOT = SCRIPT_DIR.parent
@@ -158,7 +159,7 @@ def wait_for(predicate, timeout: float = 15.0, interval: float = 0.5) -> None:
     raise PublisherError("等待页面状态超时")
 
 
-def render_cover(title: str, output_path: Path) -> Path:
+def render_cover(title: str, output_path: Path, background: str = "") -> Path:
     cover_uri = Path(DEFAULTS["cover_generator"]).resolve().as_uri()
     chrome_open_url(cover_uri)
     chrome_focus_tab(cover_uri)
@@ -168,12 +169,17 @@ def render_cover(title: str, output_path: Path) -> Path:
         (() => {{
           const input = document.getElementById('textInput');
           input.value = {json.dumps(title)};
+          const bg = {json.dumps(background)};
+          if (bg && typeof randomNiceColor === 'function') {{
+            randomNiceColor = () => bg;
+          }}
+          const canvas = document.getElementById('posterCanvas');
           if (typeof drawPoster === 'function') {{
             drawPoster();
           }} else {{
             document.getElementById('generateBtn')?.click();
           }}
-          return document.getElementById('posterCanvas').toDataURL('image/png');
+          return canvas.toDataURL('image/png');
         }})()
         """
     )
@@ -202,6 +208,21 @@ def derive_cover_text(title: str) -> str:
         .replace(" ", "")
     )
     return cleaned[:4] or "AI文"
+
+
+def load_cover_plan(article_path: Path) -> dict[str, str]:
+    file_name = article_path.relative_to(ROOT / "articles").as_posix()
+    selection = run_heybill.load_cover_selection(file_name)
+    title = article_path.stem.split("：", 1)[1]
+    if selection:
+        return {
+            "text": selection.get("text", derive_cover_text(title)),
+            "background": selection.get("background", ""),
+        }
+    return {
+        "text": derive_cover_text(title),
+        "background": "",
+    }
 
 
 def extract_tldr_summary(markdown_text: str) -> str:
@@ -637,6 +658,7 @@ def publish_article(article_path: Path, publish_date: str) -> Path:
     markdown_text = article_path.read_text(encoding="utf-8")
     html_payload = wechat.markdown_to_wechat_html(article_path)
     summary = extract_tldr_summary(markdown_text)
+    cover_plan = load_cover_plan(article_path)
     cover_path = article_path.parent.parent / "assets" / f"{publish_date}-{article_path.stem.split('：',1)[0]}" / "wechat-cover.png"
     # Correct to article-specific asset directory when possible.
     asset_prefix = f"../assets/"
@@ -649,7 +671,7 @@ def publish_article(article_path: Path, publish_date: str) -> Path:
     if asset_dir is None:
         raise PublisherError("文章里没有找到配图目录，无法生成封面")
     cover_path = asset_dir / "wechat-cover.png"
-    render_cover(derive_cover_text(title), cover_path)
+    render_cover(cover_plan["text"], cover_path, background=cover_plan["background"])
 
     chrome_open_url("https://mp.weixin.qq.com/")
     wait_for(lambda: "微信公众平台" in current_title() or "公众号" in current_title(), timeout=20)
@@ -680,6 +702,7 @@ def publish_article(article_path: Path, publish_date: str) -> Path:
                 "publish_date": publish_date,
                 "publish_time": DEFAULTS["publish_time"],
                 "cover": str(cover_path),
+                "cover_plan": cover_plan,
                 "fill_result": json.loads(result),
             },
             ensure_ascii=False,

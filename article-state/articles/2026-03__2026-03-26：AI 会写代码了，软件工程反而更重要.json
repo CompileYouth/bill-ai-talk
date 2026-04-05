@@ -1,0 +1,33 @@
+{
+  "article_file": "2026-03/2026-03-26：AI 会写代码了，软件工程反而更重要.md",
+  "article": {
+    "title": "",
+    "tldr": "",
+    "core_judgment": "",
+    "publish_date": ""
+  },
+  "strategy": {
+    "article_type": "",
+    "topic_tags": [],
+    "target_reader": "",
+    "distribution_hook": "",
+    "packaging_hypothesis": ""
+  },
+  "packaging": {
+    "cover": {},
+    "images": []
+  },
+  "outcomes": {
+    "reads": 96,
+    "likes": 3,
+    "watches": 1,
+    "shares": 5,
+    "reader_feedback": "0"
+  },
+  "review": {
+    "human_note": "这篇启动偏弱",
+    "what_worked": "",
+    "what_failed": "这篇启动偏弱，说明选题表达或包装钩子还不够强。",
+    "next_adjustment": "下次优先把标题和封面词再压缩得更直接。"
+  }
+}

@@ -1,9 +1,8 @@
 # Bill AI Talk
 
-这个仓库用来持续沉淀和产出 AI 相关的公众号文章。
+这个仓库用来持续沉淀和产出 AI 相关的公众号文章，并逐步演化成一个具备正向反馈链路的写作 agent 系统。
 
-从现在开始，这个仓库**不再维护本地规则文档**。  
-写作规范、配图规则、提交约定、交付流程，统一以 skill `$bill-wechat-daily` 为准。
+先看 [`AGENTS.md`](/Users/bytedance/Documents/my-projects/bill-ai-talk/AGENTS.md) 了解工作区边界和状态层，再用 skill `$bill-wechat-daily` 执行具体写作与发布流程。
 
 当前默认工作流：
 
@@ -16,6 +15,7 @@
 目录说明：
 
 - `articles/`：正式文章，按月份分组保存；未排期文章直接放在根目录
+- `article-state/`：每篇文章的封面、反馈、复盘等长期状态
 - `assets/`：文章配图等静态资源
 - `heybill`：从 `articles/` 实时渲染的本地预览与复制入口
 - `scripts/`：通用工具脚本
@@ -26,6 +26,7 @@
 
 - `/Users/bytedance/.codex/skills/bill-wechat-daily/SKILL.md`：公众号日更 skill
 - `skills/bill-wechat-daily/`：用于远程持久化和跨设备同步的 skill 副本
+- `AGENTS.md`：仓库级边界、目录职责和规则优先级入口
 - `scripts/build_wechat_page.py`：把 Markdown 文章转成可复制到公众号的本地网页
 - `scripts/run_heybill.py`：启动 `heyBill` 本地服务，直接读取 `articles/` 并一键复制富文本
 - `scripts/shift_publish_dates.py`：当插入新文章时，顺延后续文章的发送日期
@@ -44,6 +45,7 @@
 
 - `articles/` 中统一保存文章；已排期文章放在 `articles/YYYY-MM/YYYY-MM-DD：标题.md`，未排期文章使用 `articles/未排期：标题.md`
 - `assets/` 中保存正文配图和公众号横版封面
+- `article-state/` 中保存封面确认、反馈数据和复盘记忆
 - 每篇文章默认提供 1 张 `2.35:1` 的公众号封面图
 - 每篇文章默认额外复制 3 张上传用图片到本地 `~/Downloads`
 - 默认提供一个本地 `heyBill` 服务，用于统一浏览和复制文章
@@ -56,7 +58,8 @@
 
 - 你可以直接说一个主题，让我和你一起聊
 - 也可以把一段聊天记录或原文贴给我，我来整理
-- 后续规则变更统一更新到 `$bill-wechat-daily`，不再回写仓库文档
+- 后续写作与发布规则优先更新到 `$bill-wechat-daily` 及其 references
+- 仓库边界和状态层约定更新到 `AGENTS.md`
 
 如需手动导出单篇 HTML：
 
