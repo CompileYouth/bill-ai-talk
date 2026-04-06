@@ -1,0 +1,35 @@
+{
+  "article_file": "2026-04/2026-04-07：AI 省下了生产时间，却放大了治理成本.md",
+  "article": {
+    "title": "AI 省下了生产时间，却放大了治理成本",
+    "tldr": "AI 真正省下来的，往往只是生产时间。第一版出来得越快，后面的测试、返工、验收和兜底，反而越容易一起被放大。所以它降低了生产成本，却放大了治理成本。",
+    "core_judgment": "AI 降低了生产成本，却放大了治理成本",
+    "publish_date": "2026-04-07"
+  },
+  "strategy": {
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "workflow",
+      "agent"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "clear_explanation",
+    "packaging_hypothesis": "用直接判断标题承接文章主结论，再用真实需求返工场景把抽象成本变化落到具体体验。"
+  },
+  "packaging": {
+    "cover": {
+      "text": "治理成本",
+      "background": "#7525ac",
+      "confirmed_at": "2026-04-06T22:53:53"
+    },
+    "images": []
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_f07a2d2b6c41"
+}

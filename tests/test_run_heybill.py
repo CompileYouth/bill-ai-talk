@@ -83,6 +83,33 @@ class HeyBillCoverSelectionTests(unittest.TestCase):
         self.assertTrue(payload["state"]["article"]["core_judgment"])
         self.assertEqual(payload["state"]["strategy"]["article_type"], "short_judgment")
         self.assertTrue(payload["state"]["strategy"]["target_reader"])
+        self.assertGreater(payload["charCount"], 0)
+
+    def test_article_list_includes_char_count(self) -> None:
+        groups = run_heybill.load_article_list()
+
+        articles = [article for group in groups for article in group["articles"]]
+        self.assertEqual(len(articles), 1)
+        self.assertGreater(articles[0]["charCount"], 0)
+
+    def test_cover_candidates_filter_sentence_fragments(self) -> None:
+        candidates = run_heybill.derive_cover_candidates(
+            "为什么很多人用了 AI，还是没有省下时间",
+            "很多人用了 AI 还是没有省下时间，不是因为 AI 不够强，而是因为 AI 降低了生产成本，却提高了治理成本。第一版出来得越快，后面的测试、返工、验收和兜底，往往越容易一起被放大。",
+        )
+
+        self.assertIn("治理成本", candidates)
+        self.assertIn("生产成本", candidates)
+        self.assertNotIn("很多人用", candidates)
+        self.assertNotIn("不是因为", candidates)
+
+    def test_cover_candidates_prefer_packaging_terms(self) -> None:
+        candidates = run_heybill.derive_cover_candidates(
+            "不同预算下，我会怎么配大模型",
+            "配大模型最重要的，不是研究谁最强，而是看你的预算，适合换来什么能力。预算低，就先买一个稳定主力；预算上来，再开始分工。",
+        )
+
+        self.assertTrue(any(candidate in {"预算", "主力", "分工", "稳定主力"} for candidate in candidates))
 
     def test_wechat_publisher_prefers_confirmed_cover_state(self) -> None:
         file_name = "2026-04/2026-04-05：测试文章.md"

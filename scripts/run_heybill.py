@@ -43,6 +43,65 @@ NOISE_WORDS = (
     "今天",
     "时代",
 )
+BAD_COVER_PREFIXES = (
+    "很多人",
+    "很多",
+    "还是",
+    "不是",
+    "而是",
+    "因为",
+    "如果",
+    "现在",
+    "真正",
+    "开始",
+    "原计划",
+    "前面",
+    "后面",
+    "不断",
+    "最后",
+    "这个",
+    "那个",
+    "这些",
+    "那些",
+    "一种",
+    "一个",
+    "用了",
+    "怎么",
+    "为什么",
+)
+BAD_COVER_PARTICLES = ("的", "了", "着", "吗", "呢", "吧")
+EXACT_COVER_PHRASES = (
+    "治理成本",
+    "生产成本",
+    "返工验收",
+    "省下时间",
+    "稳定主力",
+    "开始分工",
+    "结果质量",
+    "顶级模型",
+    "普通模型",
+    "能力层次",
+    "软件工程",
+    "文件系统",
+    "高级聊天框",
+    "工作流",
+    "长上下文",
+    "复杂任务",
+    "环境执行",
+    "长期记忆",
+    "正反馈",
+    "容忍阈值",
+    "木桶理论",
+    "多模态",
+    "判断标准",
+    "边界",
+    "沙箱",
+    "主力",
+    "分工",
+    "预算",
+    "验收",
+    "返工",
+)
 
 
 def _iter_article_paths() -> list[Path]:
@@ -56,6 +115,7 @@ def load_article_list() -> list[dict[str, str]]:
     scheduled_by_month: dict[str, list[dict[str, str]]] = {}
     pending: list[dict[str, str]] = []
     for path in _iter_article_paths():
+        char_count = count_article_chars(path.read_text(encoding="utf-8"))
         match = ARTICLE_RE.match(path.name)
         if match:
             month = match.group("day")[:7]
@@ -66,6 +126,7 @@ def load_article_list() -> list[dict[str, str]]:
                     "file": path.relative_to(ARTICLES_DIR).as_posix(),
                     "month": month,
                     "pending": False,
+                    "charCount": char_count,
                 }
             )
             continue
@@ -78,6 +139,7 @@ def load_article_list() -> list[dict[str, str]]:
                     "file": path.relative_to(ARTICLES_DIR).as_posix(),
                     "month": "未排期",
                     "pending": True,
+                    "charCount": char_count,
                 }
             )
 
@@ -113,6 +175,21 @@ def extract_tldr_summary(markdown_text: str) -> str:
                 continue
             break
     return " ".join(parts).strip()
+
+
+def extract_visible_text(markdown_text: str) -> str:
+    text = clean_markdown_text(markdown_text)
+    text = re.sub(r"!\[[^\]]*\]\([^)]+\)", "", text)
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^>\s?", "", text, flags=re.MULTILINE)
+    text = re.sub(r"`{1,3}", "", text)
+    text = re.sub(r"[*_~]", "", text)
+    return text
+
+
+def count_article_chars(markdown_text: str) -> int:
+    return len(re.sub(r"\s+", "", extract_visible_text(markdown_text)))
 
 
 def extract_article_id(article_path: Path) -> str | None:
@@ -433,25 +510,57 @@ def _unique_short_phrases(text: str) -> list[str]:
     return candidates
 
 
+def _normalize_cover_phrase(phrase: str) -> str:
+    cleaned = re.sub(r"[^\u4e00-\u9fffA-Za-z0-9]", "", phrase.replace("AI", "").replace("Agent", ""))
+    while True:
+        changed = False
+        for prefix in BAD_COVER_PREFIXES:
+            if cleaned.startswith(prefix) and len(cleaned) - len(prefix) >= 2:
+                cleaned = cleaned[len(prefix) :]
+                changed = True
+        if cleaned and cleaned[0] in BAD_COVER_PARTICLES and len(cleaned) > 2:
+            cleaned = cleaned[1:]
+            changed = True
+        if not changed:
+            break
+    while cleaned and cleaned[-1] in BAD_COVER_PARTICLES and len(cleaned) > 2:
+        cleaned = cleaned[:-1]
+    return cleaned[:4] if len(cleaned) > 4 else cleaned
+
+
+def _preferred_cover_phrases(title: str, summary: str) -> list[str]:
+    source = f"{title} {summary}"
+    candidates: list[str] = []
+    for phrase in EXACT_COVER_PHRASES:
+        if phrase in source:
+            normalized = _normalize_cover_phrase(phrase)
+            if 2 <= len(normalized) <= 4 and normalized not in candidates:
+                candidates.append(normalized)
+        if len(candidates) >= 6:
+            return candidates
+    return candidates
+
+
 def derive_cover_candidates(title: str, summary: str) -> list[str]:
     candidates: list[str] = []
+    for phrase in _preferred_cover_phrases(title, summary):
+        if phrase not in candidates:
+            candidates.append(phrase)
     for token in _unique_short_phrases(title):
-        if token not in candidates:
-            candidates.append(token)
+        normalized = _normalize_cover_phrase(token)
+        if 2 <= len(normalized) <= 4 and normalized not in candidates:
+            candidates.append(normalized)
     for segment in re.split(r"[，。；：\s]+", summary):
-        phrase = segment.strip().replace("`", "")
+        phrase = _normalize_cover_phrase(segment.strip().replace("`", ""))
         if re.fullmatch(r"[A-Za-z0-9]+", phrase or ""):
             continue
-        if len(phrase) > 4:
-            phrase = phrase[:4]
         if 2 <= len(phrase) <= 4 and phrase not in candidates:
             candidates.append(phrase)
         if len(candidates) >= 3:
             break
     if not candidates:
-        fallback = title.replace("AI", "").replace("Agent", "").replace(" ", "")
-        fallback = re.sub(r"[，。！？：、“”《》\-]", "", fallback)
-        if len(fallback) >= 4:
+        fallback = _normalize_cover_phrase(title)
+        if len(fallback) >= 2:
             candidates.append(fallback[:4])
     while len(candidates) < 3:
         seed = candidates[0] if candidates else "核心判断"
@@ -474,8 +583,10 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         raise FileNotFoundError(file_name)
 
     blocks = wechat.markdown_to_blocks(path)
-    markdown_text = clean_markdown_text(path.read_text(encoding="utf-8"))
+    raw_markdown = path.read_text(encoding="utf-8")
+    markdown_text = clean_markdown_text(raw_markdown)
     summary = extract_tldr_summary(markdown_text)
+    char_count = count_article_chars(raw_markdown)
     title = match.group("title") if match else pending_match.group("title")
     for block in blocks:
         if block.startswith('<h1 class="article-title">'):
@@ -498,6 +609,7 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         "file": file_key,
         "html": "\n".join(blocks),
         "tldr": summary,
+        "charCount": char_count,
         "coverCandidates": derive_cover_candidates(title, summary),
         "savedCover": load_cover_selection(file_key),
         "state": state,
@@ -917,6 +1029,13 @@ def shell_html() -> str:
       color: #111111;
       text-shadow: 0 0 10px rgba(49, 207, 255, 0.08);
     }}
+    .article-count {{
+      margin: -8px 0 22px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }}
     .article-heading {{
       margin: 30px 0 10px;
       font-size: 24px;
@@ -989,6 +1108,19 @@ def shell_html() -> str:
       line-height: 1.8;
       margin-bottom: 8px;
       color: #282828;
+    }}
+    .item-meta {{
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      width: 100%;
+      font-size: 12px;
+      color: var(--muted);
+    }}
+    .item-count {{
+      white-space: nowrap;
+      color: #6d675f;
     }}
     @media (max-width: 980px) {{
       .page {{ grid-template-columns: 1fr; }}
@@ -1255,7 +1387,10 @@ def shell_html() -> str:
           button.type = "button";
           button.className = `item${{index === currentIndex ? " active" : ""}}`;
           button.innerHTML = `
-            <span class="item-date">${{article.date}}</span>
+            <span class="item-meta">
+              <span class="item-date">${{article.date}}</span>
+              <span class="item-count">${{article.charCount || 0}} 字</span>
+            </span>
             <span class="item-title">${{article.title}}</span>
           `;
           button.addEventListener("click", async () => {{
@@ -1277,6 +1412,13 @@ def shell_html() -> str:
       const payload = await fetchJSON(`/api/article?file=${{encodeURIComponent(current.file)}}`);
       currentArticlePayload = payload;
       document.getElementById("article-root").innerHTML = payload.html;
+      const titleNode = document.querySelector("#article-root .article-title");
+      if (titleNode) {{
+        const countNode = document.createElement("p");
+        countNode.className = "article-count";
+        countNode.textContent = `${{payload.charCount || 0}} 字`;
+        titleNode.insertAdjacentElement("afterend", countNode);
+      }}
       document.getElementById("viewer-meta").textContent = `${{payload.date}} · ${{payload.title}}`;
       const isPending = current.pending;
       document.getElementById("schedule-button").style.display = isPending ? "inline-flex" : "none";

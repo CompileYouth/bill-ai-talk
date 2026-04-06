@@ -10,6 +10,7 @@
 
 - Short judgment post: default to about 500 Chinese characters, 3-4 compact sections, one sharp judgment, one strong example or analogy, one strong close.
 - Deep explanatory post: prioritize clarity, structure, and full explanation when the topic is a framework, layered model, or technical evolution.
+- If a short judgment post still needs a real example, one conceptual distinction, and one consequence layer to make sense, 500-700 Chinese characters is usually too short; expand until the judgment is earned.
 
 ## Structural Discipline
 
@@ -17,6 +18,9 @@
 - Headings must carry information, not writing-process commentary.
 - When the problem is structure, fix thesis, paragraph roles, heading quality, and image purpose before adding more material.
 - Do not hand the user a structural half-draft.
+- Do not compress a draft into its final short form until it has: one concrete example, one explicit explanation layer, and one clean closing judgment.
+- Do not treat a strong sentence as a finished article.
+- When the user asks to rewrite, rebuild the whole article around the final judgment instead of patching paragraph by paragraph.
 
 ## Language And Framing
 
@@ -31,3 +35,4 @@
 - Every draft should have at least one sentence strong enough to save or forward.
 - For deep posts, explicitly check: hook stealing focus, repeated hook restatement, empty headings, decorative images.
 - Unscheduled drafts must be publishable on their own and should not rely on relative timing like `昨天/前天/上一期`.
+- Before calling a short judgment post finished, verify that the conclusion is not merely stated but actually explained and earned.

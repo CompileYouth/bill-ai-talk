@@ -1,11 +1,22 @@
 # Publishing Rules
 
-## Packaging
+## Cover Image
+
+- Cover images default to an ultra-minimal style: text plus solid-color background.
+- WeChat cover text should usually be no more than 4 Chinese characters and must capture the article's core judgment.
+- Cover candidates should be short judgment-like phrases, not mechanically sliced title or TL;DR fragments.
+
+## Inline Article Images
 
 - Default to two article images; use one only when a second image would be filler.
 - Images are for传播, not for re-explaining the whole article.
-- WeChat cover text should usually be no more than 4 Chinese characters and must capture the article's core judgment.
 - Keep image text sparse, decisive, and understandable without full article context.
+- Do not repeat the same meaning across multiple article images.
+- Let article image count follow information density; if one image is enough, stop at one.
+- Image copy should read like a judgment, not like a diary line or流水账.
+- Do not split image copy into too many tiny lines; prefer one clear sentence across two or three lines.
+- If an image only restates the body without adding a memorable takeaway, do not use it.
+- Article images must follow the body's argument order; do not show a judgment in an image before the body has reached that judgment.
 
 ## State And Tracking
 
