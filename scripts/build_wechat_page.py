@@ -15,6 +15,7 @@ BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
 LINK_RE = re.compile(r"\[(.+?)\]\((.+?)\)")
 CODE_RE = re.compile(r"`([^`]+)`")
 ARTICLE_ID_COMMENT_RE = re.compile(r"^<!--\s*article_id:\s*[a-z0-9_-]+\s*-->$")
+ARTICLE_ID_COMMENT_HTML_RE = re.compile(r"<!--\s*article_id:\s*[a-z0-9_-]+\s*-->")
 
 WECHAT_INLINE = {
     "article": "box-sizing:border-box;width:100%;max-width:720px;margin:0 auto;padding:0 12px;background:#ffffff;color:#24324a;font-size:16px;line-height:1.8;letter-spacing:0.01em;text-align:left;font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',sans-serif;",
@@ -97,6 +98,10 @@ def image_to_data_uri(markdown_file: Path, image_path: str) -> str:
 def load_markdown_lines(markdown_file: Path) -> list[str]:
     lines = markdown_file.read_text(encoding="utf-8").splitlines()
     return [line for line in lines if not ARTICLE_ID_COMMENT_RE.fullmatch(line.strip())]
+
+
+def strip_article_id_comments(text: str) -> str:
+    return ARTICLE_ID_COMMENT_HTML_RE.sub("", text)
 
 
 def flush_paragraph(paragraph_lines: list[str], blocks: list[str]) -> None:
@@ -208,7 +213,7 @@ def markdown_to_blocks(markdown_file: Path) -> list[str]:
     flush_paragraph(paragraph_lines, blocks)
     flush_quote()
     flush_list()
-    return blocks
+    return [strip_article_id_comments(block) for block in blocks]
 
 
 def inline_markup_wechat(text: str) -> str:
@@ -354,7 +359,7 @@ def markdown_to_wechat_html(markdown_file: Path) -> str:
     flush_quote()
     flush_list()
     parts.append("</article>")
-    return "".join(parts)
+    return strip_article_id_comments("".join(parts))
 
 
 def build_html(blocks: list[str], title: str) -> str:
