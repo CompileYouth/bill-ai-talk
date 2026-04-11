@@ -32,6 +32,8 @@ Use this repository to turn discussions and source material into publishableå…¬ä
 - When a packaging or feedback decision should be revisited later, store it in `article-state/`, not only in chat.
 - When a stable workflow rule changes, update the skill and its references instead of scattering duplicate instructions elsewhere.
 - Keep runtime noise out of version control.
+- When preparing commits, group by change type first, then split by day within that type.
+- Do not batch multiple article days into one content commit unless the user explicitly asks for a bulk commit.
 - Default article drafting flow is a two-agent loop:
   - spawn `bill-ai-talk-writer` to draft or revise the article
   - writer must return the full article text; on revision rounds it must also map changes back to reviewer suggestions
