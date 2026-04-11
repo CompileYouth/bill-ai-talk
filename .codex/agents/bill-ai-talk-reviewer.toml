@@ -51,6 +51,7 @@ body_checks = [
   "Are there repeated sentence templates becoming a crutch?",
   "Are there awkward or self-invented phrases that sound unlike normal usage?",
   "Does any sentence sound like the writer is talking about writing instead of talking to the reader?",
+  "Does any sentence read like machine-facing or author-facing language even if the logic is technically correct?",
   "Does any phrase sound like it is mocking or talking down to the reader by accident?",
   "Does the draft contain unresolved references or vague pointers that make the reader stop, such as `前面三件事` when they have not actually been established?",
   "Do paragraphs progress naturally?",
@@ -64,12 +65,14 @@ tldr_checks = [
   "Does the TL;DR summarize today's article only, instead of replaying or explaining yesterday's piece?",
   "Does the TL;DR avoid author-facing framing such as `这篇讲的是` or `昨天提到`?",
   "Does the TL;DR state the key problem and the key answer directly in plain Chinese?",
+  "Does the TL;DR stand on its own as a readable deliverable rather than a note or aside?",
 ]
 judgment_checks = [
   "Does the title contain a real judgment or tension instead of merely restating the topic?",
   "Does the title avoid writing the answer too fully before the reader even opens the article?",
   "Does the title leave enough room for the body to do real work instead of acting like a posthoc summary?",
   "Is the title strong enough for a WeChat article, rather than merely accurate or on-topic?",
+  "Would a reader actually want to click this title, or is it only technically correct?",
   "If this is a follow-up article, does it genuinely advance the previous post instead of mostly replaying it?",
   "If the draft claims a root cause, does that cause actually fit the previous article's argument and the user's stated interpretation?",
 ]
@@ -77,6 +80,8 @@ packaging_checks = [
   "Does the cover text actually suit the article's core judgment?",
   "Is the cover text short, judgment-like, and usable on a WeChat cover instead of reading like a sentence fragment?",
   "Does each inline image add value?",
+  "Does the inline image text still make sense when viewed without the article body?",
+  "Would the inline image still feel worth sharing if it were seen on its own?",
   "Are image positions aligned with the body's argument order?",
   "Is the image count justified by the article's information density?",
   "If a screenshot would explain a practical step more clearly than prose, is that screenshot present?",

@@ -23,6 +23,9 @@
 
 ## Body
 
+- Passing the body means more than being logically correct. It still has to read like natural human Chinese, like a finished piece, and like something actually worth publishing.
+- Rewrite any line that sounds like an internal compressed phrase the writer understands but a normal reader would never say out loud.
+- If a sentence is accurate but still reads like machine-facing or author-facing language, it is not done.
 - The article should state the final judgment directly, not replay the conversation.
 - Before drafting, identify the real center of gravity and keep title, body, headings, and images aligned to it.
 - The account should strengthen a recognizable position around AI-era individual upgrading and the path toward a one-person company.
@@ -68,6 +71,7 @@
 - If the sentence feels compressed, clever, or abstract in the writer's head, expand or rewrite it into plain spoken language before keeping it.
 - In practical articles, avoid meta-writing phrases such as `今天就谈谈`, `这篇讲的是`, `最先解决的是`, or similar author commentary when a direct statement would do.
 - Prefer concrete project language over vague containers. If the user is talking about an `agent 项目`, do not drift back to `这个文件夹` unless the file-system container itself is the point.
+- In practical articles, do not treat structure and images as later polish. Headings, emphasis, and images are part of the first-class draft.
 
 ## TL;DR
 
@@ -79,17 +83,22 @@
 - TL;DR should stay aligned with the body and should not introduce points the article does not actually develop.
 - TL;DR should be compressed, but it still needs to say what problem this piece is solving and what the main answer is.
 - For practical articles, TL;DR should usually start from the action or setup itself, not from `我怎么...` or other self-referential framing.
+- TL;DR is a deliverable, not a side note. It should stand on its own as a readable summary sentence or two.
 
 ## Title
 
 - Titles should say the human meaning first; keep jargon restrained.
 - Titles must carry a real judgment, tension, or consequence. Do not use a title that merely restates the topic label.
 - Reject titles that are flat, over-explaining, or read like the article's conclusion. Do not let a merely accurate title survive review.
+- Review titles for click-worthiness, not just correctness.
 
 ## Cover Text
 
 - Cover text belongs to packaging, but it still has to stay aligned with the article's center of gravity.
 - Keep cover text short, judgment-like, and detachable from the title/body without becoming a sentence fragment.
+- Treat cover text and inline image copy as deliverables, not optional extras.
+- Image text should still make sense when separated from the article body.
+- An inline image is not finished just because it matches the article; it should also be worth sharing on its own.
 
 ## Review Standard
 

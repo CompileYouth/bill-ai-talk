@@ -56,6 +56,9 @@ writing_style = [
   "title should create reading tension without writing the whole answer into the headline",
 ]
 hard_rules = [
+  "Body quality is not complete at logic correctness; it must read like natural human Chinese and a publishable finished piece.",
+  "Rewrite any line that sounds like compressed internal writer language rather than something a reader would naturally say.",
+  "Do not treat headings, emphasis, TL;DR, cover text, or inline image copy as optional polish; they are part of the draft deliverable.",
   "Do not treat one strong sentence as a finished article.",
   "Do not let repeated rhetorical templates dominate the body.",
   "Do not leave the article as a structural half-draft.",
@@ -86,6 +89,8 @@ inline_image_requirements = [
   "images must follow the body's argument order",
   "do not repeat the same meaning across multiple images",
   "if the article only supports one strong image, use one image",
+  "image text should still make sense out of context",
+  "matching the body is necessary but not sufficient; the image should also be shareable on its own",
 ]
 
 [outputs]
