@@ -1,0 +1,34 @@
+{
+  "article_file": "2026-04/2026-04-11：如何使用Codex实现双agent架构.md",
+  "article": {
+    "title": "如何使用Codex实现双agent架构",
+    "tldr": "先建 writer 和 reviewer 的配置文件，再把各自职责、来回修改的规则和停止条件写进 AGENTS.md，这套双 Agent 流程就能在项目里稳定跑起来。",
+    "core_judgment": "借助 Codex 把一个写作文件夹改成双 Agent 架构，关键不在同时开两个模型，而在把角色、规则、输入输出和停止条件都写进文件夹本身。",
+    "publish_date": "2026-04-11"
+  },
+  "strategy": {
+    "article_type": "deep_explanatory",
+    "topic_tags": [
+      "workflow",
+      "codex",
+      "multi_agent",
+      "writing"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "practical_setup",
+    "packaging_hypothesis": "标题直接把 Codex 和 bill-ai-talk 两个最具体的点打出来，再收短成更像动作句的版本。正文用真实配置过程做骨架，不讲空判断，读者能直接拿走方法。"
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-11-dual-agent-folder/1.jpg"
+    ]
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_d0c1a8b4e291"
+}

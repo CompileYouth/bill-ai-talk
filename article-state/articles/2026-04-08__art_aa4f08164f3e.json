@@ -1,0 +1,38 @@
+{
+  "article_file": "2026-04/2026-04-08：差不多对，才是 AI 最危险的地方.md",
+  "article": {
+    "title": "差不多对，才是 AI 最危险的地方",
+    "tldr": "AI 最危险的时候，常常是它交出一份看起来已经差不多能用的结果。真正把时间拖掉的，往往是你后面基于这份结果一路补出来的返工。",
+    "core_judgment": "差不多对，才是 AI 最危险的地方",
+    "publish_date": "2026-04-08"
+  },
+  "strategy": {
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "workflow",
+      "judgment",
+      "quality"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "counterintuitive_risk",
+    "packaging_hypothesis": "用常见的代码返工场景把抽象风险写具体，再扩到文案和总结，让读者意识到危险来自看起来已经能用的结果。"
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-08-almost-right/1.jpg"
+    ],
+    "cover": {
+      "text": "差不多对",
+      "background": "#1381a0",
+      "confirmed_at": "2026-04-07T23:11:29"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_aa4f08164f3e"
+}

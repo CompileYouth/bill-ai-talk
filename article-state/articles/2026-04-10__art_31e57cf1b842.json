@@ -1,0 +1,38 @@
+{
+  "article_file": "2026-04/2026-04-10：身兼裁判的球员是踢不好球的.md",
+  "article": {
+    "title": "身兼裁判的球员是踢不好球的",
+    "tldr": "我后来越来越不愿意只让一个 AI 从头干到尾。它当然能写、能改、也能自查，但很多问题还是会被它顺着同一条思路一路带下去。更稳的做法，是直接上两个 Agent：一个负责写，一个负责挑错。",
+    "core_judgment": "身兼裁判的球员是踢不好球的；一个负责干活、一个负责挑错的双 Agent 架构更容易把问题提前拦下来。",
+    "publish_date": "2026-04-10"
+  },
+  "strategy": {
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "workflow",
+      "multi_agent",
+      "quality"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "practical_solution",
+    "packaging_hypothesis": "标题直接用球员兼裁判的比喻，把单 Agent 为何不稳打出来，再由正文展开双 Agent 为什么更稳，以及第二视角如何把结果做扎实。"
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-10-dual-agent-review/1.jpg"
+    ],
+    "cover": {
+      "text": "双 Agent",
+      "background": "#1c6b64",
+      "confirmed_at": "2026-04-09T00:00:00"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_31e57cf1b842"
+}

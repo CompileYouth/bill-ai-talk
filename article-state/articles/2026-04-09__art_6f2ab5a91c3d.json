@@ -1,0 +1,36 @@
+{
+  "article_file": "2026-04/2026-04-09：AI 老是差一口气，问题往往出在一开始.md",
+  "article": {
+    "title": "AI 老是差一口气，问题往往出在一开始",
+    "tldr": "AI 总停在半成品，很多时候不在于你想不想要成品，而在于“做完”这件事从一开始就没人定义清楚。完成线越模糊，AI 越容易把“像那么回事”当成交付。",
+    "core_judgment": "AI 老是差一口气，问题往往出在一开始",
+    "publish_date": "2026-04-09"
+  },
+  "strategy": {
+    "article_type": "short_judgment",
+    "topic_tags": [
+      "workflow",
+      "quality",
+      "prompting"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "practical_followup",
+    "packaging_hypothesis": "标题直接给出判断，再用“完成标准、自查、重做阈值”三个抓手把减少半成品落到可执行动作上，同时与 4.8 保持连续但不重放昨天的论证。"
+  },
+  "packaging": {
+    "cover": {
+      "text": "半成品",
+      "background": "#b45f1d",
+      "confirmed_at": "2026-04-08T10:00:00"
+    },
+    "images": []
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_6f2ab5a91c3d"
+}
