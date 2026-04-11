@@ -68,8 +68,22 @@ BAD_COVER_PREFIXES = (
     "用了",
     "怎么",
     "为什么",
+    "这篇",
+    "我怎么",
+    "我后来",
+    "项目里",
+    "项目中",
 )
 BAD_COVER_PARTICLES = ("的", "了", "着", "吗", "呢", "吧")
+BAD_COVER_PHRASES = (
+    "这篇讲的",
+    "讲的是",
+    "我怎么用",
+    "项目里搭",
+    "项目中搭",
+    "后来不再",
+    "然后再把",
+)
 EXACT_COVER_PHRASES = (
     "治理成本",
     "生产成本",
@@ -102,6 +116,15 @@ EXACT_COVER_PHRASES = (
     "验收",
     "返工",
 )
+EXACT_COVER_MAPPINGS = {
+    "双 Agent": "双智能体",
+    "双agent": "双智能体",
+    "双Agent": "双智能体",
+    "写和审": "分工",
+    "挑错": "挑错",
+    "只读审查": "只读审",
+    "写作流程": "写作流",
+}
 
 
 def _iter_article_paths() -> list[Path]:
@@ -531,6 +554,11 @@ def _normalize_cover_phrase(phrase: str) -> str:
 def _preferred_cover_phrases(title: str, summary: str) -> list[str]:
     source = f"{title} {summary}"
     candidates: list[str] = []
+    for raw, display in EXACT_COVER_MAPPINGS.items():
+        if raw in source and display not in candidates:
+            candidates.append(display)
+        if len(candidates) >= 6:
+            return candidates
     for phrase in EXACT_COVER_PHRASES:
         if phrase in source:
             normalized = _normalize_cover_phrase(phrase)
@@ -544,17 +572,17 @@ def _preferred_cover_phrases(title: str, summary: str) -> list[str]:
 def derive_cover_candidates(title: str, summary: str) -> list[str]:
     candidates: list[str] = []
     for phrase in _preferred_cover_phrases(title, summary):
-        if phrase not in candidates:
+        if phrase not in candidates and phrase not in BAD_COVER_PHRASES:
             candidates.append(phrase)
     for token in _unique_short_phrases(title):
         normalized = _normalize_cover_phrase(token)
-        if 2 <= len(normalized) <= 4 and normalized not in candidates:
+        if 2 <= len(normalized) <= 4 and normalized not in candidates and normalized not in BAD_COVER_PHRASES:
             candidates.append(normalized)
     for segment in re.split(r"[，。；：\s]+", summary):
         phrase = _normalize_cover_phrase(segment.strip().replace("`", ""))
         if re.fullmatch(r"[A-Za-z0-9]+", phrase or ""):
             continue
-        if 2 <= len(phrase) <= 4 and phrase not in candidates:
+        if 2 <= len(phrase) <= 4 and phrase not in candidates and phrase not in BAD_COVER_PHRASES:
             candidates.append(phrase)
         if len(candidates) >= 3:
             break

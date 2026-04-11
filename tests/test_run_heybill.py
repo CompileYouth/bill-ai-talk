@@ -111,6 +111,18 @@ class HeyBillCoverSelectionTests(unittest.TestCase):
 
         self.assertTrue(any(candidate in {"预算", "主力", "分工", "稳定主力"} for candidate in candidates))
 
+    def test_cover_candidates_for_dual_agent_article(self) -> None:
+        candidates = run_heybill.derive_cover_candidates(
+            "如何使用Codex实现双agent架构",
+            "这篇讲的是，我怎么用 Codex 在 agent 项目里搭了一套双 Agent 写作流程。做法很简单：先把写和审拆成两个 Agent，再把各自职责、来回修改的规则、以及什么时候该停，全都提前写进配置文件和 AGENTS.md 里。",
+        )
+
+        self.assertIn("双智能体", candidates)
+        self.assertIn("分工", candidates)
+        self.assertNotIn("这篇讲的", candidates)
+        self.assertNotIn("我怎么用", candidates)
+        self.assertNotIn("讲的是", candidates)
+
     def test_wechat_publisher_prefers_confirmed_cover_state(self) -> None:
         file_name = "2026-04/2026-04-05：测试文章.md"
         run_heybill.save_cover_selection(file_name, text="已确认", background="#abcdef")
