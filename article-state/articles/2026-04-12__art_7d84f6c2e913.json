@@ -1,0 +1,39 @@
+{
+  "article_file": "2026-04/2026-04-12：如何设计双Agent架构.md",
+  "article": {
+    "title": "如何设计双Agent架构",
+    "tldr": "Executor 和 Reviewer 要想长期跑稳，光把两个角色分开还不够。更重要的是先把标准明确下来，再把各自的职责写清楚，最后把这一次任务需要的背景单独给到位。这样一个负责干活，一个负责评审，才不会各干各的。",
+    "core_judgment": "设计 Executor 和 Reviewer，关键不是先拆两个角色，而是先把共用标准明确下来，再把职责、视角和运行时材料分清楚。",
+    "publish_date": "2026-04-12"
+  },
+  "strategy": {
+    "article_type": "deep_explanatory",
+    "topic_tags": [
+      "workflow",
+      "multi_agent",
+      "executor",
+      "reviewer"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "practical_setup",
+    "packaging_hypothesis": "标题直接把主题收成“如何设计双Agent架构”，降低理解门槛。正文围绕共享标准、岗位职责和运行时材料三层展开，给读者一个能直接照着搭的思路。",
+    "cover_candidates": [
+      "共享标准",
+      "三层设计",
+      "职责分开"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-12-shared-standard/1.jpg"
+    ]
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_7d84f6c2e913"
+}
