@@ -631,6 +631,15 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         publish_date=publish_date,
         cover_candidates=derive_cover_candidates(title, summary),
     )
+    state_cover_candidates = (
+        state.get("strategy", {}).get("cover_candidates")
+        if isinstance(state.get("strategy", {}), dict)
+        else None
+    )
+    if isinstance(state_cover_candidates, list) and state_cover_candidates:
+        cover_candidates = [str(item) for item in state_cover_candidates if str(item).strip()]
+    else:
+        cover_candidates = derive_cover_candidates(title, summary)
     return {
         "date": publish_date if publish_date else "未排期",
         "title": title,
@@ -638,7 +647,7 @@ def load_article_payload(file_name: str) -> dict[str, str]:
         "html": "\n".join(blocks),
         "tldr": summary,
         "charCount": char_count,
-        "coverCandidates": derive_cover_candidates(title, summary),
+        "coverCandidates": cover_candidates,
         "savedCover": load_cover_selection(file_key),
         "state": state,
     }

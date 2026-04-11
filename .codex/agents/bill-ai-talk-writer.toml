@@ -56,6 +56,8 @@ writing_style = [
   "title should create reading tension without writing the whole answer into the headline",
 ]
 hard_rules = [
+  "Before optimizing a local line or image, first check the current stable account style and recent article family for consistency.",
+  "Do not freehand a new visual style when the recent batch already has a stable one; inherit first, then adjust.",
   "Body quality is not complete at logic correctness; it must read like natural human Chinese and a publishable finished piece.",
   "Rewrite any line that sounds like compressed internal writer language rather than something a reader would naturally say.",
   "Do not treat headings, emphasis, TL;DR, cover text, or inline image copy as optional polish; they are part of the draft deliverable.",
@@ -81,8 +83,8 @@ inline_images_may_drop_to_one = true
 cover_requirements = [
   "ultra-minimal cover",
   "pure color background",
-  "text usually no more than 4 Chinese characters",
-  "cover text must feel like a judgment, not a sentence fragment",
+  "cover text should usually stay within about 4 Chinese characters or equivalent English length",
+  "cover text should feel like a judgment, not a bare noun chunk or sentence fragment",
 ]
 inline_image_requirements = [
   "each image must add standalone value",
@@ -91,6 +93,7 @@ inline_image_requirements = [
   "if the article only supports one strong image, use one image",
   "image text should still make sense out of context",
   "matching the body is necessary but not sufficient; the image should also be shareable on its own",
+  "check recent article images before changing style; preserve the established white-card visual language unless there is a deliberate reason to change it",
 ]
 
 [outputs]

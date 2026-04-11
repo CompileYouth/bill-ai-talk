@@ -23,6 +23,8 @@
 
 ## Body
 
+- Before changing any local sentence, title, or image, first check whether the draft still matches the account's current stable style and recent article family.
+- Protect global consistency before optimizing local wording.
 - Passing the body means more than being logically correct. It still has to read like natural human Chinese, like a finished piece, and like something actually worth publishing.
 - Rewrite any line that sounds like an internal compressed phrase the writer understands but a normal reader would never say out loud.
 - If a sentence is accurate but still reads like machine-facing or author-facing language, it is not done.
@@ -95,10 +97,11 @@
 ## Cover Text
 
 - Cover text belongs to packaging, but it still has to stay aligned with the article's center of gravity.
-- Keep cover text short, judgment-like, and detachable from the title/body without becoming a sentence fragment.
+- Keep cover text short, usually within about 4 Chinese characters or an equivalent-length English phrase, and judgment-like instead of a bare noun chunk or sentence fragment.
 - Treat cover text and inline image copy as deliverables, not optional extras.
 - Image text should still make sense when separated from the article body.
 - An inline image is not finished just because it matches the article; it should also be worth sharing on its own.
+- Before rewriting image copy, first verify that the image style still matches the project's current visual language and the recent batch of article images.
 
 ## Review Standard
 
@@ -110,3 +113,4 @@
 - If a follow-up article proposes a reason for the previous article's problem, verify that the reason actually fits the previous article's judgment. Do not invent a simpler causal story that misreads the prior piece.
 - If the article's core idea is practical but the draft reads like a framework description, rewrite it. Practical value should feel lived, not presented.
 - In a practical article, review the TL;DR, headings, numbered steps, title, and cover text as independent deliverables. Do not only review the body paragraphs.
+- Review in this order: style consistency first, then structure completeness, then natural language, then local optimization.

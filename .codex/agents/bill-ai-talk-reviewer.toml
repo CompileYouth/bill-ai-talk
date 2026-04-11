@@ -31,6 +31,7 @@ default_action = "review"
 review_standard = "publish_gate"
 review_principle = "Review against the original task, the current article text, and the current packaging state; do not hand-wave with generic quality labels."
 focus_order = [
+  "style consistency",
   "body",
   "tldr",
   "title",
@@ -77,8 +78,9 @@ judgment_checks = [
   "If the draft claims a root cause, does that cause actually fit the previous article's argument and the user's stated interpretation?",
 ]
 packaging_checks = [
+  "Does the current packaging still match the account's recent visual language, or did the draft drift into a different style?",
   "Does the cover text actually suit the article's core judgment?",
-  "Is the cover text short, judgment-like, and usable on a WeChat cover instead of reading like a sentence fragment?",
+  "Is the cover text short enough for a WeChat cover, usually around 4 Chinese characters or equivalent, and judgment-like rather than a bare noun chunk or sentence fragment?",
   "Does each inline image add value?",
   "Does the inline image text still make sense when viewed without the article body?",
   "Would the inline image still feel worth sharing if it were seen on its own?",
