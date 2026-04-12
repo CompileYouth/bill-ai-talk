@@ -1,0 +1,44 @@
+{
+  "article_file": "2026-04/2026-04-14：为什么 prompt 最后都应该变成 AGENTS.md.md",
+  "article": {
+    "title": "为什么 prompt 最后都应该变成 AGENTS.md",
+    "tldr": "Prompt 适合交代这一次怎么做，不适合把所有长期规则都塞进去。规则一多，Prompt 只会越写越长，越改越乱。更好的做法，是把真正要长期稳定下来的东西写进 AGENTS.md，让它从一段临时提示词，变成一个可以一直继承、一直迭代的系统。",
+    "core_judgment": "Prompt 是临时提示词，AGENTS.md 是可以继承、可以迭代、可以继续生长的系统。",
+    "publish_date": "2026-04-14"
+  },
+  "strategy": {
+    "article_type": "deep_explanatory",
+    "topic_tags": [
+      "prompt",
+      "AGENTS.md",
+      "inheritance",
+      "workflow"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "inherited rules over long prompt",
+    "packaging_hypothesis": "把 prompt 和 AGENTS.md 的区别直接讲透：前者适合一次性任务，后者适合长期继承。重点不是操作细节，而是让读者意识到，规则应该从临时输入变成系统结构。",
+    "cover_candidates": [
+      "规则继承",
+      "分层规范",
+      "AGENTS.md体系"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-14-agents-md-hierarchy/1.jpg"
+    ],
+    "cover": {
+      "text": "AGEN",
+      "background": "#6330b3",
+      "confirmed_at": "2026-04-12T09:48:03"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_14a7c9b2f6d1"
+}
