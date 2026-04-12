@@ -1217,7 +1217,7 @@ def shell_html() -> str:
           </div>
           <div class="cover-edit-only">
             <label class="cover-section-label" for="cover-custom-input">自定义文案</label>
-            <input id="cover-custom-input" class="cover-input" type="text" placeholder="最多 4 个字" />
+            <input id="cover-custom-input" class="cover-input" type="text" placeholder="输入封面文案" />
           </div>
           <p id="cover-status" class="cover-status"></p>
           <div class="cover-meta-row">
@@ -1305,7 +1305,7 @@ def shell_html() -> str:
     function drawCover() {{
       const canvas = document.getElementById("cover-canvas");
       const ctx = canvas.getContext("2d");
-      const text = (currentCoverText || "封面").trim().slice(0, 4);
+      const text = (currentCoverText || "封面").trim();
       const lines = text.split(/\\r?\\n/).filter(Boolean);
       const bg = currentCoverColor || randomNiceColor();
       const fg = textColorFor(bg);
@@ -1355,7 +1355,7 @@ def shell_html() -> str:
     }}
 
     function setCoverText(value) {{
-      currentCoverText = (value || "").trim().slice(0, 4);
+      currentCoverText = (value || "").trim();
       syncCoverSelection();
     }}
 
@@ -1469,7 +1469,7 @@ def shell_html() -> str:
         setCoverLocked(true, payload.savedCover.confirmed_at || "");
       }} else {{
         currentCoverColor = randomNiceColor();
-        setCoverText((payload.coverCandidates || [payload.title.slice(0, 4)])[0] || "封面");
+        setCoverText((payload.coverCandidates || [payload.title])[0] || "封面");
         setCoverLocked(false);
       }}
     }}
