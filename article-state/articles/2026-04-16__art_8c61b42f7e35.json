@@ -1,0 +1,44 @@
+{
+  "article_file": "2026-04/2026-04-16：AGENTS.md 写出来不难，难的是后面如何长期维护.md",
+  "article": {
+    "title": "AGENTS.md 写出来不难，难的是后面如何长期维护",
+    "tldr": "AGENTS.md 写出来不难，难的是后面如何长期维护。每次遇到新问题时，你都得分清哪些只属于这一次，哪些值得沉淀成长期规则。只有规则会持续吸收反馈、并反过来改变后面的产出，AGENTS.md 才算真的生长成了一个系统。",
+    "core_judgment": "AGENTS.md 真正难的不是先写一版，而是后面能不能在持续复盘里把规则维护得越来越准；只有能吸收反馈并反过来改变后续产出的规则，才算系统。",
+    "publish_date": "2026-04-16"
+  },
+  "strategy": {
+    "article_type": "practical_explanatory",
+    "topic_tags": [
+      "AGENTS.md",
+      "workflow",
+      "retrospective",
+      "system"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "AGENTS.md 写出来不难，难的是后面如何长期维护",
+    "packaging_hypothesis": "承接前两篇“为什么迁”“怎么迁”，这一篇只讲 AGENTS.md 写完以后怎么才算真的活起来。核心点是：规则不是一开始设计完的，而是在不断复盘里持续生长和长期维护出来的。",
+    "cover_candidates": [
+      "规则迭代",
+      "持续改进",
+      "反馈沉淀"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-16-growing-agents-md/1.jpg"
+    ],
+    "cover": {
+      "text": "规则迭代",
+      "background": "#cd3b39",
+      "confirmed_at": "2026-04-15T12:00:00"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_8c61b42f7e35"
+}
