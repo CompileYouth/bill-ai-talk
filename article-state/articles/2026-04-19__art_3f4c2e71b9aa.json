@@ -1,0 +1,43 @@
+{
+  "article_file": "2026-04/2026-04-19：很多人以为自己在组织 Agent，其实只是多开了几个窗口.md",
+  "article": {
+    "title": "很多人以为自己在组织 Agent，其实只是多开了几个窗口",
+    "tldr": "很多人现在已经不只开一个对话框了，而是同时开好几个 Agent，让它们写、改、审、查。可多开几个窗口，不等于真的在组织。真正的第一步，不是把活拆得更碎，也不是把窗口开得更多，而是先把角色拆清楚：谁负责往前做，谁负责回头检查，谁负责定标准，谁负责关键地方拍板。",
+    "core_judgment": "普通人开始拥有组织能力以后，最先要学会的，不是多开几个 Agent，也不是把活拆得更碎，而是先把角色拆清楚。角色没拆开，看起来像很多 Agent 在干活，实际上还是人自己在中间亲自盯、亲自接、亲自补。",
+    "publish_date": "2026-04-19"
+  },
+  "strategy": {
+    "article_type": "conceptual_judgment",
+    "topic_tags": [
+      "Agent协作",
+      "组织能力",
+      "角色分工",
+      "工作方式迁移"
+    ],
+    "target_reader": "knowledge_workers",
+    "distribution_hook": "多开几个窗口，不等于真的在组织 Agent。真正的第一步，不是多开几个 Agent，而是先把角色拆清楚。",
+    "packaging_hypothesis": "这篇不继续讲接手时机，也不讲不能交出去的判断，而是把组织能力第一次落到具体动作上：先拆角色。标题直接打掉常见误解，正文用文章写作这个熟悉场景解释为什么多窗口不等于有分工。",
+    "cover_candidates": [
+      "先拆角色",
+      "角色分工",
+      "拆清角色"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-19-role-splitting/1.jpg"
+    ],
+    "cover": {
+      "text": "先拆角色",
+      "background": "#d9c7b4"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_3f4c2e71b9aa"
+}
