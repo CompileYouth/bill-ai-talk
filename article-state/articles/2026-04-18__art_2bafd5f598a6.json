@@ -1,0 +1,43 @@
+{
+  "article_file": "2026-04/2026-04-18：以前只有带团队的人才操心的事，现在普通人也躲不过了.md",
+  "article": {
+    "title": "以前只有带团队的人才操心的事，现在普通人也躲不过了",
+    "tldr": "以前“组织别人干活”对普通人来说门槛很高，因为你没有团队、预算和稳定可调用的人。AI 时代开始不一样了。普通人第一次可以调动 Agent、脚本、规则和文件系统，让一件事围着同一个结果往前走。接下来真正值得升级的，不只是执行力，而是组织能力。",
+    "core_judgment": "AI 时代真正发生的大变化，不只是普通人多了一个更强的工具，而是普通人第一次开始有机会拥有组织能力：不靠团队也能调动一组外部能力，把一件事围着同一个结果持续往前推。",
+    "publish_date": "2026-04-18"
+  },
+  "strategy": {
+    "article_type": "conceptual_judgment",
+    "topic_tags": [
+      "AI时代",
+      "组织能力",
+      "知识工作者",
+      "工作方式迁移"
+    ],
+    "target_reader": "knowledge_workers",
+    "distribution_hook": "AI 真正压低的，不只是执行成本，而是普通人第一次开始有机会拥有“组织一组能力把事情做成”的门槛。",
+    "packaging_hypothesis": "这篇不讲工具教程，也不讲管理学空话，只讲一个新变化：过去只有带团队的人才明显需要组织能力，现在普通人也开始拥有这项能力。标题改成更像公众号标题的冲突句，正文用文章创作这个熟悉场景让读者代入。",
+    "cover_candidates": [
+      "组织能力",
+      "组织做事",
+      "把事组织"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-20-organization-capability/1.jpg"
+    ],
+    "cover": {
+      "text": "组织能力",
+      "background": "#d9c7b4"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_2bafd5f598a6"
+}
