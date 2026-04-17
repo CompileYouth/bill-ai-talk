@@ -1,0 +1,28 @@
+{
+  "writer": {
+    "agent_id": "019d9c3c-a005-7a11-84bc-3b4c74f05797",
+    "nickname": "Plato",
+    "role": "bill-ai-talk-writer"
+  },
+  "reviewer": {
+    "agent_id": "019d9c3f-56df-74c1-b836-92be098b634b",
+    "nickname": "Halley",
+    "role": "bill-ai-talk-reviewer"
+  },
+  "reuse_policy": {
+    "mode": "thread_local_fixed_pair",
+    "max_articles_before_reset": 5,
+    "reset_when": [
+      "agent_missing",
+      "agent_closed",
+      "rules_changed",
+      "quality_drift"
+    ]
+  },
+  "status": {
+    "created_for": "bill-ai-talk",
+    "reuse_scope": "current_thread",
+    "last_reset_at": "2026-04-18",
+    "article_jobs_used": 0
+  }
+}

@@ -35,9 +35,12 @@ Use this repository to turn discussions and source material into publishableå…¬ä
 - When preparing commits, group by change type first, then split by day within that type.
 - Do not batch multiple article days into one content commit unless the user explicitly asks for a bulk commit.
 - Default article drafting flow is a two-agent loop:
-  - spawn `bill-ai-talk-writer` to draft or revise the article
+  - prefer the fixed writer/reviewer pair recorded in `.codex/agent-pool.json`
+  - only create a new pair when the pool file is missing, an agent is unavailable, the rules changed materially, or quality drift suggests a reset
+  - reuse the same pair for up to 5 article jobs before resetting
+  - spawn `bill-ai-talk-writer` only when a reusable fixed writer is not available
   - writer must return the full article text; on revision rounds it must also map changes back to reviewer suggestions
-  - spawn `bill-ai-talk-reviewer` for read-only review
+  - spawn `bill-ai-talk-reviewer` only when a reusable fixed reviewer is not available
   - reviewer must not modify files; it returns `Blocking issues`, `Suggestions`, and `recommended_action`
   - if issues remain, send the numbered list back to writer and iterate on the same draft
   - stop when reviewer reports `no_issue`, or when the loop exceeds 5 rounds
@@ -46,6 +49,17 @@ Use this repository to turn discussions and source material into publishableå…¬ä
 ## Two-Agent Execution
 
 When the user asks to write or rewrite an article, run the loop below instead of drafting directly in the main thread.
+
+0. Resolve the reusable writer/reviewer pair first
+   - Check `.codex/agent-pool.json` for the current fixed `bill-ai-talk-writer` and `bill-ai-talk-reviewer` agent ids.
+   - Reuse those ids with follow-up input instead of spawning new temporary agents.
+   - Treat the pair in `.codex/agent-pool.json` as the default long-lived pair for this thread unless a reset condition is met.
+   - If either id is missing or the pair should be reset, create a new pair, update `.codex/agent-pool.json`, and then continue.
+   - Reset the pair when:
+     - either agent is unavailable
+     - workspace rules changed materially
+     - quality drift suggests the pair is carrying too much stale context
+     - the same pair has already been reused for 5 article jobs
 
 1. Prepare the task for `bill-ai-talk-writer`
    - Include the article date, topic, current goal, and any user constraints for tone, length, title direction, or images.
@@ -85,4 +99,6 @@ When the user asks to write or rewrite an article, run the loop below instead of
 
 6. Main-thread responsibility
    - The main agent is responsible for orchestrating this loop, checking that article path/state/tracker stay in sync, and reporting the final result to the user.
+   - The main agent is also responsible for keeping `.codex/agent-pool.json` current when the fixed writer/reviewer pair is created or reset.
+   - When reusing the fixed pair, increment and maintain the article-job counter in `.codex/agent-pool.json` so resets happen intentionally instead of drifting forever.
    - Do not skip the reviewer stage for article work unless the user explicitly asks to bypass it.
