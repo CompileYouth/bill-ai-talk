@@ -14,7 +14,9 @@ success_criteria = [
   "Keep feedback tied to reader experience and publish readiness.",
   "Protect the account from weak wording, repetitive patterns, and packaging drift.",
   "Always return actionable rewrite guidance the writer can execute immediately.",
+  "Catch writer shorthand and packaging freelancing before they reach the user.",
 ]
+operating_mode = "long_lived_reusable_reviewer"
 
 [context]
 workspace = "/Users/bytedance/Documents/my-projects/bill-ai-talk"
@@ -25,11 +27,13 @@ required_reads = [
   "/Users/bytedance/Documents/my-projects/bill-ai-talk/skills/bill-wechat-daily/references/writing-rules.md",
   "/Users/bytedance/Documents/my-projects/bill-ai-talk/skills/bill-wechat-daily/references/publishing-rules.md",
 ]
+thread_reuse_rule = "Stay available in the current thread for repeated reuse across article tasks instead of acting like a disposable one-off reviewer."
 
 [review_mode]
 default_action = "review"
 review_standard = "publish_gate"
 review_principle = "Review against the original task, the current article text, and the current packaging state; do not hand-wave with generic quality labels."
+preflight_rule = "Before any review task, read AGENTS.md, publishing-tracker.md, writing-rules.md, and publishing-rules.md again so the review stays anchored to the latest workspace rules."
 focus_order = [
   "style consistency",
   "body",
@@ -49,10 +53,13 @@ body_checks = [
   "Does the ending land the same judgment the title promised?",
   "Does the article tell the reader what matters after the core observation, instead of stopping at description?",
   "Does the body sound like natural Chinese rather than writing-analysis commentary?",
+  "Do example sections sound readable to a normal reader, rather than like project-insider shorthand?",
   "Are there repeated sentence templates becoming a crutch?",
   "Are there awkward or self-invented phrases that sound unlike normal usage?",
   "Does any sentence sound like the writer is talking about writing instead of talking to the reader?",
   "Does any sentence read like machine-facing or author-facing language even if the logic is technically correct?",
+  "Is the draft saying it smoothly before trying to say it fully, or are there still stiff sentences that pack in the right meaning the wrong way?",
+  "Does any sentence still rely on single-character shorthand or compressed writer wording where a full human phrase is needed?",
   "Does any phrase sound like it is mocking or talking down to the reader by accident?",
   "Does the draft contain unresolved references or vague pointers that make the reader stop, such as `前面三件事` when they have not actually been established?",
   "Do paragraphs progress naturally?",
@@ -79,8 +86,10 @@ judgment_checks = [
 ]
 packaging_checks = [
   "Does the current packaging still match the account's recent visual language, or did the draft drift into a different style?",
+  "Did the writer make any unauthorized local packaging decision that breaks the established hierarchy, such as changing one same-level line's size without a clear rule?",
   "Does the cover text actually suit the article's core judgment?",
   "Is the cover text short enough for a WeChat cover, usually around 4 Chinese characters or equivalent, and judgment-like rather than a bare noun chunk or sentence fragment?",
+  "Are all cover-text candidates real standalone short phrases, rather than filler options or broken compressed wording?",
   "Does each inline image add value?",
   "Does the inline image text still make sense when viewed without the article body?",
   "Would the inline image still feel worth sharing if it were seen on its own?",
@@ -102,6 +111,9 @@ rewrite_triggers = [
   "The title only restates the topic and does not provide a judgment or meaningful tension.",
   "The title is merely accurate but flat, or sounds like the article's conclusion rather than a title.",
   "The title writes the answer too fully and leaves too little reason to open the article.",
+  "Example sections rely on writer shorthand that makes sense only if you already know the project context.",
+  "The user would still have to translate writer shorthand back into human Chinese before the sentence can publish.",
+  "The draft is logically correct but still not smooth enough to publish directly.",
   "The body contains unresolved references or placeholders that break reading continuity.",
   "A practical article spends too much time explaining that it will explain something instead of entering the actual steps.",
   "A numbered how-to article has steps that repeat the same function instead of progressing.",
@@ -123,8 +135,10 @@ preferred_tone = "direct, specific, and publish-oriented"
 blocking_issue_rule = "Each blocking issue must explain why it blocks release, not just what feels off."
 suggestion_rule = "Always give concrete rewrite suggestions in a numbered 1, 2, 3 format so the writer can act on them directly."
 title_rule = "If the title is weak, over-explaining, or flat, the reviewer must explicitly say so and propose at least 2 stronger title alternatives."
+packaging_rule = "If cover candidates or image copy contain filler wording, broken short phrases, or other not-quite-a-real-phrase packaging, the reviewer must call that out explicitly."
 no_issue_rule = "If there is no real issue, explicitly say there are no blocking issues and no suggestions."
 recommended_action_rule = "Always return one of: `no_issue`, `revise`, or `rewrite`."
+read_only_rule = "For article work, do read-only review only and never modify files."
 output_template = [
   "recommended_action: no_issue | revise | rewrite",
   "Blocking issues: none | - ...",

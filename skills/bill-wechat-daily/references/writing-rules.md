@@ -23,10 +23,15 @@
 
 ## Body
 
+- For article work, follow the fixed execution order: run the writer/reviewer loop first; do not draft the article directly in the main thread and justify it afterward.
+- For local preview, start or restart the preview service before opening the page. Do not skip straight to opening a stale URL or static html.
 - Before changing any local sentence, title, or image, first check whether the draft still matches the account's current stable style and recent article family.
 - Protect global consistency before optimizing local wording.
 - Passing the body means more than being logically correct. It still has to read like natural human Chinese, like a finished piece, and like something actually worth publishing.
+- Prefer saying it smoothly before saying it fully. A line that tries to say everything but still reads stiff is not ready.
 - Rewrite any line that sounds like an internal compressed phrase the writer understands but a normal reader would never say out loud.
+- Prefer complete human phrases over悬空单字或压缩词。 If a line relies on a single abstract character like `长` where a fuller human phrase such as `生长` or `长期维护` would read naturally, rewrite it.
+- Never use a single-character abstract word as a stand-in for a full idea in reader-facing prose. If the wording only works by collapsing meaning into one character, rewrite it into a full human phrase.
 - If a sentence is accurate but still reads like machine-facing or author-facing language, it is not done.
 - The article should state the final judgment directly, not replay the conversation.
 - Before drafting, identify the real center of gravity and keep title, body, headings, and images aligned to it.
@@ -54,6 +59,7 @@
 - In a step-by-step article, each numbered step must add new information. If two steps are doing the same work, merge or rewrite them.
 - In a practical article, show the real artifact when it helps more than paraphrasing it. Prefer a screenshot or concrete file snippet over repeating the same process in prose.
 - Background from the user is for understanding; only keep what strengthens the reader-facing argument.
+- Examples must be told in reader-facing language. Do not rely on `I know what I mean` shorthand when expanding an example or lesson from project practice.
 - When a general公众号 reader may not know an acronym, write the full term first.
 - Treat evidence-standard, compliance, and tone instructions as writing constraints, not article sentences.
 - Avoid habitual spoken filler and backstage framing.
@@ -62,6 +68,7 @@
 - Keep backstage writing-analysis language out of the body. Phrases like "core judgment", "hook", or "example and conclusion" belong in review, not in reader-facing prose.
 - AI flavor usually comes from abstract summary language, not from the presence of important concepts. Keep the key concept if it is the article's real value, but write the surrounding sentences in plain human language.
 - Start from a real thing worth saying, then organize it. Do not start from a structurally correct explanation and fill it with meaning afterward.
+- In body copy, do not keep a sentence just because the meaning is right. If a normal reader would still feel it is stiff, translated, or writer-facing, rewrite it.
 - Prefer direct actions, felt friction, and concrete consequences over explanatory summary phrases.
 - Be suspicious of sentences that sound like a writer presenting a method, framework, or article structure rather than a person talking about what actually happens.
 - If a sentence is accurate but sounds like something only the writer would say, rewrite it into language a reader might naturally use.
@@ -71,9 +78,11 @@
 - Do not confuse core concepts with AI flavor. If `Agent`, `Generator`, `Evaluator`, or other key concepts are the article's real value, keep them; remove the AI flavor from the surrounding sentences instead.
 - When the article is about a practical setup or workflow, write it as `why I had to do this` or `what kept going wrong without it`, not as a product or method explainer.
 - If the sentence feels compressed, clever, or abstract in the writer's head, expand or rewrite it into plain spoken language before keeping it.
+- If a sentence sounds like the writer understands it but a normal reader would have to translate it back into human language, rewrite it before it reaches review.
 - In practical articles, avoid meta-writing phrases such as `今天就谈谈`, `这篇讲的是`, `最先解决的是`, or similar author commentary when a direct statement would do.
 - Prefer concrete project language over vague containers. If the user is talking about an `agent 项目`, do not drift back to `这个文件夹` unless the file-system container itself is the point.
 - In practical articles, do not treat structure and images as later polish. Headings, emphasis, and images are part of the first-class draft.
+- Draft body, TL;DR, title, cover text, and image copy as one linked deliverable set. Do not write the body first and improvise the packaging later.
 
 ## TL;DR
 
@@ -98,10 +107,13 @@
 
 - Cover text belongs to packaging, but it still has to stay aligned with the article's center of gravity.
 - Keep cover text short, usually within about 4 Chinese characters or an equivalent-length English phrase, and judgment-like instead of a bare noun chunk or sentence fragment.
+- Every cover-text candidate must be a legitimate standalone short phrase. Do not pad the list with half-formed wording just to produce three options.
 - Treat cover text and inline image copy as deliverables, not optional extras.
 - Image text should still make sense when separated from the article body.
 - An inline image is not finished just because it matches the article; it should also be worth sharing on its own.
+- Do not compress image copy into awkward pseudo-phrases just to make it shorter. If it reads odd on its own, rewrite the wording instead of forcing the length.
 - Before rewriting image copy, first verify that the image style still matches the project's current visual language and the recent batch of article images.
+- For same-level multi-line image copy, keep hierarchy consistent by default. Do not change one line's font size ad hoc just because the layout looks tight; revise the wording first.
 
 ## Review Standard
 
@@ -113,4 +125,9 @@
 - If a follow-up article proposes a reason for the previous article's problem, verify that the reason actually fits the previous article's judgment. Do not invent a simpler causal story that misreads the prior piece.
 - If the article's core idea is practical but the draft reads like a framework description, rewrite it. Practical value should feel lived, not presented.
 - In a practical article, review the TL;DR, headings, numbered steps, title, and cover text as independent deliverables. Do not only review the body paragraphs.
+- Reviewer must reject drafts that still contain compressed writer-language in example sections, even when the underlying point is correct.
+- Reviewer must reject drafts whose body language still needs the user to translate writer shorthand into normal Chinese before it can publish.
+- Reviewer must reject drafts that are technically correct but still not smooth enough to publish directly.
+- Reviewer must reject packaging candidate lists that contain filler options, broken short phrases, or anything that cannot stand alone as actual cover text.
+- Reviewer must check packaging for unauthorized local design decisions that break established hierarchy or style consistency.
 - Review in this order: style consistency first, then structure completeness, then natural language, then local optimization.

@@ -13,7 +13,9 @@ success_criteria = [
   "The body reads like natural Chinese instead of backstage writing analysis.",
   "The title, body, headings, and images align to the same center of gravity.",
   "The draft is ready for local preview and reviewer pass, not just conceptually correct.",
+  "No example section relies on shorthand that only the writer understands.",
 ]
+operating_mode = "long_lived_reusable_writer"
 
 [context]
 workspace = "/Users/bytedance/Documents/my-projects/bill-ai-talk"
@@ -28,6 +30,7 @@ source_of_truth = [
   "articles/",
   "article-state/",
 ]
+thread_reuse_rule = "Stay available in the current thread for repeated reuse across article tasks instead of acting like a disposable one-off writer."
 
 [topic_policy]
 current_top_goal = "For the next 1-2 months, help readers understand how AI truly enters a personal workflow."
@@ -58,8 +61,12 @@ writing_style = [
 hard_rules = [
   "Before optimizing a local line or image, first check the current stable account style and recent article family for consistency.",
   "Do not freehand a new visual style when the recent batch already has a stable one; inherit first, then adjust.",
+  "Run the writer/reviewer loop first; do not let the main thread become the first drafter for article work.",
   "Body quality is not complete at logic correctness; it must read like natural human Chinese and a publishable finished piece.",
+  "Say it smoothly before trying to say it fully. If a sentence still reads stiff, translated, or writer-facing, rewrite it even when the logic is already correct.",
   "Rewrite any line that sounds like compressed internal writer language rather than something a reader would naturally say.",
+  "Prefer complete human phrases over single-character shorthand or compressed wording when the shorter form stops sounding like something a normal reader would say.",
+  "Never use a single-character abstract word as a stand-in for a full idea in reader-facing prose; write the full phrase instead.",
   "Do not treat headings, emphasis, TL;DR, cover text, or inline image copy as optional polish; they are part of the draft deliverable.",
   "Do not treat one strong sentence as a finished article.",
   "Do not let repeated rhetorical templates dominate the body.",
@@ -74,6 +81,10 @@ hard_rules = [
   "Do not use the article's body conclusion or retrospective summary sentence directly as the title.",
   "Do not choose a title just because it is accurate; it must also have WeChat-level click tension.",
   "Before locking a title, generate and compare multiple candidates instead of stopping at the first acceptable wording.",
+  "In example-heavy explanatory writing, make the example readable to an outside reader rather than relying on project-insider shorthand.",
+  "If a sentence still sounds like the user would need to translate it back into human Chinese, it is not ready.",
+  "Draft body, TL;DR, title, cover text, and image copy as one linked deliverable set instead of writing the body first and improvising packaging later.",
+  "Do not pad cover-text candidates with broken short phrases or filler options; every candidate must stand on its own as a real cover phrase.",
 ]
 
 [packaging]
@@ -94,6 +105,7 @@ inline_image_requirements = [
   "image text should still make sense out of context",
   "matching the body is necessary but not sufficient; the image should also be shareable on its own",
   "check recent article images before changing style; preserve the established white-card visual language unless there is a deliberate reason to change it",
+  "for same-level multi-line image copy, keep the line hierarchy visually consistent by default; if layout is tight, revise wording before changing font size line by line",
 ]
 
 [outputs]
