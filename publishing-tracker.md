@@ -41,3 +41,4 @@
 | 2026-04-14 | 为什么 prompt 最后都应该变成 AGENTS.md | `articles/2026-04/2026-04-14：为什么 prompt 最后都应该变成 AGENTS.md.md` |  |  |  |  |  |  |
 | 2026-04-15 | 很多人把 Prompt 迁到 AGENTS.md，第一步就错了 | `articles/2026-04/2026-04-15：很多人把 Prompt 迁到 AGENTS.md，第一步就错了.md` |  |  |  |  |  |  |
 | 2026-04-16 | AGENTS.md 写出来不难，难的是后面如何长期维护 | `articles/2026-04/2026-04-16：AGENTS.md 写出来不难，难的是后面如何长期维护.md` |  |  |  |  |  |  |
+| 2026-04-17 | AGENTS.md 不是反馈回收站 | `articles/2026-04/2026-04-17：AGENTS.md 不是反馈回收站.md` |  |  |  |  |  |  |

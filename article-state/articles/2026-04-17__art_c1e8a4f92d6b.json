@@ -1,0 +1,44 @@
+{
+  "article_file": "2026-04/2026-04-17：AGENTS.md 不是反馈回收站.md",
+  "article": {
+    "title": "AGENTS.md 不是反馈回收站",
+    "tldr": "AGENTS.md 里该留下来的，是以后还会反复遇到、写进去又真的能改变后续产出的长期规则。不是每次改稿时觉得哪里不顺，都要立刻写进规则。有些问题该当场改掉，有些才值得入库。",
+    "core_judgment": "AGENTS.md 要长期有用，关键不是把反馈记得越多越好，而是分清哪些只是这一次的问题，哪些值得变成以后都适用的规则。",
+    "publish_date": "2026-04-17"
+  },
+  "strategy": {
+    "article_type": "practical_explanatory",
+    "topic_tags": [
+      "AGENTS.md",
+      "feedback",
+      "workflow",
+      "rules"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "把“反馈沉淀”再往前推一步，只讲一个最关键的判断：什么反馈值得进规则，什么反馈不该急着写死。",
+    "packaging_hypothesis": "这篇直接把 AGENTS.md 的维护难点收窄到“反馈筛选”上。标题先把误区打出来，正文再用真实例子告诉读者：不是每个反馈都该入库，只有长期共性问题才值得沉淀成规则。",
+    "cover_candidates": [
+      "反馈入库",
+      "规则边界",
+      "入库标准"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-17-feedback-rules/1.jpg"
+    ],
+    "cover": {
+      "text": "规则边界",
+      "background": "#e65818",
+      "confirmed_at": "2026-04-16T15:57:56"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_c1e8a4f92d6b"
+}
