@@ -1,0 +1,45 @@
+{
+  "article_file": "未排期：真把活交给 AI 以后，这 3 个判断最好别交.md",
+  "article": {
+    "title": "真把活交给 AI 以后，这 3 个判断最好别交",
+    "tldr": "当 AI 真开始在工作里连续往下做，人最该留在自己手里的，不是所有执行，而是三个判断：往哪去，做到什么程度才算过线，偏了以后什么时候拉回来。因为方向错了、标准空了、纠偏缺了，AI 不会让问题变小，只会把问题更快放大。",
+    "core_judgment": "AI 真开始进入工作流以后，人不需要亲手做完所有执行，但必须继续掌握三个上游判断：定方向、定过线标准、持续纠偏；这三件一旦交出去，AI 只会更快把错误放大。",
+    "publish_date": "未排期"
+  },
+  "strategy": {
+    "article_type": "practical_explanatory",
+    "topic_tags": [
+      "AI workflow",
+      "human judgment",
+      "delegation",
+      "knowledge work"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "真把一整段工作交给 AI 以后，最不能顺手交出去的，不是执行，而是那几个决定整套工作会不会一路跑偏的判断。",
+    "packaging_hypothesis": "承接 4 月 18 日“很多人其实还没完成工作方式迁移”，这一篇继续往前走，只讲迁移真正发生以后人必须保留的三种判断。标题改成更像标题的 tension 句，正文用增长方案这个常见工作场景让读者代入，并把“为什么偏偏是这三件”提前讲透。",
+    "cover_candidates": [
+      "别交出去",
+      "判断别丢",
+      "上游别交"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-19-human-judgment/1.jpg",
+      "assets/2026-04-19-human-judgment/2.jpg"
+    ],
+    "cover": {
+      "text": "别交出去",
+      "background": "#5d846c",
+      "confirmed_at": "2026-04-17T12:30:00"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_6d3b9a1c4e72"
+}
