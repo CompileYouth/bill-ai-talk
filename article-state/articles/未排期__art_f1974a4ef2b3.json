@@ -1,0 +1,43 @@
+{
+  "article_file": "未排期：为什么很多人用了 AI，工作反而更累了.md",
+  "article": {
+    "title": "为什么很多人用了 AI，工作反而更累了",
+    "tldr": "很多人已经把 AI 用进了方案、汇报、调研和纪要里，但工作方式其实没变。因为真正没变的，是人还在亲自拆步骤、亲自补背景、亲自把上一段结果送到下一段。真把这套活交出去以后，人主要负责目标和标准，Agent 去连续执行，系统再把资料、规则和进度留住。",
+    "core_judgment": "很多人只是把 AI 插进旧流程里的几个局部，自己仍然负责拆步骤、补背景、衔接前后；真把整套活交出去以后，人负责目标和标准，让 Agent 连续执行，再由系统把资料、规则和进度留住。",
+    "publish_date": "未排期"
+  },
+  "strategy": {
+    "article_type": "practical_explanatory",
+    "topic_tags": [
+      "AI workflow",
+      "agent",
+      "knowledge work",
+      "migration"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "AI 最容易把人骗到的一点，是让你以为自己已经升级了，实际上只是带着 AI 继续亲力亲为。",
+    "packaging_hypothesis": "这篇要把“很多人用了 AI，但工作方式没变”写成一个顺口、可代入的周会汇报场景：旧流程里人仍然亲自拆步骤、补背景、把结果往下传；真把整套活交出去以后，人只定目标和标准，Agent 连着做，系统把资料、规则和进度留住。",
+    "cover_candidates": [
+      "新瓶旧酒"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-18-workflow-migration/1.jpg",
+      "assets/2026-04-18-workflow-migration/2.jpg"
+    ],
+    "cover": {
+      "text": "新瓶旧酒",
+      "background": "#deb932",
+      "confirmed_at": "2026-04-17T00:51:07"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_f1974a4ef2b3"
+}
