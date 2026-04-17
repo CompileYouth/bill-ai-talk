@@ -52,6 +52,7 @@ When the user asks to write or rewrite an article, run the loop below instead of
 
 0. Resolve the reusable writer/reviewer pair first
    - Check `.codex/agent-pool.json` for the current fixed `bill-ai-talk-writer` and `bill-ai-talk-reviewer` agent ids.
+   - Use the canonical boot prompts in `.codex/fixed-agents/bill-ai-talk-writer.md` and `.codex/fixed-agents/bill-ai-talk-reviewer.md` whenever a fresh pair has to be created.
    - Reuse those ids with follow-up input instead of spawning new temporary agents.
    - Treat the pair in `.codex/agent-pool.json` as the default long-lived pair for this thread unless a reset condition is met.
    - If either id is missing or the pair should be reset, create a new pair, update `.codex/agent-pool.json`, and then continue.

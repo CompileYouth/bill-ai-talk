@@ -2,12 +2,16 @@
   "writer": {
     "agent_id": "019d9c3c-a005-7a11-84bc-3b4c74f05797",
     "nickname": "Plato",
-    "role": "bill-ai-talk-writer"
+    "role": "bill-ai-talk-writer",
+    "prompt_file": "/Users/bytedance/Documents/my-projects/bill-ai-talk/.codex/fixed-agents/bill-ai-talk-writer.md",
+    "reuse_mode": "long_lived_thread_worker"
   },
   "reviewer": {
     "agent_id": "019d9c3f-56df-74c1-b836-92be098b634b",
     "nickname": "Halley",
-    "role": "bill-ai-talk-reviewer"
+    "role": "bill-ai-talk-reviewer",
+    "prompt_file": "/Users/bytedance/Documents/my-projects/bill-ai-talk/.codex/fixed-agents/bill-ai-talk-reviewer.md",
+    "reuse_mode": "long_lived_thread_worker"
   },
   "reuse_policy": {
     "mode": "thread_local_fixed_pair",
