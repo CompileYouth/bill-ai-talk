@@ -1,0 +1,44 @@
+{
+  "article_file": "2026-04/2026-04-15：很多人把 Prompt 迁到 AGENTS.md，第一步就错了.md",
+  "article": {
+    "title": "很多人把 Prompt 迁到 AGENTS.md，第一步就错了",
+    "tldr": "很多人懂了要写 AGENTS.md，真正卡住的不是要不要写，而是接下来怎么迁。更稳的做法不是把整段 Prompt 搬过去，而是先做规则分层：先拆 Prompt，只迁长期规则，再把“这次”留给 Prompt，把“以后”交给 AGENTS.md。",
+    "core_judgment": "从 Prompt 到 AGENTS.md，最重要的不是搬运，而是分层：先把“这次”留给 Prompt，再把“以后”交给 AGENTS.md。",
+    "publish_date": "2026-04-15"
+  },
+  "strategy": {
+    "article_type": "practical_explanatory",
+    "topic_tags": [
+      "prompt",
+      "AGENTS.md",
+      "migration",
+      "workflow"
+    ],
+    "target_reader": "ai_curious_readers",
+    "distribution_hook": "next step after understanding why AGENTS.md matters",
+    "packaging_hypothesis": "承接上一篇的原理文，这一篇只回答“接下来怎么迁”，核心不是搬运，而是先做规则分层：先拆 Prompt，只迁长期规则，最后分开这次和以后。",
+    "cover_candidates": [
+      "规则分层",
+      "分层迁移",
+      "只迁规则"
+    ]
+  },
+  "packaging": {
+    "images": [
+      "assets/2026-04-15-migrate-prompt-to-agents/1.jpg"
+    ],
+    "cover": {
+      "text": "分层迁移",
+      "background": "#cd3b39",
+      "confirmed_at": "2026-04-14T22:57:49"
+    }
+  },
+  "outcomes": {},
+  "review": {
+    "human_note": "",
+    "what_worked": "",
+    "what_failed": "",
+    "next_adjustment": ""
+  },
+  "article_id": "art_5e2f9c1d8a47"
+}
